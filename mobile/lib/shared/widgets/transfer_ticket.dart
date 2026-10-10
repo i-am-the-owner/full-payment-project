@@ -57,7 +57,7 @@ class TransferTicket extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (compact) return _mini();
+    if (compact) return _mini(context);
     return AaminTicket(
       band: bandColour,
       onBand: onBandColour,
@@ -71,7 +71,7 @@ class TransferTicket extends StatelessWidget {
       stub: Row(
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          Expanded(child: _amountBlock(size: 40)),
+          Expanded(child: _amountBlock(context, size: 40)),
           if (stamp != null) _Stamp(stamp!),
           if (badge != null)
             Flexible(child: StatusBadge(badge!, colours: badgeColours)),
@@ -80,7 +80,7 @@ class TransferTicket extends StatelessWidget {
     );
   }
 
-  Widget _mini() {
+  Widget _mini(BuildContext context) {
     final code = AlmaPayText.display.copyWith(
       fontSize: 22,
       height: 1,
@@ -133,7 +133,7 @@ class TransferTicket extends StatelessWidget {
       stub: Row(
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          Expanded(child: _amountBlock(size: 26)),
+          Expanded(child: _amountBlock(context, size: 26)),
           if (badge != null)
             Flexible(
               child: Column(
@@ -149,7 +149,7 @@ class TransferTicket extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                       style: AlmaPayText.ui(
                         size: 12.5,
-                        color: AlmaPayColours.ink2,
+                        color: context.palette.muted,
                       ),
                     ),
                   ],
@@ -161,7 +161,7 @@ class TransferTicket extends StatelessWidget {
     );
   }
 
-  Widget _amountBlock({required double size}) => Column(
+  Widget _amountBlock(BuildContext context, {required double size}) => Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       Text(
@@ -171,7 +171,7 @@ class TransferTicket extends StatelessWidget {
         style: AlmaPayText.ui(
           size: compact ? 13.5 : 13,
           weight: compact ? 600 : 500,
-          color: AlmaPayColours.ink2,
+          color: context.palette.muted,
         ),
       ),
       FittedBox(
@@ -196,8 +196,8 @@ class StatusBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bg = colours?.$1 ?? AlmaPayColours.fog;
-    final fg = colours?.$2 ?? AlmaPayColours.ink;
+    final bg = colours?.$1 ?? context.palette.background;
+    final fg = colours?.$2 ?? context.palette.text;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       decoration: BoxDecoration(

@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../theme/almapay_theme.dart';
 
-/// The AaminPay mark: a route between two places, drawn as a blue tile.
+/// The AaminPay mark: a gradient blue tile with a bold white "A" whose
+/// crossbar is the amber line of money on its way.
 class AaminMark extends StatelessWidget {
   const AaminMark({this.size = 36, super.key});
   final double size;
@@ -14,6 +15,7 @@ class AaminMark extends StatelessWidget {
 }
 
 class _MarkPainter extends CustomPainter {
+  // The same geometry is used to draw the app icon files (32 x 32 units).
   @override
   void paint(Canvas canvas, Size size) {
     final k = size.width / 32;
@@ -21,31 +23,44 @@ class _MarkPainter extends CustomPainter {
       Offset.zero & size,
       Radius.circular(9 * k),
     );
-    canvas.drawRRect(tile, Paint()..color = AlmaPayColours.blue);
-    canvas.save();
-    canvas.clipRRect(tile);
-    final navy = Paint()..color = AlmaPayColours.ink;
-    canvas.drawCircle(Offset(0, 16 * k), 4 * k, navy);
-    canvas.drawCircle(Offset(32 * k, 16 * k), 4 * k, navy);
-    canvas.restore();
-    final white = Paint()..color = Colors.white;
-    for (var x = 8.0; x < 18; x += 5.6) {
-      canvas.drawRRect(
-        RRect.fromRectAndRadius(
-          Rect.fromLTWH(x * k, 14.8 * k, 2.6 * k, 2.4 * k),
-          Radius.circular(1.2 * k),
-        ),
-        white,
-      );
-    }
-    canvas.drawCircle(Offset(23 * k, 16 * k), 3.2 * k, white);
+    canvas.drawRRect(
+      tile,
+      Paint()
+        ..shader = const LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [Color(0xFF3D7BFF), Color(0xFF1A3A9E)],
+        ).createShader(Offset.zero & size),
+    );
+    final letter = Path()
+      ..moveTo(8.2 * k, 25.5 * k)
+      ..lineTo(16 * k, 6.5 * k)
+      ..lineTo(23.8 * k, 25.5 * k);
+    canvas.drawPath(
+      letter,
+      Paint()
+        ..color = Colors.white
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 3.6 * k
+        ..strokeCap = StrokeCap.round
+        ..strokeJoin = StrokeJoin.round,
+    );
+    canvas.drawLine(
+      Offset(11.9 * k, 19.6 * k),
+      Offset(20.1 * k, 19.6 * k),
+      Paint()
+        ..color = AlmaPayColours.way
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 3 * k
+        ..strokeCap = StrokeCap.round,
+    );
   }
 
   @override
   bool shouldRepaint(covariant CustomPainter old) => false;
 }
 
-/// The mark with the lower-case wordmark beside it.
+/// The mark with the "AaminPay" wordmark beside it.
 class AaminWordmark extends StatelessWidget {
   const AaminWordmark({this.onDark = true, this.size = 28, super.key});
 
@@ -54,15 +69,21 @@ class AaminWordmark extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final base = onDark ? context.palette.text : AlmaPayColours.ink;
     return Row(
       children: [
-        AaminMark(size: size + 4),
-        const SizedBox(width: 10),
-        Text(
-          'aaminpay',
-          style: AlmaPayText.display.copyWith(
-            fontSize: size,
-            color: onDark ? AlmaPayColours.white : AlmaPayColours.ink,
+        AaminMark(size: size + 8),
+        const SizedBox(width: 12),
+        Text.rich(
+          TextSpan(
+            style: AlmaPayText.ui(size: size, weight: 700, color: base),
+            children: [
+              const TextSpan(text: 'Aamin'),
+              TextSpan(
+                text: 'Pay',
+                style: TextStyle(color: context.palette.accent),
+              ),
+            ],
           ),
         ),
       ],

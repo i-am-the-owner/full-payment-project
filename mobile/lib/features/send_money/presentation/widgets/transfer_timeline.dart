@@ -109,14 +109,14 @@ class _Step extends StatelessWidget {
               width: 28,
               child: Column(
                 children: [
-                  _dot(),
+                  _dot(context),
                   if (!isLast)
                     Expanded(
                       child: Container(
                         width: 2,
                         color: state == _StepState.done
-                            ? AlmaPayColours.ink
-                            : AlmaPayColours.line,
+                            ? context.palette.text
+                            : context.palette.line,
                       ),
                     ),
                 ],
@@ -138,7 +138,7 @@ class _Step extends StatelessWidget {
                             ? AlmaPayColours.faint
                             : state == _StepState.stopped
                             ? AlmaPayColours.refused
-                            : AlmaPayColours.ink,
+                            : context.palette.text,
                       ),
                     ),
                     if (timeText != null)
@@ -146,7 +146,7 @@ class _Step extends StatelessWidget {
                         timeText,
                         style: AlmaPayText.ui(
                           size: 13.5,
-                          color: AlmaPayColours.ink2,
+                          color: context.palette.muted,
                         ),
                       ),
                   ],
@@ -159,17 +159,17 @@ class _Step extends StatelessWidget {
     );
   }
 
-  Widget _dot() {
+  Widget _dot(BuildContext context) {
     switch (state) {
       case _StepState.done:
         return Container(
           width: 28,
           height: 28,
-          decoration: const BoxDecoration(
-            color: AlmaPayColours.ink,
+          decoration: BoxDecoration(
+            color: context.palette.text,
             shape: BoxShape.circle,
           ),
-          child: const Icon(Icons.check, size: 16, color: Colors.white),
+          child: Icon(Icons.check, size: 16, color: context.palette.background),
         );
       case _StepState.current:
         return Container(
@@ -177,15 +177,15 @@ class _Step extends StatelessWidget {
           height: 28,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: Colors.white,
-            border: Border.all(color: AlmaPayColours.ink, width: 2),
+            color: context.palette.surface,
+            border: Border.all(color: context.palette.text, width: 2),
           ),
           child: Center(
             child: Container(
               width: 10,
               height: 10,
-              decoration: const BoxDecoration(
-                color: AlmaPayColours.ink,
+              decoration: BoxDecoration(
+                color: context.palette.text,
                 shape: BoxShape.circle,
               ),
             ),
@@ -197,8 +197,8 @@ class _Step extends StatelessWidget {
           height: 28,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: Colors.white,
-            border: Border.all(color: AlmaPayColours.line, width: 2),
+            color: context.palette.surface,
+            border: Border.all(color: context.palette.line, width: 2),
           ),
         );
       case _StepState.stopped:

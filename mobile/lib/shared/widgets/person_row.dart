@@ -32,7 +32,7 @@ class PersonRow extends StatelessWidget {
                   '${person.accountSummary} · ${person.country}',
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: AlmaPayText.ui(size: 14, color: AlmaPayColours.ink2),
+                  style: AlmaPayText.ui(size: 14, color: context.palette.muted),
                 ),
               ],
             ),
@@ -61,8 +61,8 @@ class Avatar extends StatelessWidget {
     width: size,
     height: size,
     alignment: Alignment.center,
-    decoration: const BoxDecoration(
-      color: AlmaPayColours.blueSoft,
+    decoration: BoxDecoration(
+      color: context.palette.accentSoft,
       shape: BoxShape.circle,
     ),
     child: ExcludeSemantics(

@@ -91,7 +91,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 const SizedBox(height: 8),
                 Text(
                   'We will email you a link to verify your address.',
-                  style: AlmaPayText.ui(size: 16, color: AlmaPayColours.ink2),
+                  style: AlmaPayText.ui(size: 16, color: context.palette.muted),
                 ),
                 const SizedBox(height: 20),
                 TextFormField(
@@ -134,11 +134,11 @@ class _RegisterPageState extends State<RegisterPage> {
                   key: const Key('register_submit'),
                   onPressed: _submitting ? null : _submit,
                   child: _submitting
-                      ? const SizedBox.square(
+                      ? SizedBox.square(
                           dimension: 20,
                           child: CircularProgressIndicator(
                             strokeWidth: 2,
-                            color: AlmaPayColours.white,
+                            color: Theme.of(context).colorScheme.onPrimary,
                           ),
                         )
                       : const Text('Create account'),
@@ -152,7 +152,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         text: 'Already have an account? ',
                         style: AlmaPayText.ui(
                           size: 15,
-                          color: AlmaPayColours.ink2,
+                          color: context.palette.muted,
                         ),
                         children: [
                           TextSpan(

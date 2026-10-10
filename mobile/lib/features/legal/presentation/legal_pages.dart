@@ -124,7 +124,7 @@ class LegalDocumentPage extends StatelessWidget {
       body: ListView(
         padding: const EdgeInsets.all(22),
         children: [
-          Text(intro, style: AlmaPayText.ui(color: AlmaPayColours.ink2)),
+          Text(intro, style: AlmaPayText.ui(color: context.palette.muted)),
           for (final s in sections) ...[
             const SizedBox(height: 20),
             Text(s.heading, style: AlmaPayText.ui(size: 16, weight: 600)),
@@ -152,7 +152,7 @@ class ContactPage extends StatelessWidget {
           Text(
             'Questions about a transfer, your account or your data? Email us '
             'and include your transfer reference if you have one.',
-            style: AlmaPayText.ui(color: AlmaPayColours.ink2),
+            style: AlmaPayText.ui(color: context.palette.muted),
           ),
           const SizedBox(height: 20),
           Card(
@@ -175,7 +175,7 @@ class ContactPage extends StatelessWidget {
             // TODO-LEGAL: company name, registered address and complaints route.
             'Company details and the complaints route will be shown here '
             'before launch.',
-            style: AlmaPayText.ui(size: 13.5, color: AlmaPayColours.ink2),
+            style: AlmaPayText.ui(size: 13.5, color: context.palette.muted),
           ),
         ],
       ),
@@ -212,7 +212,7 @@ class DeleteDataPage extends StatelessWidget {
           Text(
             'You can ask us to delete your account and personal data. We will '
             'reply by email to confirm it is you.',
-            style: AlmaPayText.ui(color: AlmaPayColours.ink2),
+            style: AlmaPayText.ui(color: context.palette.muted),
           ),
           const SizedBox(height: 16),
           Text(

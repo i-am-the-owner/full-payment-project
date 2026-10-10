@@ -266,7 +266,7 @@ class _AmountStepState extends State<_AmountStep> {
             padding: const EdgeInsets.symmetric(vertical: 8),
             child: Text(
               'Getting the rate…',
-              style: AlmaPayText.ui(color: AlmaPayColours.ink2),
+              style: AlmaPayText.ui(color: context.palette.muted),
             ),
           )
         else if (quote != null) ...[
@@ -282,7 +282,7 @@ class _AmountStepState extends State<_AmountStep> {
         ] else
           Text(
             'Type an amount in either box to see the rate and fee.',
-            style: AlmaPayText.ui(size: 15, color: AlmaPayColours.ink2),
+            style: AlmaPayText.ui(size: 15, color: context.palette.muted),
           ),
         const SizedBox(height: 24),
         PrimaryButton(
@@ -333,7 +333,7 @@ class _AmountTicket extends StatelessWidget {
               style: AlmaPayText.ui(
                 size: 15,
                 weight: 600,
-                color: AlmaPayColours.white,
+                color: context.palette.surface,
               ),
             ),
           ),
@@ -735,7 +735,7 @@ class _ReviewStepState extends State<_ReviewStep> {
                 style: AlmaPayText.ui(
                   size: 13,
                   weight: 500,
-                  color: AlmaPayColours.ink2,
+                  color: context.palette.muted,
                 ),
               ),
               FittedBox(
@@ -755,7 +755,7 @@ class _ReviewStepState extends State<_ReviewStep> {
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
           decoration: BoxDecoration(
-            color: AlmaPayColours.blueSoft,
+            color: context.palette.accentSoft,
             borderRadius: BorderRadius.circular(16),
           ),
           child: Row(
@@ -826,7 +826,7 @@ class _ReviewStepState extends State<_ReviewStep> {
           'After you confirm, we will show you how to pay ${c.providerName}. '
           'Your money goes directly to them, not to AaminPay.',
           textAlign: TextAlign.center,
-          style: AlmaPayText.ui(size: 13.5, color: AlmaPayColours.ink2),
+          style: AlmaPayText.ui(size: 13.5, color: context.palette.muted),
         ),
         const SizedBox(height: 16),
         PrimaryButton(

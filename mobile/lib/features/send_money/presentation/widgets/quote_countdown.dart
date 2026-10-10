@@ -78,16 +78,12 @@ class _QuoteCountdownState extends State<QuoteCountdown> {
         key: const Key('quote_countdown'),
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Icon(
-            Icons.timer_outlined,
-            size: 16,
-            color: AlmaPayColours.ink2,
-          ),
+          Icon(Icons.timer_outlined, size: 16, color: context.palette.muted),
           const SizedBox(width: 6),
           Flexible(
             child: Text(
               text,
-              style: AlmaPayText.ui(size: 13.5, color: AlmaPayColours.ink2),
+              style: AlmaPayText.ui(size: 13.5, color: context.palette.muted),
             ),
           ),
         ],
