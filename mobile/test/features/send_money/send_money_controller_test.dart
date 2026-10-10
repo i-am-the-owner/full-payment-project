@@ -37,6 +37,23 @@ Future<SendMoneyController> _atReview(
 
 void main() {
   test(
+    'a transfer in a list is named after the saved person it went to',
+    () async {
+      final backend = FakeSendMoneyBackend();
+      final c = await _atReview(backend);
+      await c.confirm();
+      final page = (await c.loadHistory(1))!;
+      final transfer = page.transfers.first;
+
+      c.clearCustomerData();
+      expect(c.recipientNameFor(transfer), isNull);
+
+      await c.refreshRecipientsQuietly();
+      expect(c.recipientNameFor(transfer), 'Anna Schmidt');
+    },
+  );
+
+  test(
     'choosing another country shows no old rate, then that pair\'s rate',
     () async {
       final backend = FakeSendMoneyBackend();

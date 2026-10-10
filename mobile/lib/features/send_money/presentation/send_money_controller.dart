@@ -125,6 +125,28 @@ class SendMoneyController extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Who a transfer was sent to: the name the backend gave with it, or else the
+  /// saved person with that id. Null when neither is known.
+  String? recipientNameFor(Transfer t) {
+    final named = t.recipient?.displayName;
+    if (named != null && named.isNotEmpty) return named;
+    for (final r in _recipients) {
+      if (r.id == t.recipientId) return r.displayName;
+    }
+    return null;
+  }
+
+  /// Refreshes the saved people without showing a spinner or an error, for
+  /// lists that only want to put names on transfers.
+  Future<void> refreshRecipientsQuietly() async {
+    try {
+      _recipients = await _repository.listRecipients();
+      notifyListeners();
+    } on ApiException {
+      // Transfers just show their reference instead of a name.
+    }
+  }
+
   Quote? _rateQuote;
   DateTime? _rateFetchedAt;
   bool _rateLoading = false;

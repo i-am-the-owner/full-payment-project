@@ -161,9 +161,14 @@ class _HomeTabState extends State<_HomeTab> {
   }
 
   Future<void> _loadRecent() async {
-    final page = await widget.sendMoney.loadHistory(1);
+    // The names come with the transfers; the saved people fill any gap.
+    final results = await Future.wait([
+      widget.sendMoney.loadHistory(1),
+      widget.sendMoney.refreshRecipientsQuietly(),
+    ]);
+    final page = results.first as TransferPage?;
     if (!mounted || page == null) return;
-    setState(() => _recent = page.transfers.take(3).toList());
+    setState(() => _recent = page.transfers.take(5).toList());
   }
 
   @override
@@ -325,7 +330,7 @@ class _HomeTabState extends State<_HomeTab> {
                 fromCurrency: t.source.currency,
                 toCurrency: t.target.currency,
                 fromCaption: formatDate(t.createdAt),
-                toCaption: t.recipient?.displayName ?? t.reference,
+                toCaption: widget.sendMoney.recipientNameFor(t) ?? t.reference,
                 detail: 'You paid ${t.totalToPay.label}',
                 label: t.reference,
                 amount: t.target.label,

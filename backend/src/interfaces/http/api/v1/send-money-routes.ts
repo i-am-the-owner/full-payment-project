@@ -371,7 +371,15 @@ export function sendMoneyRoutes(deps: SendMoneyRoutesDeps): Router {
         validatedQuery<z.infer<typeof listQuery>>(req),
       );
       sendData(res, {
-        transfers: await Promise.all(result.transfers.map((t) => dto.transfer(t))),
+        transfers: await Promise.all(
+          result.transfers.map(async (t) => {
+            const recipient = result.recipients.get(t.recipientId);
+            return {
+              ...(await dto.transfer(t)),
+              recipient: recipient ? dto.recipient(recipient) : null,
+            };
+          }),
+        ),
         page: result.page,
         pageSize: result.pageSize,
         hasMore: result.hasMore,

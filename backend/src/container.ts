@@ -551,7 +551,7 @@ export function createContainer(
       applyProviderTransferUpdate,
       clock,
     }),
-    listTransfers: createListTransfers({ transferRepository }),
+    listTransfers: createListTransfers({ transferRepository, recipientRepository }),
     cancelTransfer: createCancelTransfer({
       provider,
       customerLinkStore,

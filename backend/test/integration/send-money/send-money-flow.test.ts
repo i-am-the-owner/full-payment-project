@@ -428,6 +428,20 @@ suite("a customer's recipient list holds only their own recipients", async () =>
   assert.deepEqual(await listed(owner), [mine.id]);
 });
 
+suite('the transfer list names the person each transfer was sent to', async () => {
+  await ctx.reset();
+  const s = await session(ctx);
+  await newTransfer(ctx, s, key(10));
+
+  const res = await ctx.http('/api/v1/transfers', authed(s.token));
+  assert.equal(res.status, 200);
+  const first = (data(res).transfers as Json[])[0]!;
+  const recipient = first.recipient as Json;
+  assert.equal(typeof recipient.displayName, 'string');
+  assert.ok((recipient.displayName as string).length > 0);
+  assert.equal(recipient.id, first.recipientId);
+});
+
 // --- Webhooks ------------------------------------------------------------------
 
 suite(

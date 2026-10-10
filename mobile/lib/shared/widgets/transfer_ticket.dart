@@ -82,7 +82,7 @@ class TransferTicket extends StatelessWidget {
 
   Widget _mini(BuildContext context) {
     final code = AlmaPayText.display.copyWith(
-      fontSize: 22,
+      fontSize: 19,
       height: 1,
       color: onBandColour,
     );
@@ -90,9 +90,9 @@ class TransferTicket extends StatelessWidget {
       band: bandColour,
       onBand: onBandColour,
       onTap: onTap,
-      topHeight: 40,
-      topPadding: const EdgeInsets.symmetric(horizontal: 18),
-      stubPadding: const EdgeInsets.fromLTRB(18, 10, 18, 12),
+      topHeight: 32,
+      topPadding: const EdgeInsets.symmetric(horizontal: 16),
+      stubPadding: const EdgeInsets.fromLTRB(16, 8, 16, 10),
       top: LayoutBuilder(
         builder: (context, box) => Row(
           children: [
@@ -133,7 +133,7 @@ class TransferTicket extends StatelessWidget {
       stub: Row(
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          Expanded(child: _amountBlock(context, size: 26)),
+          Expanded(child: _amountBlock(context, size: 23)),
           if (badge != null)
             Flexible(
               child: Column(
@@ -142,7 +142,7 @@ class TransferTicket extends StatelessWidget {
                 children: [
                   StatusBadge(badge!, colours: badgeColours),
                   if (detail != null) ...[
-                    const SizedBox(height: 4),
+                    const SizedBox(height: 3),
                     Text(
                       detail!,
                       maxLines: 1,
@@ -169,9 +169,10 @@ class TransferTicket extends StatelessWidget {
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
         style: AlmaPayText.ui(
-          size: compact ? 13.5 : 13,
-          weight: compact ? 600 : 500,
-          color: context.palette.muted,
+          // On a list ticket the caption is the person's name: make it easy to read.
+          size: compact ? 16 : 13,
+          weight: compact ? 700 : 500,
+          color: compact ? context.palette.text : context.palette.muted,
         ),
       ),
       FittedBox(
