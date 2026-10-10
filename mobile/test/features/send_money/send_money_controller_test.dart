@@ -37,6 +37,24 @@ Future<SendMoneyController> _atReview(
 
 void main() {
   test(
+    'choosing another country shows no old rate, then that pair\'s rate',
+    () async {
+      final backend = FakeSendMoneyBackend();
+      final c = _controller(backend);
+      await c.loadIndicativeRate();
+      final other = c.targetCurrencies.firstWhere(
+        (code) => code != c.targetCurrency && code != c.sourceCurrency,
+      );
+
+      c.setTargetCurrency(other);
+      expect(c.indicativeRate, isNull);
+
+      await c.loadIndicativeRate();
+      expect(c.indicativeRate, endsWith(' $other'));
+    },
+  );
+
+  test(
     'the home ticket gets a rate from the backend and forgets it on sign-out',
     () async {
       final backend = FakeSendMoneyBackend();

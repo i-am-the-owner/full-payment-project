@@ -13,6 +13,7 @@ class CurrencyPickerButton extends StatelessWidget {
     required this.currencies,
     required this.onSelected,
     this.onColour = AlmaPayColours.white,
+    this.codeSize = 15,
     super.key,
   });
 
@@ -25,6 +26,9 @@ class CurrencyPickerButton extends StatelessWidget {
 
   /// The colour of the code and arrow: white on a coloured ticket top.
   final Color onColour;
+
+  /// Size of the currency code; larger on the Home ticket.
+  final double codeSize;
 
   @override
   Widget build(BuildContext context) {
@@ -56,9 +60,17 @@ class CurrencyPickerButton extends StatelessWidget {
             children: [
               Text(
                 selected ?? '—',
-                style: AlmaPayText.ui(size: 15, weight: 700, color: onColour),
+                style: AlmaPayText.ui(
+                  size: codeSize,
+                  weight: 700,
+                  color: onColour,
+                ),
               ),
-              Icon(Icons.keyboard_arrow_down, color: onColour, size: 20),
+              Icon(
+                Icons.keyboard_arrow_down,
+                color: onColour,
+                size: codeSize + 5,
+              ),
             ],
           ),
         ),

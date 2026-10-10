@@ -15,6 +15,7 @@ import '../../send_money/presentation/send_money_controller.dart';
 import '../../send_money/presentation/send_money_flow_page.dart';
 import '../../send_money/presentation/status_style.dart';
 import '../../send_money/presentation/transfer_history_page.dart';
+import '../../send_money/presentation/widgets/currency_picker.dart';
 
 /// What a verified customer sees: Home, People, Transfers and You, with the
 /// design's bottom bar. Everything shown comes from the backend; nothing here
@@ -195,7 +196,8 @@ class _HomeTabState extends State<_HomeTab> {
           ListenableBuilder(
             listenable: widget.sendMoney,
             builder: (context, _) {
-              final rate = widget.sendMoney.indicativeRate;
+              final sm = widget.sendMoney;
+              final rate = sm.indicativeRate;
               return AaminTicket(
                 topHeight: 84,
                 topPadding: EdgeInsets.zero,
@@ -203,8 +205,44 @@ class _HomeTabState extends State<_HomeTab> {
                 bandGradient: AaminTicket.split,
                 top: Row(
                   children: [
-                    _half('You send', Alignment.centerLeft),
-                    _half('They receive', Alignment.centerRight),
+                    Expanded(
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 12),
+                          child: _pair(
+                            'Country you send from',
+                            sm.sourceCurrency,
+                            sm.sourceCurrencies,
+                            (c) {
+                              sm.setSourceCurrency(c);
+                              sm.loadIndicativeRate();
+                            },
+                          ),
+                        ),
+                      ),
+                    ),
+                    const Icon(
+                      Icons.arrow_forward,
+                      color: AlmaPayColours.white,
+                    ),
+                    Expanded(
+                      child: Align(
+                        alignment: Alignment.centerRight,
+                        child: Padding(
+                          padding: const EdgeInsets.only(right: 12),
+                          child: _pair(
+                            'Country you send to',
+                            sm.targetCurrency,
+                            sm.targetCurrencies,
+                            (c) {
+                              sm.setTargetCurrency(c);
+                              sm.loadIndicativeRate();
+                            },
+                          ),
+                        ),
+                      ),
+                    ),
                   ],
                 ),
                 stub: Row(
@@ -312,20 +350,18 @@ class _HomeTabState extends State<_HomeTab> {
     _ => (AlmaPayColours.waitSoft, AlmaPayColours.wait),
   };
 
-  Widget _half(String text, Alignment a) => Expanded(
-    child: Align(
-      alignment: a,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: Text(
-          text,
-          style: AlmaPayText.display.copyWith(
-            fontSize: 32,
-            color: AlmaPayColours.white,
-          ),
-        ),
-      ),
-    ),
+  Widget _pair(
+    String label,
+    String? selected,
+    List<String> codes,
+    ValueChanged<String> onSelected,
+  ) => CurrencyPickerButton(
+    label: label,
+    selected: selected,
+    codes: codes,
+    currencies: widget.sendMoney.currencies,
+    onSelected: onSelected,
+    codeSize: 30,
   );
 }
 

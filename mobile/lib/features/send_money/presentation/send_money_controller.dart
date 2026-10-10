@@ -134,17 +134,26 @@ class SendMoneyController extends ChangeNotifier {
   /// send: a transfer is always made from a fresh quote the customer reviews.
   String? get indicativeRate {
     final q = _rateQuote;
-    return q == null
+    // A rate for another pair than the one chosen is not shown.
+    return q == null ||
+            q.source.currency != _sourceCurrency ||
+            q.target.currency != _targetCurrency
         ? null
         : '1 ${q.source.currency} = ${q.exchangeRate} ${q.target.currency}';
   }
 
-  /// Fetches the rate for the first currency pair the provider offers. At most
-  /// every five minutes, and a failure just leaves the old value (or none).
+  /// Fetches the rate for the chosen pair (the provider's first pair at the
+  /// start). The same pair is fetched at most every five minutes, and a failure just leaves the old value (or none).
   Future<void> loadIndicativeRate() async {
     final at = _rateFetchedAt;
+    final current = _rateQuote;
+    final samePair =
+        current != null &&
+        current.source.currency == _sourceCurrency &&
+        current.target.currency == _targetCurrency;
     if (_rateLoading ||
-        (at != null &&
+        (samePair &&
+            at != null &&
             DateTime.now().difference(at) < const Duration(minutes: 5))) {
       return;
     }
