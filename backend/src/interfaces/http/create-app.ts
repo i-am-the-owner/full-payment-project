@@ -44,8 +44,10 @@ export function createApp(deps: HttpDependencies): Express {
 
   // Cross-cutting request pipeline.
   app.use(securityHeaders(deps.config.httpSecurity));
-  app.use(requireHttps(deps.config.httpSecurity.requireHttps));
+  // The request logger comes first: the error handler needs `req.log` even when
+  // the HTTPS check below refuses a request.
   app.use(requestContext(deps.logger));
+  app.use(requireHttps(deps.config.httpSecurity.requireHttps));
 
   // Infra probes: unversioned, no body parsing, not rate limited.
   app.use(healthRoutes(deps));
