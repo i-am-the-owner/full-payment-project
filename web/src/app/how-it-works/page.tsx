@@ -8,18 +8,18 @@ import { ButtonLink } from "@/components/Button";
 export const metadata: Metadata = {
   title: "How It Works",
   description:
-    "How sending money with SomPay works, step by step: create an account, verify your identity when required, choose a destination and amount, review the rate and fees, confirm, and track your transfer.",
+    "How sending money with AaminPay works, step by step: create an account, verify your identity when required, choose a destination and amount, review the rate and fees, confirm, and track your transfer.",
   alternates: { canonical: "/how-it-works" },
 };
 
 const steps = [
   {
-    title: "Create your SomPay account",
+    title: "Create your AaminPay account",
     body: "Sign up with your email address and choose a strong password. You'll verify your email before you can send money.",
   },
   {
     title: "Verify your identity when required",
-    body: "Money-transfer services must carry out identity checks. SomPay will ask you to verify your identity where the law and our checks require it — usually before your first transfer, and sometimes for larger amounts.",
+    body: "Money-transfer services must carry out identity checks. AaminPay will ask you to verify your identity where the law and our checks require it — usually before your first transfer, and sometimes for larger amounts.",
   },
   {
     title: "Choose where you want to send money",
@@ -27,7 +27,7 @@ const steps = [
   },
   {
     title: "Enter the amount",
-    body: "Enter how much you want to send. SomPay calculates a quote for you.",
+    body: "Enter how much you want to send. AaminPay calculates a quote for you.",
   },
   {
     title: "Add recipient information",
@@ -35,11 +35,11 @@ const steps = [
   },
   {
     title: "Review the exchange rate and fees",
-    body: "SomPay shows you the exchange rate, the transfer fee, and exactly how much the recipient will receive. The quote is valid for a limited time.",
+    body: "AaminPay shows you the exchange rate, the transfer fee, and exactly how much the recipient will receive. The quote is valid for a limited time.",
   },
   {
     title: "Confirm the transfer",
-    body: "When you're happy, confirm. SomPay then processes the payout. Nothing about the price changes after you confirm.",
+    body: "When you're happy, confirm. AaminPay then processes the payout. Nothing about the price changes after you confirm.",
   },
   {
     title: "Track your transfer",
@@ -52,7 +52,7 @@ export default function HowItWorksPage() {
     <>
       <PageHeader
         eyebrow="How It Works"
-        title="Sending money with SomPay, step by step"
+        title="Sending money with AaminPay, step by step"
         lead="A clear, predictable process. You always see the full cost before you commit, and you can follow your transfer until it's done."
       />
 
@@ -81,7 +81,7 @@ export default function HowItWorksPage() {
             <CardTitle>The backend is the source of truth</CardTitle>
             <CardBody>
               The fee, the exchange rate and whether a transfer has completed
-              are all decided by SomPay’s servers. The app shows you that
+              are all decided by AaminPay’s servers. The app shows you that
               verified result.
             </CardBody>
           </Card>

@@ -1,4 +1,4 @@
-# AlmaPay documentation
+# AaminPay documentation
 
 | Document                                                                   | Purpose                                                                                                                  |
 | -------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
@@ -14,7 +14,7 @@
 | [`security/security-principles.md`](security/security-principles.md)       | Non-negotiable security rules for a money-moving application.                                                            |
 | [`security/authentication-review.md`](security/authentication-review.md)   | Auth implementation reviewed against common auth vulnerabilities.                                                        |
 | [`development/environments.md`](development/environments.md)               | Development, sandbox/test and production configuration model.                                                            |
-| [`operations/production-readiness.md`](operations/production-readiness.md) | Production-readiness checklist and go-live gate. AlmaPay is **not** production-ready; real-money transfers are disabled. |
+| [`operations/production-readiness.md`](operations/production-readiness.md) | Production-readiness checklist and go-live gate. AaminPay is **not** production-ready; real-money transfers are disabled. |
 
 New significant decisions get a new ADR (copy the highest-numbered one as a
 template). ADRs are immutable once `Accepted`; supersede rather than edit.

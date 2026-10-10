@@ -172,7 +172,7 @@ export function ContactForm() {
       </Button>
 
       <p className="text-xs text-[var(--color-ink-soft)]">
-        By sending this form you agree that SomPay may use the details you
+        By sending this form you agree that AaminPay may use the details you
         provide to respond to your enquiry. See our{" "}
         <a href="/privacy" className="underline">
           Privacy Policy

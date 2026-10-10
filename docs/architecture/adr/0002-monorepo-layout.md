@@ -5,7 +5,7 @@
 
 ## Context
 
-AlmaPay has two deployable artefacts (a Flutter app and a Node.js backend) plus
+AaminPay has two deployable artefacts (a Flutter app and a Node.js backend) plus
 shared documentation. They are developed by one team and released in a
 coordinated way. The two projects share almost no code (different languages,
 different runtimes).

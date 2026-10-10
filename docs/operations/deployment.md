@@ -1,6 +1,6 @@
 # Deployment
 
-How AlmaPay runs in development, staging and production. Nothing here is a hosting decision: it works on
+How AaminPay runs in development, staging and production. Nothing here is a hosting decision: it works on
 any container platform (ECS, Kubernetes, Fly, a VM with Docker). Hosting, TLS, the WAF and the managed
 database are listed as OPEN in [`../../GO_LIVE.md`](../../GO_LIVE.md).
 

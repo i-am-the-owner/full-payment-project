@@ -5,9 +5,9 @@ import { Card, CardBody, CardTitle } from "@/components/Card";
 import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "About SomPay",
+  title: "About AaminPay",
   description:
-    "SomPay's purpose: to make international money transfers simple, transparent and accessible through a modern digital platform. UK-based, starting with the UK to Kenya.",
+    "AaminPay's purpose: to make international money transfers simple, transparent and accessible through a modern digital platform. UK-based, starting with the UK to Kenya.",
   alternates: { canonical: "/about" },
 };
 
@@ -31,8 +31,8 @@ export default function AboutPage() {
     <>
       <PageHeader
         eyebrow="About"
-        title="About SomPay"
-        lead="SomPay exists to make international money transfers simple, transparent and accessible through a modern digital platform."
+        title="About AaminPay"
+        lead="AaminPay exists to make international money transfers simple, transparent and accessible through a modern digital platform."
       />
 
       <Section containerSize="narrow">
@@ -40,12 +40,12 @@ export default function AboutPage() {
           <p>
             Sending money across borders is still harder than it should be.
             People often can&apos;t see the real cost until it&apos;s too late,
-            and it isn&apos;t always clear where a transfer has got to. SomPay
+            and it isn&apos;t always clear where a transfer has got to. AaminPay
             is being built to fix that: a straightforward app where you see the
             full cost upfront and can follow your transfer to completion.
           </p>
           <p>
-            SomPay is a {site.launchCorridor.from.name}-based business. Our
+            AaminPay is a {site.launchCorridor.from.name}-based business. Our
             first corridor is the {site.launchCorridor.from.name} to{" "}
             {site.launchCorridor.to.name}, and the platform is designed so more
             countries and currencies can be added.
@@ -67,7 +67,7 @@ export default function AboutPage() {
 
       <Section title="Where we are" containerSize="narrow">
         <p className="text-[var(--color-ink-soft)]">
-          SomPay is in active development. The mobile app and backend are being
+          AaminPay is in active development. The mobile app and backend are being
           built, and we are completing the registrations and partner onboarding
           needed before opening for live transfers. We&apos;re not publishing
           customer numbers, funding details or a company history here, because

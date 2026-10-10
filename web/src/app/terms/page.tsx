@@ -7,7 +7,7 @@ import { site } from "@/lib/site";
 export const metadata: Metadata = {
   title: "Terms & Conditions (Draft)",
   description:
-    "Draft terms and conditions for using SomPay. Requires legal review before production.",
+    "Draft terms and conditions for using AaminPay. Requires legal review before production.",
   alternates: { canonical: "/terms" },
   robots: { index: false, follow: true },
 };
@@ -23,14 +23,14 @@ export default function TermsPage() {
 
         <div className="prose mt-10 text-[var(--color-ink)]">
           <p className="text-[var(--color-ink-soft)]">
-            This draft outlines the intended terms for using SomPay. It is not
+            This draft outlines the intended terms for using AaminPay. It is not
             in force, and it will be replaced by a legally reviewed version
-            before SomPay launches.
+            before AaminPay launches.
           </p>
 
           <h2>1. About these terms</h2>
           <p>
-            These terms will govern your use of SomPay&apos;s website and app
+            These terms will govern your use of AaminPay&apos;s website and app
             and the money-transfer service. By using the service you will be
             agreeing to the final version of these terms.
           </p>
@@ -38,7 +38,7 @@ export default function TermsPage() {
           <h2>2. Eligibility</h2>
           <p>
             You will need to be of legal age, resident where the service is
-            offered, and able to pass the identity and other checks SomPay is
+            offered, and able to pass the identity and other checks AaminPay is
             required to carry out.
           </p>
 
@@ -52,7 +52,7 @@ export default function TermsPage() {
           <h2>4. Transfers</h2>
           <ul>
             <li>
-              Before you confirm a transfer, SomPay will show you the exchange
+              Before you confirm a transfer, AaminPay will show you the exchange
               rate, the fee and the amount the recipient will receive.
             </li>
             <li>
@@ -79,22 +79,22 @@ export default function TermsPage() {
 
           <h2>6. Acceptable use</h2>
           <p>
-            You must not use SomPay for unlawful purposes, including money
-            laundering, terrorist financing, fraud or sanctions evasion. SomPay
+            You must not use AaminPay for unlawful purposes, including money
+            laundering, terrorist financing, fraud or sanctions evasion. AaminPay
             may refuse, delay or reverse a transfer to meet its legal
             obligations.
           </p>
 
           <h2>7. Liability</h2>
           <p>
-            The final terms will set out SomPay&apos;s responsibilities and the
+            The final terms will set out AaminPay&apos;s responsibilities and the
             limits of its liability, in line with applicable law. Nothing will
             exclude liability that cannot be excluded by law.
           </p>
 
           <h2>8. Changes</h2>
           <p>
-            SomPay may update these terms. Material changes will be communicated
+            AaminPay may update these terms. Material changes will be communicated
             before they take effect.
           </p>
 

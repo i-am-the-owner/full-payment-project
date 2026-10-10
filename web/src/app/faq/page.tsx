@@ -10,7 +10,7 @@ import { site } from "@/lib/site";
 export const metadata: Metadata = {
   title: "FAQ",
   description:
-    "Answers to common questions about SomPay: what it is, how sending money works, supported countries, fees, exchange rates, identity checks, tracking and failed transfers.",
+    "Answers to common questions about AaminPay: what it is, how sending money works, supported countries, fees, exchange rates, identity checks, tracking and failed transfers.",
   alternates: { canonical: "/faq" },
 };
 

@@ -10,7 +10,7 @@ export function DraftNotice() {
       </strong>{" "}
       This document is a working draft to describe intended practices. It is not
       legal advice and is not the final policy. It must be reviewed and approved
-      by a qualified legal adviser before SomPay launches.{" "}
+      by a qualified legal adviser before AaminPay launches.{" "}
       <span className="font-semibold">
         TODO-LEGAL: replace this page with the lawyer&apos;s final text, then
         remove this notice.

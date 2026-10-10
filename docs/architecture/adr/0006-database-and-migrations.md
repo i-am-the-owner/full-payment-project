@@ -65,7 +65,7 @@ The database is the last line of defence for financial correctness:
 - `webhook_events (provider, dedupe_key)` unique → a redelivered webhook is
   rejected.
 - `transfers (provider, provider_transfer_id)` unique → one provider transfer
-  links to at most one AlmaPay transfer.
+  links to at most one AaminPay transfer.
 
 ### Migrations: plain SQL + a small runner
 

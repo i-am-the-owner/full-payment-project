@@ -1,4 +1,4 @@
-# The AlmaPay demo
+# The AaminPay demo
 
 A version of the app you can try on a phone **before any real provider exists**. It has sample people, rates and
 transfers (Priya in Bengaluru, Juan in Guadalajara, Ama in Accra, from
@@ -44,7 +44,7 @@ to Juan is MX$4,612.00 with a £2.40 fee.
    If Google Play Protect says it cannot scan the app, tap **Install anyway** (it is a debug-signed demo, not from the Play
    Store). If you downloaded the zip on a computer, copy the APK to the phone (USB, email, Drive) or open the zip on the
    phone in Files by Google and extract it.
-5. Open **AlmaPay Demo**. To remove it: long-press the icon, Uninstall.
+5. Open **AaminPay Demo**. To remove it: long-press the icon, Uninstall.
 
 ## iPhone (and any phone or computer): the web demo
 

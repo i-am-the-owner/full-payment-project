@@ -7,7 +7,7 @@ import { site } from "@/lib/site";
 export const metadata: Metadata = {
   title: "Privacy Policy (Draft)",
   description:
-    "Draft privacy policy describing how SomPay intends to collect, use and protect personal data. Requires legal review before production.",
+    "Draft privacy policy describing how AaminPay intends to collect, use and protect personal data. Requires legal review before production.",
   alternates: { canonical: "/privacy" },
   robots: { index: false, follow: true },
 };
@@ -23,13 +23,13 @@ export default function PrivacyPage() {
 
         <div className="prose mt-10 text-[var(--color-ink)]">
           <p className="text-[var(--color-ink-soft)]">
-            This draft describes how SomPay intends to handle personal data. It
-            will be finalised with legal advice before SomPay launches.
+            This draft describes how AaminPay intends to handle personal data. It
+            will be finalised with legal advice before AaminPay launches.
           </p>
 
           <h2>1. Who we are</h2>
           <p>
-            SomPay is a {site.launchCorridor.from.name}-based digital
+            AaminPay is a {site.launchCorridor.from.name}-based digital
             money-transfer platform. {site.company.legalNameNote} The data
             controller&apos;s registered details will be confirmed here before
             launch.
@@ -78,7 +78,7 @@ export default function PrivacyPage() {
 
           <h2>5. International transfers</h2>
           <p>
-            Because SomPay moves money internationally, some data may be
+            Because AaminPay moves money internationally, some data may be
             processed outside the {site.launchCorridor.from.name}. Where that
             happens, appropriate safeguards will be put in place.
           </p>

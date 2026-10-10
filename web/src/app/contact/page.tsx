@@ -7,7 +7,7 @@ import { site } from "@/lib/site";
 export const metadata: Metadata = {
   title: "Contact",
   description:
-    "Get in touch with SomPay — general enquiries, help with a transfer, or business and partnership questions.",
+    "Get in touch with AaminPay — general enquiries, help with a transfer, or business and partnership questions.",
   alternates: { canonical: "/contact" },
 };
 
@@ -68,7 +68,7 @@ export default function ContactPage() {
                 Business &amp; partnerships
               </h2>
               <p className="mt-2 text-sm text-[var(--color-ink-soft)]">
-                Working with SomPay or media enquiries:
+                Working with AaminPay or media enquiries:
                 <br />
                 <a
                   href={`mailto:${site.contact.businessEmail}`}

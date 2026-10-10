@@ -6,7 +6,7 @@
 
 ## Context
 
-AlmaPay is an unlicensed platform; a licensed payout provider is the regulated
+AaminPay is an unlicensed platform; a licensed payout provider is the regulated
 party. The first choice is Wise Platform, with Airwallex as a backup, so the app
 must not depend on any one provider. Before this change the use cases, the
 domain model and the schema were written directly against Wise, there was no way
@@ -16,7 +16,7 @@ stored locally.
 ## Decision
 
 1. **One interface.** `PayoutProvider` (`application/payout/`) is the only seam
-   to a provider. It speaks AlmaPay's own types (`domain/payout/`); a provider's
+   to a provider. It speaks AaminPay's own types (`domain/payout/`); a provider's
    response shape never leaves its adapter.
 2. **Selection by config.** `PAYOUT_PROVIDER=mock|wise|airwallex|currencycloud`,
    default `mock`. Missing provider variables fail startup. The mock is refused
@@ -51,8 +51,8 @@ CANCELLED, REFUNDED, FAILED`, mapped per provider (docs/STATUSES.md).
 - The app runs end to end with no external account.
 - The Wise adapter keeps what existed but cannot be used until customer
   onboarding, currencies, forms and pay-in instructions are built for it.
-- AlmaPay's own per-corridor fee (`fee_rules`) is no longer applied: the quote
-  shows the provider's fee only. Whether and how AlmaPay charges a fee is open.
+- AaminPay's own per-corridor fee (`fee_rules`) is no longer applied: the quote
+  shows the provider's fee only. Whether and how AaminPay charges a fee is open.
 - The `countries` and `corridors` tables are no longer used by the send-money
   flow; they are left in place.
 - Mock quotes, recipients and transfers are held in memory and are lost when the

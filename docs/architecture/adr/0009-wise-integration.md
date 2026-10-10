@@ -8,7 +8,7 @@
 Milestone 6 adds the backend integration with the Wise Platform API (Sandbox):
 authentication, quotes, recipients, transfers, funding, transfer status,
 inbound webhooks, error mapping, retry, timeout and audit logging. The rest of
-AlmaPay must not depend on raw Wise calls, and the Milestone 5 rules stand: no
+AaminPay must not depend on raw Wise calls, and the Milestone 5 rules stand: no
 Wise credentials in Flutter, sandbox only, no real money.
 
 ## Decisions
@@ -16,7 +16,7 @@ Wise credentials in Flutter, sandbox only, no real money.
 ### One boundary: the `WiseGateway` port
 
 `application/wise/wise-gateway.ts` is the only interface the rest of the backend
-uses (Milestone 7 depends solely on it). It takes and returns AlmaPay-normalised
+uses (Milestone 7 depends solely on it). It takes and returns AaminPay-normalised
 value objects (`domain/wise/wise-models.ts`) — money as `bigint` minor units,
 rates as exact decimal strings, Wise transfer states verbatim. Nothing outside
 `infrastructure/wise/` builds a Wise URL, header or body.
@@ -58,7 +58,7 @@ All Wise config is backend-only.
 Transfer creation carries a UUID `customerTransactionId`; Wise dedupes on it, so
 the client treats `POST /v1/transfers` as retryable. Funding and cancellation are
 not retried (Wise rejects a repeat funding — no duplicate-transfer risk). Webhook
-deliveries carry `X-Delivery-Id` for AlmaPay-side dedup (Milestone 7).
+deliveries carry `X-Delivery-Id` for AaminPay-side dedup (Milestone 7).
 
 ### Webhooks
 

@@ -1,6 +1,6 @@
 # Authentication security review (Milestone 5)
 
-Review of the AlmaPay authentication implementation against common authentication
+Review of the AaminPay authentication implementation against common authentication
 weaknesses (OWASP ASVS V2/V3, OWASP Top 10 A07). Scope: `backend/src/**/auth`,
 migration `0009`, and `mobile/lib/core/auth` + `mobile/lib/features/auth`.
 

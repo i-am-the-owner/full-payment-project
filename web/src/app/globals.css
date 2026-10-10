@@ -1,45 +1,51 @@
 @import "tailwindcss";
 
 /* ------------------------------------------------------------------ */
-/*  SomPay design system — tokens                                     */
+/*  AaminPay design system — tokens                                     */
 /* ------------------------------------------------------------------ */
 @theme {
-  /* Brand — ink (neutral near-black) scale used for primary actions + headings */
-  --color-brand-50: #f4f4f6;
-  --color-brand-100: #e7e6ea;
-  --color-brand-200: #d3d1d9;
-  --color-brand-300: #a6a3b0;
-  --color-brand-400: #8a8794;
-  --color-brand-500: #67656f;
-  --color-brand-600: #15131a;
-  --color-brand-700: #2a2733;
-  --color-brand-800: #1f1d26;
-  --color-brand-900: #15131a;
-  --color-brand-950: #0b0a0e;
+  /* Brand — dark blue scale used for primary actions + headings */
+  --color-brand-50: #f2f5fb;
+  --color-brand-100: #e2e7f1;
+  --color-brand-200: #cdd5e6;
+  --color-brand-300: #a8b4ce;
+  --color-brand-400: #8190b0;
+  --color-brand-500: #5b6785;
+  --color-brand-600: #0d2252;
+  --color-brand-700: #152d66;
+  --color-brand-800: #0f2559;
+  --color-brand-900: #0d2252;
+  --color-brand-950: #081633;
 
-  /* Ink surfaces for dark sections */
-  --color-ink-800: #1f1d26;
-  --color-ink-900: #15131a;
-  --color-ink-950: #0b0a0e;
+  /* Dark blue surfaces for dark sections */
+  --color-ink-800: #122046;
+  --color-ink-900: #0d2252;
+  --color-ink-950: #081633;
 
-  /* Marigold — the signature accent */
-  --color-marigold: #f5a623;
-  --color-marigold-soft: #fef1d6;
-  --color-marigold-deep: #8a5a00;
-  --color-rosa: #e5127d;
-  --color-rosa-soft: #fde3ef;
+  /* Blue — the signature accent: your side of the transfer */
+  --color-blue: #2563d9;
+  --color-blue-soft: #e6eefc;
+  --color-blue-deep: #1b4fb5;
+  /* Light blue for text on dark sections */
+  --color-sky: #8db4f5;
+  /* Amber — while the money travels; red — if it is refused */
+  --color-way: #f5a623;
+  --color-way-soft: #fdf0d8;
+  --color-way-deep: #8a5a00;
+  --color-refused: #d2382f;
+  --color-refused-soft: #fbe6e3;
 
-  /* Accent (kente green — confirmation / progress) */
+  /* Green — their side, arrived / confirmation */
   --color-accent-400: #34c38a;
-  --color-accent-500: #1f8a5b;
-  --color-accent-600: #1c7f57;
+  --color-accent-500: #1a7f53;
+  --color-accent-600: #1a7f53;
 
   /* Neutrals */
   --color-surface: #ffffff;
-  --color-surface-muted: #f4f4f6;
-  --color-border: #e7e6ea;
-  --color-ink: #15131a;
-  --color-ink-soft: #67656f;
+  --color-surface-muted: #f2f5fb;
+  --color-border: #e2e7f1;
+  --color-ink: #0d2252;
+  --color-ink-soft: #5b6785;
 
   /* Typography */
   --font-display:
@@ -57,7 +63,7 @@
 
   /* Shadows */
   --shadow-card:
-    0 1px 2px rgba(21, 19, 26, 0.05), 0 12px 28px -16px rgba(21, 19, 26, 0.22);
+    0 1px 2px rgba(13, 34, 82, 0.05), 0 12px 28px -16px rgba(13, 34, 82, 0.22);
 }
 
 /* ------------------------------------------------------------------ */
@@ -169,7 +175,8 @@ p {
 .ticket-top {
   height: var(--cut);
   border-radius: 1.6rem 1.6rem 0 0;
-  background: var(--color-marigold);
+  background: var(--color-blue);
+  color: #fff;
   padding: 1.25rem 1.5rem;
   display: flex;
   flex-direction: column;

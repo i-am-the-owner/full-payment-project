@@ -10,7 +10,7 @@ corridors and currencies.
 
 ```
 ┌──────────────────┐        HTTPS / REST         ┌──────────────────────┐
-│  Flutter app     │  ───────────────────────▶   │  AlmaPay backend     │
+│  Flutter app     │  ───────────────────────▶   │  AaminPay backend     │
 │  (Android / iOS) │                             │  (Node.js + TS)      │
 │                  │  ◀───────────────────────   │                      │
 └──────────────────┘        JSON responses       └──────────┬───────────┘

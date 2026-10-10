@@ -7,7 +7,7 @@ import { site } from "@/lib/site";
 export const metadata: Metadata = {
   title: "Cookie Policy (Draft)",
   description:
-    "Draft cookie policy describing how SomPay's website uses cookies and similar technologies. Requires legal review before production.",
+    "Draft cookie policy describing how AaminPay's website uses cookies and similar technologies. Requires legal review before production.",
   alternates: { canonical: "/cookies" },
   robots: { index: false, follow: true },
 };
@@ -23,9 +23,9 @@ export default function CookiesPage() {
 
         <div className="prose mt-10 text-[var(--color-ink)]">
           <p className="text-[var(--color-ink-soft)]">
-            This draft describes how SomPay&apos;s website intends to use
+            This draft describes how AaminPay&apos;s website intends to use
             cookies and similar technologies. It will be finalised with legal
-            advice, and a cookie-consent mechanism will be added, before SomPay
+            advice, and a cookie-consent mechanism will be added, before AaminPay
             launches.
           </p>
 

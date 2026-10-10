@@ -55,7 +55,7 @@ jobs:
           tag_name: demo-latest
           name: Demo build (sample data, no real money)
           body: |
-            AlmaPay DEMO for Android. Sample data only: no backend, no real money, no internet permission.
+            AaminPay DEMO for Android. Sample data only: no backend, no real money, no internet permission.
             Download `almapay-demo.apk` and open it on your phone (see docs/demo/README.md).
             Built from commit ${{ github.sha }}.
           prerelease: true

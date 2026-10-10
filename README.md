@@ -1,6 +1,6 @@
-# AlmaPay
+# AaminPay
 
-AlmaPay is a UK-based fintech application for international money transfers.
+AaminPay is a UK-based fintech application for international money transfers.
 
 - **Initial corridor:** United Kingdom → Kenya
 - **Initial currency pair:** GBP → KES
@@ -9,7 +9,7 @@ AlmaPay is a UK-based fintech application for international money transfers.
 
 > **Status:** Milestone 7 – the backend-authoritative **send-money flow** over
 > the Milestone 6 Wise Sandbox integration: `POST /api/v1/quotes` (provider rate
-> + AlmaPay fee), recipients, `POST /api/v1/transfers` (create + submit + fund,
+> + AaminPay fee), recipients, `POST /api/v1/transfers` (create + submit + fund,
 > idempotent), `GET /api/v1/transfers/:id`, cancellation, and webhook-driven
 > status reconciliation. The Flutter app never decides a fee, rate or status —
 > the backend is the source of truth. No real money, no production credentials.
@@ -83,7 +83,7 @@ Run before every commit.
 
 ## Security
 
-AlmaPay handles money. Read [`docs/security/security-principles.md`](docs/security/security-principles.md)
+AaminPay handles money. Read [`docs/security/security-principles.md`](docs/security/security-principles.md)
 before contributing. In short: no secrets in the mobile app, no secrets in git,
 all privileged and Wise communication happens server-side, and no transfer is ever
 marked successful on the strength of the client alone.

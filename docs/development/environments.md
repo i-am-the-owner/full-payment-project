@@ -1,6 +1,6 @@
 # Environments
 
-AlmaPay uses three fully separate environments. Configuration, credentials, data
+AaminPay uses three fully separate environments. Configuration, credentials, data
 stores and (later) Wise accounts are never shared between them.
 
 | Environment              | Purpose                                               | Wise                                          | Data                                           |

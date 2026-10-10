@@ -20,7 +20,7 @@ function clientKey(request: Request): string {
  *
  * TO CONNECT A REAL DESTINATION:
  *   - add a server-only env var for the destination (e.g. a transactional-email
- *     API key, a helpdesk webhook, or the SomPay backend URL) — never a
+ *     API key, a helpdesk webhook, or the AaminPay backend URL) — never a
  *     NEXT_PUBLIC_* var, and never commit it;
  *   - send `parsed.value` from inside this handler (server-side);
  *   - keep the response shape { ok, message } unchanged so the client and the

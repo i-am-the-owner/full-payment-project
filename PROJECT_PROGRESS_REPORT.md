@@ -1,8 +1,8 @@
-# AlmaPay — Project Progress Report
+# AaminPay — Project Progress Report
 
 _Generated: 2026-09-09. Describes the repository exactly as it exists on disk._
 
-AlmaPay is a UK-based international money-transfer platform. First launch corridor:
+AaminPay is a UK-based international money-transfer platform. First launch corridor:
 **UK → Kenya (GBP → KES)**, with the architecture built to add more corridors later.
 
 > **Headline:** Backend (auth + send-money orchestration) and the database schema
@@ -138,7 +138,7 @@ are configured; no live call has ever been made.** See §7.
 
 ### Milestone 7 — Send-money flow (backend) ✅ / (mobile) 🟡 partial
 **Backend — complete and tested:**
-- `POST /api/v1/quotes` — applies AlmaPay's configured fee to a Wise quote,
+- `POST /api/v1/quotes` — applies AaminPay's configured fee to a Wise quote,
   stores an immutable `transfer_quotes` row with an expiry.
 - `GET|POST /api/v1/recipients` — validated recipient management (masked account
   identifiers in responses).
@@ -179,7 +179,7 @@ Files exist under `mobile/lib/features/send_money/`:
 
 **Not done:**
 - **Not wired in** — no reference from `main.dart`, `AuthDependencies`,
-  `AlmaPayApp`, or `HomePage`. There is no way to reach these screens in the
+  `AaminPayApp`, or `HomePage`. There is no way to reach these screens in the
   running app. `HomePage` is still the placeholder "Signed in" screen.
 - **No tests** for any send_money file (0 of the 8 mobile test files cover it).
 - No DI/composition wiring, no navigation entry point.
@@ -396,9 +396,9 @@ lockfile unchanged since).
   and **not in the mobile app** (confirmed by grep).
 - Production Wise hosts (`api.transferwise.com`, `api.wise.com`) are **actively
   refused at startup** unless `WISE_ALLOW_PRODUCTION=true` is explicitly set.
-- Wise has **not** approved AlmaPay; onboarding is pending (see
+- Wise has **not** approved AaminPay; onboarding is pending (see
   `docs/operations/production-readiness.md` §2.1).
-- AlmaPay's intent to investigate **Wise Platform Embedded** is noted; the actual
+- AaminPay's intent to investigate **Wise Platform Embedded** is noted; the actual
   integration will be built later against official documentation only.
 
 ---

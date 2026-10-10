@@ -24,7 +24,7 @@ const benefits = [
   },
   {
     title: "Backend-verified status",
-    body: "Your transfer's status is confirmed by SomPay's servers, not guessed by your phone. You always see a reliable state.",
+    body: "Your transfer's status is confirmed by AaminPay's servers, not guessed by your phone. You always see a reliable state.",
   },
   {
     title: "Built for more corridors",
@@ -67,19 +67,19 @@ export default function HomePage() {
         <Container className="py-16 sm:py-24">
           <div className="grid items-center gap-14 lg:grid-cols-[1.1fr_0.9fr]">
             <div>
-              <p className="text-marigold mb-6 inline-flex items-center gap-2 rounded-full bg-white/10 px-3.5 py-1.5 text-xs font-semibold">
+              <p className="text-sky mb-6 inline-flex items-center gap-2 rounded-full bg-white/10 px-3.5 py-1.5 text-xs font-semibold">
                 <span
                   aria-hidden="true"
-                  className="bg-marigold h-1.5 w-1.5 rounded-full"
+                  className="bg-sky h-1.5 w-1.5 rounded-full"
                 />
                 UK&nbsp;→&nbsp;Kenya first · more destinations planned
               </p>
               <h1 className="text-5xl !text-white sm:text-6xl lg:text-7xl">
                 Send money abroad.{" "}
-                <span className="text-marigold">Simple. Transparent.</span>
+                <span className="text-sky">Simple. Transparent.</span>
               </h1>
               <p className="mt-6 max-w-xl text-lg text-slate-300">
-                SomPay is a UK-based digital platform for sending money abroad.
+                AaminPay is a UK-based digital platform for sending money abroad.
                 See the exchange rate and fees before you confirm, then track
                 your transfer until it arrives.
               </p>
@@ -97,7 +97,7 @@ export default function HomePage() {
                 </ButtonLink>
               </div>
               <p className="mt-7 max-w-xl text-sm text-slate-400">
-                SomPay is not yet open for live transfers. We are building the
+                AaminPay is not yet open for live transfers. We are building the
                 product and completing the required registrations and partner
                 onboarding.
               </p>
@@ -106,7 +106,7 @@ export default function HomePage() {
             {/* Non-interactive "ticket" — descriptive copy, no fabricated rates */}
             <div className="mx-auto w-full max-w-md lg:rotate-2">
               <div className="ticket shadow-2xl shadow-black/40">
-                <div className="ticket-top text-ink-900">
+                <div className="ticket-top">
                   <p className="text-sm font-semibold">
                     What you&apos;ll see before confirming
                   </p>
@@ -126,7 +126,7 @@ export default function HomePage() {
                     <dd className="font-semibold">Amount in GBP</dd>
                   </div>
                   <div className="flex items-center justify-between">
-                    <dt className="text-[var(--color-ink-soft)]">SomPay fee</dt>
+                    <dt className="text-[var(--color-ink-soft)]">AaminPay fee</dt>
                     <dd className="font-semibold">Shown in full</dd>
                   </div>
                   <div className="flex items-center justify-between">
@@ -146,7 +146,7 @@ export default function HomePage() {
                 </dl>
               </div>
               <p className="mt-5 text-center text-xs text-slate-400">
-                Figures are calculated by SomPay when you request a transfer and
+                Figures are calculated by AaminPay when you request a transfer and
                 are shown in the app before you confirm.
               </p>
             </div>
@@ -154,16 +154,16 @@ export default function HomePage() {
         </Container>
       </section>
 
-      {/* What SomPay does */}
+      {/* What AaminPay does */}
       <Section
         id="what"
-        eyebrow="What is SomPay?"
+        eyebrow="What is AaminPay?"
         title="A modern way to send money across borders"
         intro={
           <>
             An international money transfer moves funds from someone in one
             country to someone in another, converting between currencies along
-            the way. SomPay handles the quote, the currency conversion, the
+            the way. AaminPay handles the quote, the currency conversion, the
             payout to your recipient, and keeps you updated — all from one app.
           </>
         }
@@ -244,7 +244,7 @@ export default function HomePage() {
         tone="ink"
         eyebrow="Security"
         title="Your money and your data, protected"
-        intro="SomPay is built as a fintech product from the ground up."
+        intro="AaminPay is built as a fintech product from the ground up."
       >
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {[
@@ -307,16 +307,16 @@ export default function HomePage() {
 
       {/* CTA */}
       <Section id="cta" tone="muted" containerSize="narrow">
-        <div className="bg-marigold text-ink-900 rounded-[var(--radius-xl)] px-8 py-14 text-center">
-          <h2 className="text-ink-900 text-3xl sm:text-4xl">
-            Ready when SomPay launches?
+        <div className="bg-blue rounded-[var(--radius-xl)] text-white px-8 py-14 text-center">
+          <h2 className="text-3xl text-white sm:text-4xl">
+            Ready when AaminPay launches?
           </h2>
-          <p className="text-ink-900/80 mx-auto mt-3 max-w-lg">
+          <p className="mx-auto text-white/85 mt-3 max-w-lg">
             Learn how the transfer process works and what you&apos;ll need to
             get started.
           </p>
           <div className="mt-7 flex justify-center">
-            <ButtonLink href="/how-it-works" size="lg" variant="primary">
+            <ButtonLink href="/how-it-works" size="lg" variant="secondary">
               Get Started
             </ButtonLink>
           </div>

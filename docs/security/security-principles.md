@@ -1,6 +1,6 @@
 # Security principles
 
-AlmaPay moves real money. These rules are non-negotiable and apply to every
+AaminPay moves real money. These rules are non-negotiable and apply to every
 change. They restate and operationalise the project's core security rules.
 
 ## Secrets
@@ -68,7 +68,7 @@ The customer send-money flow landed in Milestone 7
     signature-verified webhook or a server-side status poll, and only forwards —
     an out-of-order or backwards transition is logged and ignored. The DB state
     machine (trigger-enforced) is the backstop.
-19. A Wise submission failure transitions the AlmaPay transfer to `failed` with a
+19. A Wise submission failure transitions the AaminPay transfer to `failed` with a
     mapped reason and audits it; the record is never left dangling.
 20. All money-movement endpoints require a verified email.
 

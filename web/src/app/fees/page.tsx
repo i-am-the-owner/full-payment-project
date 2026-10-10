@@ -7,7 +7,7 @@ import { Card, CardBody, CardTitle } from "@/components/Card";
 export const metadata: Metadata = {
   title: "Fees",
   description:
-    "How SomPay's fees and exchange rates work. You see the transfer fee, the exchange rate and the amount your recipient receives before you confirm. Commercial pricing is not yet finalised.",
+    "How AaminPay's fees and exchange rates work. You see the transfer fee, the exchange rate and the amount your recipient receives before you confirm. Commercial pricing is not yet finalised.",
   alternates: { canonical: "/fees" },
 };
 
@@ -17,7 +17,7 @@ export default function FeesPage() {
       <PageHeader
         eyebrow="Fees"
         title="Clear pricing, shown before you confirm"
-        lead="Every transfer has two parts to its cost: a transfer fee and the exchange rate. SomPay shows you both — and the exact amount your recipient will receive — before you commit."
+        lead="Every transfer has two parts to its cost: a transfer fee and the exchange rate. AaminPay shows you both — and the exact amount your recipient will receive — before you commit."
       />
 
       <Section containerSize="narrow">
@@ -25,7 +25,7 @@ export default function FeesPage() {
           <strong className="font-semibold">
             Commercial pricing is not finalised.
           </strong>{" "}
-          The amounts below are described in general terms only. SomPay does not
+          The amounts below are described in general terms only. AaminPay does not
           publish a specific fee or a specific exchange rate on this page. The
           real figures for your transfer are calculated at the time you request
           it and are shown in the app.
@@ -35,7 +35,7 @@ export default function FeesPage() {
           <Card>
             <CardTitle>Transfer fee</CardTitle>
             <CardBody>
-              A fee set by SomPay for processing your transfer. It is shown as a
+              A fee set by AaminPay for processing your transfer. It is shown as a
               clear amount in your sending currency before you confirm. When
               pricing is finalised, the current fee will be published here.
             </CardBody>
@@ -44,7 +44,7 @@ export default function FeesPage() {
             <CardTitle>Exchange rate</CardTitle>
             <CardBody>
               The rate used to convert your money into the recipient&apos;s
-              currency. SomPay calculates it from current wholesale rates when
+              currency. AaminPay calculates it from current wholesale rates when
               you request a transfer. The rate you see is the rate applied to
               your transfer, held for a limited time.
             </CardBody>
@@ -60,7 +60,7 @@ export default function FeesPage() {
         <dl className="divide-y divide-[var(--color-border)] rounded-[var(--radius-lg)] border border-[var(--color-border)] bg-white">
           {[
             ["You send", "The amount you enter, in your sending currency."],
-            ["Transfer fee", "SomPay's fee for this transfer."],
+            ["Transfer fee", "AaminPay's fee for this transfer."],
             ["Total to pay", "The amount you send plus the transfer fee."],
             ["Exchange rate", "The rate applied to convert your money."],
             [

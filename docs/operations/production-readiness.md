@@ -1,4 +1,4 @@
-# AlmaPay production-readiness checklist
+# AaminPay production-readiness checklist
 
 **Status: NOT READY FOR PRODUCTION. Real-money transfers are not enabled and
 must not be enabled until every _Blocking_ item below is closed and signed off.**
@@ -114,7 +114,7 @@ present in the mobile codebase or build inputs.
 | Auth mode (client-credentials vs. pre-issued token) confirmed against the onboarding pack                              | ❌ — code supports both (`buildTokenProvider`) |
 | Wise account funded via the approved treasury process; funding/settlement runbook written                              | ❌                                             |
 | Rate limits / quotas for the production Wise app documented and alerted on                                             | ❌                                             |
-| Production webhook subscription created in Wise with the AlmaPay `/webhooks/wise` URL; delivery tested end-to-end      | ❌                                             |
+| Production webhook subscription created in Wise with the AaminPay `/webhooks/wise` URL; delivery tested end-to-end      | ❌                                             |
 
 ### 2.2 mTLS / certificates — 🟡 confirm requirement
 
@@ -122,14 +122,14 @@ present in the mobile codebase or build inputs.
   (client-credentials or static token) — no client certificate.
 - **SCA (Strong Customer Authentication)** for funding uses request signing with
   an RSA private key (`WISE_SCA_PRIVATE_KEY`, `WiseScaSigner`, `X-Signature`
-  header). Confirm with onboarding whether SCA applies to AlmaPay's flow; if so:
+  header). Confirm with onboarding whether SCA applies to AaminPay's flow; if so:
   - [ ] Generate the RSA keypair in an HSM or the secrets manager; register the
         **public** key with Wise.
   - [ ] Store the private key only in the secrets manager; never in the repo,
         an image layer, or an env file on disk.
   - [ ] Key-rotation procedure documented.
 - [ ] Confirm with Wise whether **mutual TLS** is required for the API or
-      webhook channel for AlmaPay's product. If yes, provision the client
+      webhook channel for AaminPay's product. If yes, provision the client
       certificate, add it to the outbound HTTP client, and add a
       certificate-expiry alert. (Not currently implemented — `fetch` with the
       default trust store.)
@@ -258,7 +258,7 @@ Still required:
 - [ ] SAR / regulatory reporting workflow.
 - [ ] Chargeback / recall / `bounced_back` / `charged_back` handling runbook
       (the states are mapped; the operational response is not defined).
-- [ ] Confirm the AML/CFT programme owner and that AlmaPay (not only Wise) meets
+- [ ] Confirm the AML/CFT programme owner and that AaminPay (not only Wise) meets
       its obligations as the customer-facing party.
 
 ### 2.11 Webhook security — 🟡
@@ -290,11 +290,11 @@ Still required:
       customer messaging, queue-and-retry vs. hard-stop, and reconciliation on
       recovery.
 - [ ] "Stuck transfer" recovery: a transfer that fails mid-`submitToWise`
-      (after the AlmaPay row exists, before/after the Wise transfer) — today the
+      (after the AaminPay row exists, before/after the Wise transfer) — today the
       idempotency fast-path returns the stranded row without resuming
       submission. Define detection (alert on `created` age) and a safe
       re-drive / manual-completion procedure.
-- [ ] Reconciliation job: AlmaPay transfers vs. Wise transfers vs. float
+- [ ] Reconciliation job: AaminPay transfers vs. Wise transfers vs. float
       movements, run on a schedule, discrepancies alerted.
 - [ ] DR test scheduled (at least annually) and results recorded.
 
@@ -427,7 +427,7 @@ Still required:
 | `flutter build ipa` with `--obfuscate --split-debug-info`; symbols uploaded to the crash reporter                                              | ❌ (`DART_OBFUSCATION=false`)                                   |
 | Privacy manifest (`PrivacyInfo.xcprivacy`) + App Store privacy questionnaire (data collected: email, financial account info; purpose; linkage) | ❌                                                              |
 | Jailbreak / debugger checks and screenshot-obscuring for the transfer screens (decide; not required)                                           | ❌ decision needed                                              |
-| Certificate pinning to the AlmaPay backend (defence in depth for a payments app)                                                               | ❌ decision needed                                              |
+| Certificate pinning to the AaminPay backend (defence in depth for a payments app)                                                               | ❌ decision needed                                              |
 | Minimum iOS version set deliberately; tested on that version                                                                                   | 🟡                                                              |
 | `flutter analyze` clean                                                                                                                        | ✅                                                              |
 

@@ -57,4 +57,4 @@ that talks to the backend.
 - Some empty-looking structure is avoided now at the cost of adding folders as
   features arrive.
 - The thin-client rule is architectural: the app has no path to privileged
-  systems, only to the AlmaPay backend.
+  systems, only to the AaminPay backend.

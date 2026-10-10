@@ -7,7 +7,7 @@
 
 Milestone 7 builds the customer send-money flow on top of the Milestone 6 Wise
 gateway: choose currency and destination, enter an amount, get a backend quote
-(provider rate + AlmaPay fee), pick or add a recipient, review, confirm, and
+(provider rate + AaminPay fee), pick or add a recipient, review, confirm, and
 then watch the transfer through to a verified terminal state.
 
 The controlling constraint: **the Flutter app must never decide the final fee,
@@ -19,7 +19,7 @@ backend returns.
 
 ### The quote is an immutable server-side resource
 
-`POST /api/v1/quotes` calls `WiseGateway.createQuote`, applies AlmaPay's
+`POST /api/v1/quotes` calls `WiseGateway.createQuote`, applies AaminPay's
 configured fee (`fee_rules`, by corridor), and persists a `transfer_quotes` row
 with the Wise quote id, the exact provider rate (decimal string), the fee, and an
 expiry. The client receives an opaque `quoteId` plus display values. It cannot
@@ -38,7 +38,7 @@ and `refunded` from `processing` / `completed` / `failed`. Only `cancelled` and
 a `refunded`/chargeback. The set is enforced by the database
 (`transfer_status_transitions` + a trigger), not just application code. Wise
 states map in `domain/transfer/transfer-status.ts`; a state we do not recognise
-maps to "no AlmaPay meaning" and is ignored, never guessed.
+maps to "no AaminPay meaning" and is ignored, never guessed.
 
 ### Confirmation is idempotent at three layers
 
@@ -48,7 +48,7 @@ maps to "no AlmaPay meaning" and is ignored, never guessed.
    (HTTP 200) before any work.
 2. A unique constraint on `(user_id, idempotency_key)` catches a concurrent
    race; the loser re-reads and returns the winner's transfer.
-3. Wise dedupes `POST /v1/transfers` on `customerTransactionId` (the AlmaPay
+3. Wise dedupes `POST /v1/transfers` on `customerTransactionId` (the AaminPay
    transfer id), so a retried submission never creates a second Wise transfer.
 
 A duplicate request therefore always returns the original transfer and never
@@ -56,9 +56,9 @@ moves money twice. A fresh transfer is 201; a replay is 200.
 
 ### Submission failures fail the record, they do not dangle
 
-After the AlmaPay `transfers` row exists, `confirm-transfer` creates the Wise
+After the AaminPay `transfers` row exists, `confirm-transfer` creates the Wise
 recipient (lazily, once), creates the Wise transfer, and funds it from the
-AlmaPay balance. Any Wise error transitions the transfer to `failed` with a
+AaminPay balance. Any Wise error transitions the transfer to `failed` with a
 mapped reason (`create:<code>`, `funding:<code>`) and audits it — the HTTP call
 still returns 201 with `status: "failed"` so the client shows a definite
 outcome. An SCA challenge on funding leaves the transfer `awaiting_payment` for
@@ -66,7 +66,7 @@ manual approval rather than failing it.
 
 ### Status is reconciled from the provider, forward-only
 
-`apply-wise-transfer-update` is the single place a Wise state becomes an AlmaPay
+`apply-wise-transfer-update` is the single place a Wise state becomes an AaminPay
 state, from either a verified webhook (`POST /webhooks/wise`) or a best-effort
 poll on `GET /api/v1/transfers/:id` for a non-settled transfer. It is
 forward-only: an out-of-order or backwards transition (the DB trigger rejects it)

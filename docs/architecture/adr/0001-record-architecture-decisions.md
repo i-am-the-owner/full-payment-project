@@ -5,7 +5,7 @@
 
 ## Context
 
-AlmaPay is a financial application with strict security and correctness
+AaminPay is a financial application with strict security and correctness
 requirements. Decisions about structure, tooling and integration approach need to
 be traceable: a future contributor (or auditor) should be able to see _why_ a
 choice was made, not just _what_ the code does.

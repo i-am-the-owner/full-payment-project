@@ -6,14 +6,14 @@ import { Card, CardBody, CardTitle } from "@/components/Card";
 export const metadata: Metadata = {
   title: "Security",
   description:
-    "How SomPay protects your money and your information: encrypted connections, secure authentication, server-side processing, data minimisation, audit logging and monitoring for fraud.",
+    "How AaminPay protects your money and your information: encrypted connections, secure authentication, server-side processing, data minimisation, audit logging and monitoring for fraud.",
   alternates: { canonical: "/security" },
 };
 
 const practices = [
   {
     title: "Secure connections",
-    body: "All communication between the app and SomPay uses HTTPS/TLS. Traffic is encrypted in transit.",
+    body: "All communication between the app and AaminPay uses HTTPS/TLS. Traffic is encrypted in transit.",
   },
   {
     title: "Encryption",
@@ -29,7 +29,7 @@ const practices = [
   },
   {
     title: "Secure server-side processing",
-    body: "Fees, exchange rates and whether a transfer has completed are all decided by SomPay's servers. The app cannot change a price or mark a transfer as successful — it only displays the verified result.",
+    body: "Fees, exchange rates and whether a transfer has completed are all decided by AaminPay's servers. The app cannot change a price or mark a transfer as successful — it only displays the verified result.",
   },
   {
     title: "Monitoring and fraud prevention",
@@ -43,7 +43,7 @@ export default function SecurityPage() {
       <PageHeader
         eyebrow="Security"
         title="Built to protect your money and your data"
-        lead="SomPay is designed as a fintech product, with security considered at every layer — from the mobile app to the database."
+        lead="AaminPay is designed as a fintech product, with security considered at every layer — from the mobile app to the database."
       />
 
       <Section>
@@ -60,7 +60,7 @@ export default function SecurityPage() {
       <Section tone="muted" title="What we don't claim" containerSize="narrow">
         <p className="text-[var(--color-ink-soft)]">
           We will not display security certifications, audit badges or
-          regulatory approvals that SomPay does not hold. As the product matures
+          regulatory approvals that AaminPay does not hold. As the product matures
           and independent assessments are completed, this page will be updated
           with accurate, verifiable information. If you have a security concern,
           please{" "}
@@ -73,14 +73,14 @@ export default function SecurityPage() {
 
       <Section title="Your part" containerSize="narrow">
         <ul className="prose text-[var(--color-ink-soft)]">
-          <li>Use a strong, unique password for your SomPay account.</li>
+          <li>Use a strong, unique password for your AaminPay account.</li>
           <li>Keep your device’s operating system and the app up to date.</li>
           <li>
-            Only download the SomPay app from an official app store when it is
+            Only download the AaminPay app from an official app store when it is
             available.
           </li>
           <li>
-            SomPay will never ask for your password by email, message or phone.
+            AaminPay will never ask for your password by email, message or phone.
           </li>
         </ul>
       </Section>

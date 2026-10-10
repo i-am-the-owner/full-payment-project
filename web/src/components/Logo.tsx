@@ -2,8 +2,8 @@ import Link from "next/link";
 import { site } from "@/lib/site";
 
 /**
- * Text-plus-mark wordmark. The mark is a simple inline SVG (a ticket with an
- * arrow, as in the app) — no external
+ * Text-plus-mark wordmark. The mark is a simple inline SVG (a route between two
+ * places, as in the app) — no external
  * asset, no fake brand badge.
  */
 export function Logo({
@@ -28,16 +28,17 @@ export function Logo({
         aria-hidden="true"
         className="shrink-0"
       >
-        <rect width="32" height="32" rx="9" fill="var(--color-marigold)" />
+        <rect width="32" height="32" rx="9" fill="var(--color-blue)" />
         <circle cx="0" cy="16" r="4" fill="var(--color-ink-900)" />
         <circle cx="32" cy="16" r="4" fill="var(--color-ink-900)" />
         <path
-          d="M9 16h13m-4-5 5 5-5 5"
-          stroke="var(--color-ink-900)"
+          d="M8 16h13"
+          stroke="#fff"
           strokeWidth="2.4"
+          strokeDasharray="2.6 3"
           strokeLinecap="round"
-          strokeLinejoin="round"
         />
+        <circle cx="23" cy="16" r="3.2" fill="#fff" />
       </svg>
       <span className="font-[family-name:var(--font-display)] text-2xl font-extrabold tracking-wide lowercase">
         {site.name}

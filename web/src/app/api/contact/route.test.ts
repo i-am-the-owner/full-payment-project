@@ -16,7 +16,7 @@ describe("POST /api/contact", () => {
         name: "Ada Lovelace",
         email: "ada@example.com",
         subject: "General enquiry",
-        message: "Please tell me more about SomPay.",
+        message: "Please tell me more about AaminPay.",
       }),
     );
     expect(res.status).toBe(200);

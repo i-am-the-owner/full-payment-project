@@ -1,7 +1,7 @@
 /**
  * Backend service abstraction.
  *
- * The public website does not currently talk to the SomPay backend. This module
+ * The public website does not currently talk to the AaminPay backend. This module
  * is the single seam where that connection will be added later. Everything here
  * either returns static, clearly-marked placeholder data or posts to a
  * first-party Next.js route handler under `/api` — it never embeds a backend
@@ -42,7 +42,7 @@ export function getCorridorPricingDisplay(
     sendCurrency,
     receiveCurrency,
     feeDisplay:
-      "A transfer fee set by SomPay, shown in full before you confirm. Commercial pricing is not yet finalised.",
+      "A transfer fee set by AaminPay, shown in full before you confirm. Commercial pricing is not yet finalised.",
     rateDisplay:
       "A live exchange rate calculated at the time of your transfer and shown before you confirm.",
     confirmed: false,

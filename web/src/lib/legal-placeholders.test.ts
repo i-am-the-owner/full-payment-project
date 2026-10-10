@@ -13,7 +13,7 @@ describe("legal placeholders", () => {
     expect(source("components/DraftNotice.tsx")).toContain("TODO-LEGAL");
   });
 
-  it("the footer says who provides payments and that SomPay holds no customer funds", () => {
+  it("the footer says who provides payments and that AaminPay holds no customer funds", () => {
     expect(site.paymentStatement).toContain("Payments are provided by");
     expect(site.paymentStatement).toContain("[provider name]");
     expect(site.paymentStatement).toContain("does not hold customer funds");

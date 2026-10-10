@@ -6,16 +6,16 @@
 > are gone). All Wise code lives in `backend/src/infrastructure/providers/wise/`;
 > the webhook endpoint is `POST /webhooks/wise` only while Wise is the active
 > provider. Every Wise call is made for the customer's own Wise profile (their
-> provider link), never a shared AlmaPay business profile, and transfers are not
-> funded from an AlmaPay balance unless `ALMAPAY_BALANCE_FUNDING_ENABLED=true`.
+> provider link), never a shared AaminPay business profile, and transfers are not
+> funded from an AaminPay balance unless `ALMAPAY_BALANCE_FUNDING_ENABLED=true`.
 > Customer onboarding, the currency list, dynamic recipient/transfer forms and
 > pay-in instructions are **not implemented** for Wise yet, so Wise cannot be
 > used end to end. Sections below that describe file paths, `WiseGateway` as an
-> application port, or AlmaPay-balance funding predate this change. Status
+> application port, or AaminPay-balance funding predate this change. Status
 > mapping: [`../STATUSES.md`](../STATUSES.md).
 
 Milestone 6. The backend integration with the Wise Platform API, behind an
-abstraction (`WiseGateway`) so the rest of AlmaPay never touches raw Wise calls.
+abstraction (`WiseGateway`) so the rest of AaminPay never touches raw Wise calls.
 
 > **Sandbox only.** A production Wise host is refused at startup unless
 > `WISE_ALLOW_PRODUCTION=true` is explicitly set. No real customer money.
@@ -24,7 +24,7 @@ abstraction (`WiseGateway`) so the rest of AlmaPay never touches raw Wise calls.
 >
 > **Status:** the client, auth, webhook verification, error mapping, retry and
 > audit logging are implemented and tested with mocked HTTP + fixtures. The
-> AlmaPay send-money flow that _uses_ this — quotes, recipients, transfer
+> AaminPay send-money flow that _uses_ this — quotes, recipients, transfer
 > records and webhook-to-record reconciliation — landed in Milestone 7
 > ([ADR 0010](../architecture/adr/0010-send-money-flow.md),
 > [API reference](../api/README.md#send-money-flow)).
@@ -61,7 +61,7 @@ webhook signature verification (Wise "Webhook events") and the
   onboarding. The token is held in memory only, refreshed proactively, and never
   logged. On a `401` the client discards the cached token and retries once.
 - **SCA** (`fundTransferFromBalance`): an SCA-protected call returns `403` with an
-  `x-2fa-approval` one-time token. The client signs that token with AlmaPay's RSA
+  `x-2fa-approval` one-time token. The client signs that token with AaminPay's RSA
   private key (`RSA-SHA256`, PKCS#1 v1.5, base64) and retries once with
   `x-2fa-approval: <token>` + `X-Signature: <sig>`. If no signing key is
   configured, a clear `wise_sca_required` error is raised instead of failing
@@ -82,10 +82,10 @@ The `WiseTransfer.status` field carries the Wise states **verbatim**:
 `funds_refunded`, `bounced_back`. An unrecognised value maps to `unknown` (a
 defensive fallback for a future Wise state; never used on the happy path).
 
-AlmaPay maps these to its own states in
+AaminPay maps these to its own states in
 `src/domain/transfer/transfer-status.ts` (Milestone 7):
 
-| Wise state                                                    | AlmaPay state                   |
+| Wise state                                                    | AaminPay state                   |
 | ------------------------------------------------------------- | ------------------------------- |
 | `incoming_payment_waiting`                                    | `awaiting_payment`              |
 | `incoming_payment_initiated`, `processing`, `funds_converted` | `processing`                    |
@@ -100,7 +100,7 @@ backwards is logged and ignored.
 
 ## Idempotency
 
-- **Transfer creation** carries `customerTransactionId` (a UUID AlmaPay
+- **Transfer creation** carries `customerTransactionId` (a UUID AaminPay
   supplies). Wise dedupes on it: a repeated request with the same value returns
   the original transfer, never a second one. The HTTP client therefore treats
   `POST /v1/transfers` as retryable.
@@ -108,10 +108,10 @@ backwards is logged and ignored.
 - Funding and cancellation are **not** retried by the client; funding an
   already-funded transfer is rejected by Wise, so there is no duplicate-transfer
   risk.
-- Webhook deliveries carry `X-Delivery-Id`; AlmaPay's webhook processing dedupes
+- Webhook deliveries carry `X-Delivery-Id`; AaminPay's webhook processing dedupes
   on it (`webhook_events`, unique on `(provider, dedupe_key)`), falling back to a
   payload hash when the header is absent.
-- The AlmaPay send-money flow adds two more layers on top of Wise's dedup: a fast
+- The AaminPay send-money flow adds two more layers on top of Wise's dedup: a fast
   lookup by `(user_id, idempotency_key)` and a unique constraint that catches a
   concurrent race — see [ADR 0010](../architecture/adr/0010-send-money-flow.md).
 
@@ -177,7 +177,7 @@ All backend-only (`.env` / secrets manager). See `backend/.env.example`.
 | `WISE_ENABLED`                                  | Master switch (default `false`; the app runs without Wise). |
 | `WISE_API_BASE_URL`                             | Default `https://api.sandbox.transferwise.tech`.            |
 | `WISE_ALLOW_PRODUCTION`                         | Must be `true` to use a production host.                    |
-| `WISE_PROFILE_ID`                               | AlmaPay's Wise business profile id.                         |
+| `WISE_PROFILE_ID`                               | AaminPay's Wise business profile id.                         |
 | `WISE_CLIENT_ID` / `WISE_CLIENT_SECRET`         | OAuth client credentials, **or**                            |
 | `WISE_API_TOKEN`                                | a pre-issued bearer token.                                  |
 | `WISE_WEBHOOK_PUBLIC_KEY`                       | PEM; overrides the bundled sandbox key.                     |
@@ -186,7 +186,7 @@ All backend-only (`.env` / secrets manager). See `backend/.env.example`.
 
 ## Assumptions to confirm against the onboarding pack
 
-- The exact token type Wise issues AlmaPay for money operations (client-credentials
+- The exact token type Wise issues AaminPay for money operations (client-credentials
   access token vs. a partner user token) — the code supports both via config.
 - The `scope` string and whether an authenticated-quote scope differs from the
   application scope.

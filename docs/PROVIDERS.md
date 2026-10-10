@@ -139,7 +139,7 @@ connected account with a funded GBP Wallet.
   terms and data usage.** The app must collect that acceptance before calling
   `POST /api/v1/customer/onboarding/start`.
 - **A transfer is paid from the customer's own Airwallex Wallet** as soon as it
-  is created (or on its transfer date). AlmaPay holds nothing.
+  is created (or on its transfer date). AaminPay holds nothing.
 - **The quote shows no fee.** Airwallex returns the transfer fee only when the
   transfer is created.
 - **Webhook payloads contain the recipient's full bank details.** The adapter

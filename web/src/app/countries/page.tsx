@@ -9,7 +9,7 @@ import { destinations, availabilityMeta, originCountry } from "@/lib/countries";
 export const metadata: Metadata = {
   title: "Countries",
   description:
-    "Destinations SomPay supports or is building. Our first corridor is the United Kingdom to Kenya. Each destination lists its currency, payout methods and current availability.",
+    "Destinations AaminPay supports or is building. Our first corridor is the United Kingdom to Kenya. Each destination lists its currency, payout methods and current availability.",
   alternates: { canonical: "/countries" },
 };
 
@@ -18,7 +18,7 @@ export default function CountriesPage() {
     <>
       <PageHeader
         eyebrow="Countries"
-        title="Where SomPay sends money"
+        title="Where AaminPay sends money"
         lead={
           <>
             All transfers currently start in the {originCountry.name} (
@@ -86,7 +86,7 @@ export default function CountriesPage() {
         title="Adding more countries"
       >
         <p className="text-[var(--color-ink-soft)]">
-          SomPay is deliberately built as a multi-corridor platform. Each
+          AaminPay is deliberately built as a multi-corridor platform. Each
           destination is described by a small set of structured fields — country
           name and code, currency, availability status, payout methods and
           display information — so new corridors can be added without

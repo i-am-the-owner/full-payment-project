@@ -8,12 +8,12 @@ export interface Step {
 /** Numbered vertical process list. */
 export function Steps({ steps }: { steps: Step[] }) {
   return (
-    <ol className="border-marigold/50 relative space-y-8 border-l-[3px] pl-8">
+    <ol className="border-blue/40 relative space-y-8 border-l-[3px] pl-8">
       {steps.map((step, i) => (
         <li key={step.title} className="relative">
           <span
             aria-hidden="true"
-            className="bg-marigold text-ink-900 absolute -left-[43px] flex h-8 w-8 items-center justify-center rounded-full text-sm font-bold"
+            className="bg-blue absolute text-white -left-[43px] flex h-8 w-8 items-center justify-center rounded-full text-sm font-bold"
           >
             {i + 1}
           </span>

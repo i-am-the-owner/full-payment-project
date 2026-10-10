@@ -1,10 +1,10 @@
-# AlmaPay website
+# AaminPay website
 
-The public marketing website for **AlmaPay**, a UK-based international
+The public marketing website for **AaminPay**, a UK-based international
 money-transfer platform. First launch corridor: **UK → Kenya**, with a
 data-driven structure so more corridors can be added.
 
-This is a **separate project** from the AlmaPay mobile app (`../mobile/`) and
+This is a **separate project** from the AaminPay mobile app (`../mobile/`) and
 backend (`../backend/`). It contains **no secrets, no API keys, and no Wise
 credentials or endpoints** — it is a public site.
 
@@ -64,7 +64,7 @@ src/
 
 ## Content and claims
 
-The copy is deliberately conservative. The site does **not** claim AlmaPay is
+The copy is deliberately conservative. The site does **not** claim AaminPay is
 FCA authorised / regulated, licensed, a bank, "fully regulated", the cheapest or
 the fastest, or available everywhere. It does not publish a fixed fee or a fixed
 exchange rate, and it does not describe any corridor as open for live transfers.
@@ -73,7 +73,7 @@ Adjust `src/lib/site.ts` (`regulatoryNote`) and `src/lib/countries.ts`
 
 ## Connecting the backend later
 
-`src/lib/api.ts` is the single seam. When the AlmaPay backend is ready:
+`src/lib/api.ts` is the single seam. When the AaminPay backend is ready:
 
 1. Add a **server-only** env var (never `NEXT_PUBLIC_*`) for the backend URL /
    any credential.
@@ -88,5 +88,5 @@ helpdesk webhook, or the backend).
 ## Deployment notes
 
 - Set `NEXT_PUBLIC_SITE_URL` to the real domain (used for canonical URLs, the
-  sitemap and robots). The placeholder is `https://www.almapay.example`.
+  sitemap and robots). The placeholder is `https://www.aaminpay.example`.
 - The site is fully static except `/api/contact`.

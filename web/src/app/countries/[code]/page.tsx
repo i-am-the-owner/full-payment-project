@@ -28,7 +28,7 @@ export async function generateMetadata({
   if (!d) return { title: "Country not found" };
   return {
     title: `Send money to ${d.name}`,
-    description: `Sending money from the ${originCountry.name} to ${d.name} with SomPay: ${d.currencyName} (${d.currency}) payouts, ${d.transferMethods
+    description: `Sending money from the ${originCountry.name} to ${d.name} with AaminPay: ${d.currencyName} (${d.currency}) payouts, ${d.transferMethods
       .map((m) => m.label.toLowerCase())
       .join(" and ")}, and current availability.`,
     alternates: { canonical: `/countries/${d.code}` },
@@ -109,7 +109,7 @@ export default async function CountryPage({ params }: RouteParams) {
                   {pricing.rateDisplay}
                 </p>
                 <p className="text-[var(--color-ink-soft)]">
-                  SomPay does not publish a fixed rate or fee for this corridor.
+                  AaminPay does not publish a fixed rate or fee for this corridor.
                   You&apos;ll see the exact figures for your transfer in the app
                   before you confirm. See the{" "}
                   <Link href="/fees" className="underline">

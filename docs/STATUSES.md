@@ -1,6 +1,6 @@
 # Transfer statuses
 
-AlmaPay has **one** internal transfer status enum. Every payout provider's own
+AaminPay has **one** internal transfer status enum. Every payout provider's own
 statuses are mapped onto it inside that provider's adapter
 (`backend/src/infrastructure/providers/<provider>/`); nothing else in the
 backend, the API or the apps ever sees a provider's status vocabulary.
@@ -14,7 +14,7 @@ code, the test and this file together.
 
 | Status           | Meaning                                                                         | Customer-facing label (mobile) |
 | ---------------- | ------------------------------------------------------------------------------- | ------------------------------ |
-| `DRAFT`          | AlmaPay's record exists; the provider has not confirmed a transfer yet.         | Preparing                      |
+| `DRAFT`          | AaminPay's record exists; the provider has not confirmed a transfer yet.         | Preparing                      |
 | `AWAITING_FUNDS` | The provider created the transfer and is waiting to be paid by the customer.    | Waiting for your money         |
 | `PROCESSING`     | The provider has the funds and is executing the payout.                         | Processing                     |
 | `SENT`           | The provider has paid out; the money is on its way to the recipient.            | Sent                           |
@@ -128,7 +128,7 @@ webhook does not strand a transfer.
 
 ## Who may change a status
 
-- **AlmaPay on its own authority** can only fail a transfer (a definitive
+- **AaminPay on its own authority** can only fail a transfer (a definitive
   provider rejection) or cancel it (the customer asked, and the provider agreed).
 - **Every other status** says what the provider did with the money and needs
   _provider evidence_: a signature-verified webhook (`provider_webhook`), a
@@ -151,7 +151,7 @@ with its `source`:
 | `PROVIDER_RESPONSE` | The provider's answer to a call we made (e.g. creating the transfer). Provider evidence. |
 | `USER`              | The customer asked for it (a cancellation).                                              |
 | `ADMIN`             | Reserved. No admin path exists that changes a status.                                    |
-| `SYSTEM`            | AlmaPay itself: creating the record, or recording a definitive rejection.                |
+| `SYSTEM`            | AaminPay itself: creating the record, or recording a definitive rejection.                |
 
 ## What is never marked failed
 
@@ -171,12 +171,12 @@ Stored per customer and provider in `provider_links.kyc_status`.
 | `PENDING`                 | Started; the provider has not decided.                                                                                        | Verification in progress          | No                               |
 | `VERIFIED`                | The provider verified the customer.                                                                                           | Verified – you can send money     | Yes                              |
 | `REJECTED`                | The provider refused.                                                                                                         | Couldn't verify – contact support | No                               |
-| `REJECTED_PENDING_REVIEW` | The provider verified someone whose name or date of birth differs from our profile. Set by AlmaPay; cleared only by a person. | Couldn't verify – contact support | No                               |
+| `REJECTED_PENDING_REVIEW` | The provider verified someone whose name or date of birth differs from our profile. Set by AaminPay; cleared only by a person. | Couldn't verify – contact support | No                               |
 | `NEEDS_RELINK`            | The provider no longer accepts the customer's connection or tokens.                                                           | Please reconnect your account     | No (403 `NEEDS_RELINK`)          |
 
 Who may change it: only the backend, from provider data (the onboarding
 callback, a status lookup, or a provider call rejecting the customer's tokens).
-No API accepts a status from a customer or an admin. AlmaPay can only make a
+No API accepts a status from a customer or an admin. AaminPay can only make a
 status stricter (`REJECTED_PENDING_REVIEW`), never grant `VERIFIED`.
 
 ## How statuses change

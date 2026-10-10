@@ -1,4 +1,4 @@
-# AlmaPay database schema (v1)
+# AaminPay database schema (v1)
 
 > **Updated 2026-10-04 — migration 0022 (hardening).** New `rate_limit_hits` (UNLOGGED: `key`, `hits`, `reset_at`; shared
 > rate-limit counters), `system_settings` (`key`, `value` JSONB, `updated_by`, `updated_at`; first key
@@ -268,7 +268,7 @@ guarantees the line items sum to the quote's `fee_amount_minor`.
 | code               | terminal | meaning                                                                                     |
 | ------------------ | :------: | ------------------------------------------------------------------------------------------- |
 | `created`          |    no    | created from an accepted quote                                                              |
-| `awaiting_payment` |    no    | Wise transfer created; awaiting funding from the AlmaPay balance                            |
+| `awaiting_payment` |    no    | Wise transfer created; awaiting funding from the AaminPay balance                            |
 | `processing`       |    no    | funded; Wise is paying out to the recipient                                                 |
 | `completed`        |    no    | Wise confirmed `outgoing_payment_sent` (a later chargeback can still move it to `refunded`) |
 | `failed`           |    no    | will not complete (a later `refunded` is still possible)                                    |
@@ -310,7 +310,7 @@ Constraints:
 
 - `UNIQUE (reference)`
 - `UNIQUE (user_id, idempotency_key)` — idempotent creation
-- `UNIQUE (provider, provider_transfer_id)` — one provider transfer ↔ one AlmaPay transfer
+- `UNIQUE (provider, provider_transfer_id)` — one provider transfer ↔ one AaminPay transfer
 - amounts `> 0`; `fee_amount_minor >= 0`; `total_to_pay_minor = source + fee`; `exchange_rate > 0`
 - `provider_transfer_id` set ⇒ `provider` set; `provider IN ('wise')`
 - `completed` / `failed` / `cancelled` / `refunded` ⇒ the matching `*_at` timestamp is set
