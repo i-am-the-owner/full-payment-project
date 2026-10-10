@@ -559,6 +559,7 @@ export function createContainer(
       passwordHasher,
       auditLog,
       passwordMinLength: config.auth.passwordMinLength,
+      skipEmailVerification: config.features.skipEmailVerification,
       ...emailTokenDeps,
     }),
     loginUser: createLoginUser({

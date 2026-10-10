@@ -174,6 +174,11 @@ export const envSchema = z.object({
   // Write verification / reset links (which contain live tokens) to the log so
   // a developer can follow them without a mail service. Refused in production.
   DEV_LOG_MAIL_LINKS: booleanFromString.default(false),
+  // TEMPORARY, for testing before a mail service exists: new accounts are marked
+  // email-verified at sign-up and no verification email is sent. Refused when
+  // APP_ENV=production. This is only the email step; identity (KYC) is still
+  // done by the payout provider.
+  SKIP_EMAIL_VERIFICATION: booleanFromString.default(false),
 
   // --- Encryption of provider tokens at rest -------------------------------
   // base64 of 32 random bytes. Required in production. Without it the app runs

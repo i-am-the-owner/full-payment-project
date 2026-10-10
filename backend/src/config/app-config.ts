@@ -98,6 +98,8 @@ export interface FeatureFlags {
   readonly balanceFundingEnabled: boolean;
   /** Log verification / reset links for local development. Never in production. */
   readonly devLogMailLinks: boolean;
+  /** Temporary: mark new accounts email-verified instead of sending a code. Never in production. */
+  readonly skipEmailVerification: boolean;
 }
 
 export class ConfigError extends Error {}
@@ -160,6 +162,9 @@ function assertProductionSafe(env: Env): void {
   }
   if (env.DEV_LOG_MAIL_LINKS) {
     problems.push('DEV_LOG_MAIL_LINKS must not be enabled in production.');
+  }
+  if (env.SKIP_EMAIL_VERIFICATION && env.APP_ENV === 'production') {
+    problems.push('SKIP_EMAIL_VERIFICATION must not be enabled when APP_ENV=production.');
   }
   if (!env.TRUST_PROXY) {
     // The API speaks plain HTTP to a TLS-terminating proxy; without this it
@@ -246,6 +251,7 @@ export function loadConfig(env: Env, packageVersion: string): AppConfig {
     features: {
       balanceFundingEnabled: env.ALMAPAY_BALANCE_FUNDING_ENABLED,
       devLogMailLinks: env.DEV_LOG_MAIL_LINKS,
+      skipEmailVerification: env.SKIP_EMAIL_VERIFICATION,
     },
     admin: {
       consoleEnabled: env.ADMIN_CONSOLE_ENABLED,

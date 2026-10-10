@@ -10,7 +10,7 @@ import {
   FakeUserAccountStore,
 } from '../../../support/auth-fakes.ts';
 
-function build() {
+function build(skipEmailVerification = false) {
   const userAccountStore = new FakeUserAccountStore();
   const authTokenStore = new FakeAuthTokenStore();
   const mailer = new FakeMailer();
@@ -26,6 +26,7 @@ function build() {
     emailVerificationTtlHours: 24,
     passwordMinLength: 12,
     publicAppUrl: 'https://app.almapay.test',
+    skipEmailVerification,
   });
   return { register, userAccountStore, authTokenStore, mailer, auditLog };
 }
@@ -57,4 +58,15 @@ test('a duplicate email creates nothing and sends the "already registered" email
 
   assert.equal(userAccountStore.accounts.size, 1);
   assert.equal(mailer.sent.at(-1)?.template, 'duplicate_registration');
+});
+
+test('with the temporary skip switch on, the account is verified and no email is sent', async () => {
+  const { register, userAccountStore, authTokenStore, mailer } = build(true);
+
+  await register({ email: 'quick@example.test', password: 'a strong enough passphrase' });
+
+  const account = await userAccountStore.findByEmail('quick@example.test');
+  assert.equal(account?.emailVerified, true);
+  assert.equal(authTokenStore.tokens.length, 0);
+  assert.equal(mailer.sent.length, 0);
 });

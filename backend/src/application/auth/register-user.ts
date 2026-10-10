@@ -25,6 +25,8 @@ export interface RegisterUserDeps {
   readonly emailVerificationTtlHours: number;
   readonly passwordMinLength: number;
   readonly publicAppUrl: string;
+  /** Temporary testing switch: verify the email at sign-up instead of sending a code. */
+  readonly skipEmailVerification?: boolean;
 }
 
 export type RegisterUser = (input: RegisterUserInput) => Promise<void>;
@@ -68,7 +70,11 @@ export function createRegisterUser(deps: RegisterUserDeps): RegisterUser {
       passwordHash,
     });
 
-    await issueVerificationEmail(deps, id, input.email, input.ipAddress);
+    if (deps.skipEmailVerification) {
+      await deps.userAccountStore.markEmailVerified(id);
+    } else {
+      await issueVerificationEmail(deps, id, input.email, input.ipAddress);
+    }
 
     await deps.auditLog.record({
       actorType: 'user',
