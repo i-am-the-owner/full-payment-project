@@ -16,10 +16,13 @@ export class PostgresJobQueue implements JobQueue {
     this.#pool = pool;
   }
 
+  // A job with no explicit time is due at once. The time is cut to the millisecond
+  // because workers compare it with a JavaScript clock, which has no finer unit: with
+  // microseconds, a worker in the same millisecond would find the job not yet due.
   async enqueue(job: NewJob): Promise<{ id: string; created: boolean }> {
     const { rows } = await this.#pool.query<{ id: string }>(
       `INSERT INTO jobs (type, payload, dedupe_key, run_at, max_attempts)
-       VALUES ($1, $2::jsonb, $3, COALESCE($4, now()), COALESCE($5, 8))
+       VALUES ($1, $2::jsonb, $3, COALESCE($4, date_trunc('milliseconds', now())), COALESCE($5, 8))
        ON CONFLICT (dedupe_key) WHERE dedupe_key IS NOT NULL DO NOTHING
        RETURNING id`,
       [

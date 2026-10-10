@@ -491,7 +491,8 @@ suite('the scheduled poll job runs through the same worker', async () => {
   await ctx.container.pool.query(`ALTER TABLE transfer_events ENABLE TRIGGER USER`);
 
   await ctx.container.pool.query(
-    `INSERT INTO jobs (type, dedupe_key) VALUES ('poll_stuck_transfers', 'schedule:test:1')`,
+    `INSERT INTO jobs (type, dedupe_key, run_at)
+     VALUES ('poll_stuck_transfers', 'schedule:test:1', now() - interval '1 second')`,
   );
   await drain();
   assert.equal((await detail(s, id)).status, 'PROCESSING');
