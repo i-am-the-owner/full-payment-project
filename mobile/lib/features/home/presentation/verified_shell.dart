@@ -7,6 +7,8 @@ import '../../../shared/widgets/aamin_ticket.dart';
 import '../../../shared/widgets/person_row.dart';
 import '../../../shared/widgets/transfer_ticket.dart';
 import '../../auth/presentation/auth_controller.dart';
+import '../../legal/presentation/legal_pages.dart';
+import '../../security/biometric_lock.dart';
 import '../../send_money/domain/models.dart';
 import '../../send_money/presentation/send_money_controller.dart';
 import '../../send_money/presentation/send_money_flow_page.dart';
@@ -21,12 +23,14 @@ class VerifiedShell extends StatefulWidget {
     required this.auth,
     required this.config,
     required this.sendMoney,
+    this.biometrics,
     super.key,
   });
 
   final AuthController auth;
   final AppConfig config;
   final SendMoneyController sendMoney;
+  final BiometricLockController? biometrics;
 
   @override
   State<VerifiedShell> createState() => _VerifiedShellState();
@@ -69,7 +73,11 @@ class _VerifiedShellState extends State<VerifiedShell> {
         devTools: !widget.config.isProduction,
         embedded: true,
       ),
-      _YouTab(auth: widget.auth, config: widget.config),
+      _YouTab(
+        auth: widget.auth,
+        config: widget.config,
+        biometrics: widget.biometrics,
+      ),
     ];
     return Scaffold(
       body: IndexedStack(index: _tab, children: pages),
@@ -355,9 +363,13 @@ class _PeopleTabState extends State<_PeopleTab> {
 // --- You ---------------------------------------------------------------------
 
 class _YouTab extends StatelessWidget {
-  const _YouTab({required this.auth, required this.config});
+  const _YouTab({required this.auth, required this.config, this.biometrics});
   final AuthController auth;
   final AppConfig config;
+  final BiometricLockController? biometrics;
+
+  void _open(BuildContext context, Widget page) =>
+      Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => page));
 
   @override
   Widget build(BuildContext context) {
@@ -384,6 +396,80 @@ class _YouTab extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 16),
+          if (biometrics case final lock? when lock.available)
+            ListenableBuilder(
+              listenable: lock,
+              builder: (context, _) => Padding(
+                padding: const EdgeInsets.only(bottom: 16),
+                child: Material(
+                  color: AlmaPayColours.white,
+                  borderRadius: BorderRadius.circular(24),
+                  clipBehavior: Clip.antiAlias,
+                  child: SwitchListTile(
+                    key: const Key('biometric_switch'),
+                    secondary: const Icon(Icons.fingerprint),
+                    title: const Text('Unlock with fingerprint'),
+                    value: lock.enabled,
+                    onChanged: lock.setEnabled,
+                  ),
+                ),
+              ),
+            ),
+          Material(
+            color: AlmaPayColours.white,
+            borderRadius: BorderRadius.circular(24),
+            clipBehavior: Clip.antiAlias,
+            child: Column(
+              children: [
+                ListTile(
+                  key: const Key('open_terms'),
+                  title: const Text('Terms & Conditions'),
+                  trailing: const Icon(Icons.chevron_right),
+                  onTap: () => _open(context, const LegalDocumentPage.terms()),
+                ),
+                const Divider(height: 1),
+                ListTile(
+                  key: const Key('open_privacy'),
+                  title: const Text('Privacy Policy'),
+                  trailing: const Icon(Icons.chevron_right),
+                  onTap: () =>
+                      _open(context, const LegalDocumentPage.privacy()),
+                ),
+                const Divider(height: 1),
+                ListTile(
+                  key: const Key('open_about'),
+                  title: Text('About ${config.appDisplayName}'),
+                  trailing: const Icon(Icons.chevron_right),
+                  onTap: () =>
+                      _open(context, AboutPage(appName: config.appDisplayName)),
+                ),
+                const Divider(height: 1),
+                ListTile(
+                  key: const Key('open_delete_data'),
+                  title: const Text('Delete my account / data'),
+                  trailing: const Icon(Icons.chevron_right),
+                  onTap: () => _open(
+                    context,
+                    DeleteDataPage(
+                      supportEmail: config.supportEmail,
+                      accountEmail: user?.email ?? '',
+                    ),
+                  ),
+                ),
+                const Divider(height: 1),
+                ListTile(
+                  key: const Key('open_contact'),
+                  title: const Text('Contact us'),
+                  trailing: const Icon(Icons.chevron_right),
+                  onTap: () => _open(
+                    context,
+                    ContactPage(supportEmail: config.supportEmail),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 16),
           Text(
             'Payments are provided by our licensed partner. AaminPay never '
             'holds your money.',
@@ -392,7 +478,10 @@ class _YouTab extends StatelessWidget {
           const SizedBox(height: 24),
           OutlinedButton.icon(
             key: const Key('sign_out'),
-            onPressed: auth.logout,
+            onPressed: () async {
+              await biometrics?.reset();
+              await auth.logout();
+            },
             icon: const Icon(Icons.logout),
             label: const Text('Sign out'),
           ),

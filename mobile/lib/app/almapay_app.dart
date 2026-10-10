@@ -4,6 +4,7 @@ import '../core/auth/auth_dependencies.dart';
 import '../features/auth/presentation/auth_gate.dart';
 import '../features/onboarding/data/onboarding_api.dart';
 import '../features/onboarding/presentation/onboarding_controller.dart';
+import '../features/security/biometric_lock.dart';
 import '../features/send_money/data/send_money_api.dart';
 import '../features/send_money/data/send_money_repository_impl.dart';
 import '../features/send_money/presentation/send_money_controller.dart';
@@ -14,10 +15,18 @@ import 'environment/app_config.dart';
 /// authentication graph so that configuration and dependencies are injected once,
 /// at the top, rather than read ad hoc.
 class AlmaPayApp extends StatefulWidget {
-  const AlmaPayApp({required this.config, required this.auth, super.key});
+  const AlmaPayApp({
+    required this.config,
+    required this.auth,
+    this.biometrics,
+    super.key,
+  });
 
   final AppConfig config;
   final AuthDependencies auth;
+
+  /// The fingerprint lock; the real device one when omitted.
+  final BiometricLockController? biometrics;
 
   @override
   State<AlmaPayApp> createState() => _AlmaPayAppState();
@@ -26,6 +35,7 @@ class AlmaPayApp extends StatefulWidget {
 class _AlmaPayAppState extends State<AlmaPayApp> {
   late final OnboardingController _onboarding;
   late final SendMoneyController _sendMoney;
+  late final BiometricLockController _biometrics;
 
   @override
   void initState() {
@@ -46,6 +56,13 @@ class _AlmaPayAppState extends State<AlmaPayApp> {
         ),
       ),
     );
+    _biometrics =
+        widget.biometrics ??
+        BiometricLockController(
+          authenticator: DeviceBiometricAuthenticator(),
+          store: SecureBiometricPreferenceStore(),
+        );
+    _biometrics.init();
     // Restore a persisted session before the first frame settles.
     widget.auth.authController.restoreSession();
   }
@@ -54,6 +71,7 @@ class _AlmaPayAppState extends State<AlmaPayApp> {
   void dispose() {
     _onboarding.dispose();
     _sendMoney.dispose();
+    _biometrics.dispose();
     super.dispose();
   }
 
@@ -69,6 +87,7 @@ class _AlmaPayAppState extends State<AlmaPayApp> {
         config: widget.config,
         onboarding: _onboarding,
         sendMoney: _sendMoney,
+        biometrics: _biometrics,
       ),
     );
   }

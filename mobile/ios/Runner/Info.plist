@@ -26,6 +26,8 @@
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>NSCameraUsageDescription</key>
 	<string>SomPay uses the camera so you can photograph your ID and yourself when you verify your identity.</string>
+	<key>NSFaceIDUsageDescription</key>
+	<string>AaminPay uses Face ID to unlock the app.</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>UIApplicationSceneManifest</key>

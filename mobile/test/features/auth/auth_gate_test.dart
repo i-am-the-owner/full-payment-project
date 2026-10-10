@@ -122,6 +122,8 @@ void main() {
     expect(find.text('Signed in as user@example.test'), findsOneWidget);
     await tester.tap(find.text('You'));
     await tester.pumpAndSettle();
+    // The list is long enough that Sign out sits below the fold.
+    await tester.scrollUntilVisible(find.byKey(const Key('sign_out')), 200);
     expect(find.byKey(const Key('sign_out')), findsOneWidget);
   });
 

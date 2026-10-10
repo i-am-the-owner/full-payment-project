@@ -5,6 +5,7 @@ import '../../auth/presentation/auth_controller.dart';
 import '../../onboarding/presentation/onboarding_controller.dart';
 import '../../onboarding/presentation/onboarding_flow.dart';
 import '../../onboarding/presentation/provider_web_view_page.dart';
+import '../../security/biometric_lock.dart';
 import '../../send_money/presentation/send_money_controller.dart';
 import '../../send_money/presentation/send_money_flow_page.dart';
 import '../../send_money/presentation/transfer_history_page.dart';
@@ -20,6 +21,7 @@ class HomePage extends StatelessWidget {
     required this.onboarding,
     required this.sendMoney,
     this.openProviderPage,
+    this.biometrics,
     super.key,
   });
 
@@ -30,6 +32,7 @@ class HomePage extends StatelessWidget {
 
   /// Replaces the in-app web view, for tests.
   final ProviderPageOpener? openProviderPage;
+  final BiometricLockController? biometrics;
 
   Future<void> _openProviderPage(BuildContext context, Uri url) {
     return Navigator.of(context).push(
@@ -56,6 +59,7 @@ class HomePage extends StatelessWidget {
             auth: controller,
             config: config,
             sendMoney: sendMoney,
+            biometrics: biometrics,
           );
         }
         return _signUpSteps(context);

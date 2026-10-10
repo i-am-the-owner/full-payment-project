@@ -4,6 +4,7 @@ import '../../../app/environment/app_config.dart';
 import '../../home/presentation/home_page.dart';
 import '../../onboarding/presentation/onboarding_controller.dart';
 import '../../onboarding/presentation/onboarding_flow.dart';
+import '../../security/biometric_lock.dart';
 import '../../send_money/presentation/send_money_controller.dart';
 import 'auth_controller.dart';
 import 'login_page.dart';
@@ -16,6 +17,7 @@ class AuthGate extends StatelessWidget {
     required this.onboarding,
     required this.sendMoney,
     this.openProviderPage,
+    this.biometrics,
     super.key,
   });
 
@@ -26,6 +28,9 @@ class AuthGate extends StatelessWidget {
 
   /// Replaces the in-app web view, for tests.
   final ProviderPageOpener? openProviderPage;
+
+  /// The fingerprint lock. Null in tests that do not exercise it.
+  final BiometricLockController? biometrics;
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +44,7 @@ class AuthGate extends StatelessWidget {
               body: Center(child: CircularProgressIndicator()),
             );
           case AuthStatus.authenticated:
-            return HomePage(
+            final home = HomePage(
               // A different account starts sign-up from its own beginning.
               key: ValueKey(controller.user?.id),
               controller: controller,
@@ -47,7 +52,12 @@ class AuthGate extends StatelessWidget {
               onboarding: onboarding,
               sendMoney: sendMoney,
               openProviderPage: openProviderPage,
+              biometrics: biometrics,
             );
+            final lock = biometrics;
+            return lock == null
+                ? home
+                : BiometricLockGate(controller: lock, child: home);
           case AuthStatus.unauthenticated:
             return LoginPage(controller: controller);
         }
