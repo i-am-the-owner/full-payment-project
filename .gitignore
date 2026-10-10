@@ -1,0 +1,59 @@
+# ---------------------------------------------------------------------------
+# AlmaPay – repository-wide ignore rules
+# Security note: never commit real secrets. Only *.example env files belong in git.
+# ---------------------------------------------------------------------------
+
+# Secrets and local environment configuration
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.keystore
+*.jks
+secrets/
+service-account*.json
+google-services.json
+GoogleService-Info.plist
+
+# Node / backend
+node_modules/
+dist/
+build/
+coverage/
+*.tsbuildinfo
+npm-debug.log*
+.npm/
+
+# Flutter / Dart / mobile
+.dart_tool/
+.packages
+.pub-cache/
+.pub/
+mobile/build/
+mobile/.flutter-plugins
+mobile/.flutter-plugins-dependencies
+mobile/**/GeneratedPluginRegistrant.*
+mobile/ios/Pods/
+mobile/ios/.symlinks/
+mobile/ios/Flutter/Flutter.framework
+mobile/ios/Flutter/Flutter.podspec
+mobile/android/.gradle/
+mobile/android/local.properties
+mobile/android/key.properties
+mobile/android/app/upload-keystore.jks
+
+# IDE / editor
+.idea/
+.vscode/
+*.iml
+*.swp
+.DS_Store
+
+# OS
+Thumbs.db
+
+# Playwright
+test-results/
+playwright-report/

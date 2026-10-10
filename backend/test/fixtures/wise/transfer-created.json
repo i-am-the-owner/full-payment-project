@@ -1,0 +1,21 @@
+{
+  "id": 51000009,
+  "user": 12970,
+  "targetAccount": 40000001,
+  "sourceAccount": null,
+  "quote": null,
+  "quoteUuid": "11144c35-9fe8-4c32-b7fd-d05c2a7734bf",
+  "status": "incoming_payment_waiting",
+  "reference": "ALM-7F3A2B",
+  "rate": 174.5,
+  "created": "2026-09-08T13:20:00.000Z",
+  "business": 555,
+  "transferRequest": null,
+  "details": { "reference": "ALM-7F3A2B" },
+  "hasActiveIssues": false,
+  "sourceCurrency": "GBP",
+  "sourceValue": 100.77,
+  "targetCurrency": "KES",
+  "targetValue": 17225.5,
+  "customerTransactionId": "b7c8d9e0-1111-2222-3333-444455556666"
+}

@@ -1,0 +1,139 @@
+:root {
+  color-scheme: light dark;
+  --bg: #f6f7f9;
+  --fg: #14181f;
+  --card: #fff;
+  --line: #d5dae1;
+  --accent: #0b5fff;
+  --bad: #b42318;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #12151a;
+    --fg: #e8ebf0;
+    --card: #1b2028;
+    --line: #2c333d;
+    --accent: #6ea0ff;
+    --bad: #ff8a80;
+  }
+}
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  font:
+    14px/1.45 system-ui,
+    sans-serif;
+  background: var(--bg);
+  color: var(--fg);
+}
+header {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  padding: 10px 16px;
+  background: var(--card);
+  border-bottom: 1px solid var(--line);
+  flex-wrap: wrap;
+}
+nav {
+  display: flex;
+  gap: 4px;
+  flex: 1;
+  flex-wrap: wrap;
+}
+button,
+input,
+select {
+  font: inherit;
+  padding: 6px 10px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--card);
+  color: var(--fg);
+}
+button {
+  cursor: pointer;
+}
+button.primary {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+button.active {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+button.danger {
+  color: var(--bad);
+  border-color: var(--bad);
+}
+main {
+  padding: 16px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+.card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 14px;
+  margin-bottom: 14px;
+}
+.row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+  align-items: center;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+th,
+td {
+  text-align: left;
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--line);
+  vertical-align: top;
+  word-break: break-word;
+}
+tr.link {
+  cursor: pointer;
+}
+tr.link:hover {
+  background: rgba(127, 127, 127, 0.12);
+}
+.err {
+  color: var(--bad);
+}
+.muted {
+  opacity: 0.7;
+}
+label {
+  display: block;
+  margin: 8px 0 2px;
+}
+h2 {
+  margin: 0 0 10px;
+  font-size: 17px;
+}
+@media (max-width: 640px) {
+  th,
+  td {
+    font-size: 12px;
+    padding: 4px;
+  }
+}
+.login {
+  max-width: 360px;
+  margin: 40px auto;
+}
+label input,
+label select {
+  display: block;
+  width: 100%;
+  margin-top: 2px;
+}

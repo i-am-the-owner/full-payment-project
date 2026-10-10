@@ -1,0 +1,58 @@
+{
+  "name": "@almapay/backend",
+  "version": "0.1.0",
+  "private": true,
+  "description": "AlmaPay backend – REST API for international money transfers (UK → Kenya, GBP → KES).",
+  "type": "module",
+  "engines": {
+    "node": ">=22.11.0"
+  },
+  "main": "dist/main.js",
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "start": "node dist/main.js",
+    "dev": "node --env-file-if-exists=.env --watch src/main.ts",
+    "typecheck": "tsc --noEmit",
+    "test": "npm run test:unit && npm run test:integration",
+    "test:unit": "node --test \"src/**/*.test.ts\" \"test/unit/**/*.test.ts\"",
+    "test:integration": "node --test --test-concurrency=1 \"test/integration/**/*.test.ts\"",
+    "test:e2e": "playwright test",
+    "test:coverage": "node --test --test-concurrency=1 --experimental-test-coverage --test-coverage-include=\"src/**\" --test-coverage-exclude=\"**/*.test.ts\" --test-coverage-lines=90 --test-coverage-branches=80 --test-coverage-functions=85 \"src/**/*.test.ts\" \"test/**/*.test.ts\"",
+    "scan-secrets": "node scripts/scan-secrets.ts src scripts ../mobile/lib ../web/src",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "seed": "node --env-file-if-exists=.env src/seed.ts",
+    "worker": "node --env-file-if-exists=.env src/worker.ts",
+    "db:migrate": "node --env-file-if-exists=.env src/infrastructure/database/cli.ts migrate",
+    "db:rollback": "node --env-file-if-exists=.env src/infrastructure/database/cli.ts rollback",
+    "db:status": "node --env-file-if-exists=.env src/infrastructure/database/cli.ts status",
+    "db:seed": "node --env-file-if-exists=.env src/infrastructure/database/seed.ts",
+    "webhooks:setup": "node --env-file-if-exists=.env scripts/setup-webhooks.ts",
+    "webhooks:mock": "node --env-file-if-exists=.env scripts/send-mock-webhook.ts",
+    "webhooks:wise-simulate": "node --env-file-if-exists=.env scripts/wise-simulate.ts",
+    "user-data": "node --env-file-if-exists=.env scripts/user-data.ts"
+  },
+  "dependencies": {
+    "@node-rs/argon2": "2.2.1",
+    "express": "5.2.1",
+    "express-rate-limit": "8.7.0",
+    "jose": "6.2.12",
+    "pg": "8.23.1",
+    "zod": "4.6.5"
+  },
+  "devDependencies": {
+    "@eslint/js": "9.39.5",
+    "@playwright/test": "1.63.0",
+    "@types/express": "5.0.6",
+    "@types/node": "22.20.1",
+    "@types/pg": "8.23.1",
+    "eslint": "9.39.5",
+    "eslint-config-prettier": "10.1.8",
+    "globals": "16.5.0",
+    "prettier": "3.9.9",
+    "typescript": "5.9.3",
+    "typescript-eslint": "8.71.0"
+  }
+}

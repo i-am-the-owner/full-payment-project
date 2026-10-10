@@ -1,0 +1,47 @@
+{
+  "id": "11144c35-9fe8-4c32-b7fd-d05c2a7734bf",
+  "sourceCurrency": "GBP",
+  "targetCurrency": "KES",
+  "sourceAmount": 100,
+  "targetAmount": 17225.5,
+  "payOut": "BANK_TRANSFER",
+  "rate": 174.5,
+  "createdTime": "2026-09-08T13:18:58Z",
+  "rateType": "FIXED",
+  "rateExpirationTime": "2026-09-11T13:18:57Z",
+  "expirationTime": "2026-09-08T13:48:58Z",
+  "status": "PENDING",
+  "profile": 555,
+  "paymentOptions": [
+    {
+      "payIn": "BANK_TRANSFER",
+      "payOut": "BANK_TRANSFER",
+      "payInProduct": "CHEAP",
+      "sourceAmount": 100,
+      "targetAmount": 17225.5,
+      "disabled": false,
+      "estimatedDelivery": "2026-09-10T12:30:00Z",
+      "formattedEstimatedDelivery": "by Sep 10",
+      "allowedProfileTypes": ["PERSONAL", "BUSINESS"],
+      "fee": {
+        "transferwise": 0.77,
+        "payIn": 0,
+        "discount": 0,
+        "partner": 0,
+        "total": 0.77
+      },
+      "disabledReason": null
+    },
+    {
+      "payIn": "BANK_TRANSFER",
+      "payOut": "SWIFT",
+      "payInProduct": "CHEAP",
+      "sourceAmount": 100,
+      "targetAmount": 17100.0,
+      "disabled": true,
+      "fee": { "total": 6.0 },
+      "disabledReason": { "code": "error.payInMethodDisabled", "message": "Not available" }
+    }
+  ],
+  "notices": []
+}

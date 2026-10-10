@@ -1,0 +1,15 @@
+{
+  "id": 40000001,
+  "profile": 555,
+  "accountHolderName": "Amina Otieno",
+  "currency": "KES",
+  "country": "KE",
+  "type": "kenya_local",
+  "details": {
+    "legalType": "PRIVATE",
+    "accountNumber": "01001234567800",
+    "bankCode": "01"
+  },
+  "active": true,
+  "ownedByCustomer": false
+}

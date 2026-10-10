@@ -1,0 +1,10 @@
+{
+  "errors": [
+    {
+      "code": "NOT_VALID",
+      "message": "sortCode is not valid",
+      "path": "details/sortCode",
+      "arguments": ["sortCode"]
+    }
+  ]
+}
