@@ -1,0 +1,63 @@
+name: Demo web
+
+# Builds the DEMO app as a web app (works on iPhone and any phone browser) on every
+# push and keeps the build as an artifact. On pushes to main it also publishes it to
+# Cloudflare Pages, if the two secrets below are set.
+#
+#   Secrets (Settings > Secrets and variables > Actions > New repository secret):
+#     CLOUDFLARE_API_TOKEN   an API token with "Cloudflare Pages: Edit"
+#     CLOUDFLARE_ACCOUNT_ID  your Cloudflare account id
+#   Variable (same page, Variables tab, optional):
+#     CLOUDFLARE_PAGES_PROJECT   the Pages project name (default: almapay-demo)
+on:
+  push:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: demo-web-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  web:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      HAS_CLOUDFLARE: ${{ secrets.CLOUDFLARE_API_TOKEN != '' && secrets.CLOUDFLARE_ACCOUNT_ID != '' }}
+    defaults:
+      run:
+        working-directory: mobile
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.47.2'
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      - run: flutter test test/demo
+      # --no-web-resources-cdn bundles the Flutter engine files instead of loading them from Google.
+      - name: Build the demo web app
+        run: >
+          flutter build web --release -t lib/main_demo.dart
+          --dart-define=ALMAPAY_ENV=demo --dart-define=ALMAPAY_DEMO_RELEASE=true
+          --no-web-resources-cdn --pwa-strategy=none
+      - uses: actions/upload-artifact@v4
+        with:
+          name: almapay-demo-web
+          path: mobile/build/web
+          retention-days: 30
+          if-no-files-found: error
+      - name: Publish to Cloudflare Pages (main only)
+        if: github.ref == 'refs/heads/main' && env.HAS_CLOUDFLARE == 'true'
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          workingDirectory: mobile
+          command: pages deploy build/web --project-name=${{ vars.CLOUDFLARE_PAGES_PROJECT || 'almapay-demo' }} --branch=main --commit-dirty=true
+      - name: Skipped publishing
+        if: github.ref == 'refs/heads/main' && env.HAS_CLOUDFLARE != 'true'
+        run: echo "Cloudflare secrets are not set, so the demo was built but not published. See docs/demo/README.md."

@@ -1,0 +1,94 @@
+# Full local stack on the MOCK provider with demo data: no external accounts needed.
+#
+#   docker compose up --build
+#   API:            http://localhost:${API_PORT:-3000}      (health: /healthz, ready: /readyz)
+#   Admin console:  http://localhost:${API_PORT:-3000}/admin-console/
+#   Demo logins and the admin's authenticator secret are printed by the `seed` service:
+#                   docker compose logs seed
+#
+# Everything below is DEVELOPMENT ONLY. The secrets are public dummy values; the
+# stack refuses to start in production mode with them (see docs/operations/deployment.md).
+name: almapay
+
+x-backend: &backend
+  build: ./backend
+  image: almapay-backend:local
+  environment:
+    &backend-env # Not NODE_ENV=production: this is the development stack (mock provider, dev tools, logged mail links).
+    NODE_ENV: development
+    APP_ENV: development
+    LOG_LEVEL: info
+    DATABASE_URL: postgres://almapay:almapay@db:5432/almapay
+    JWT_SECRET: dev-only-insecure-secret-change-me-0123456789
+    # 32 random bytes, base64. Public dummy value: development only.
+    ENCRYPTION_KEY: ZGV2LW9ubHktZW5jcnlwdGlvbi1rZXktMzItYnl0ZXM=
+    PAYOUT_PROVIDER: mock
+    DEV_LOG_MAIL_LINKS: "true"
+    PUBLIC_API_URL: http://localhost:${API_PORT:-3000}
+    DASHBOARD_USD_RATES: GBP:1.27,EUR:1.08
+  depends_on:
+    migrate:
+      condition: service_completed_successfully
+
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: almapay
+      POSTGRES_PASSWORD: almapay
+      POSTGRES_DB: almapay
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U almapay -d almapay"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  # Migrations are a deploy STEP: they run to completion before the API or worker start.
+  migrate:
+    <<: *backend
+    depends_on:
+      db:
+        condition: service_healthy
+    command: ["node", "dist/infrastructure/database/cli.js", "migrate"]
+    restart: "no"
+
+  # Demo customer, admin (with 2FA) and sample transfers. Safe to re-run.
+  seed:
+    <<: *backend
+    command: ["node", "dist/seed.js"]
+    restart: "no"
+
+  api:
+    <<: *backend
+    environment:
+      <<: *backend-env
+      # The worker is its own service below.
+      BACKGROUND_JOBS_ENABLED: "false"
+    depends_on:
+      seed:
+        condition: service_completed_successfully
+    ports:
+      - "${API_PORT:-3000}:3000"
+    restart: unless-stopped
+
+  worker:
+    <<: *backend
+    command: ["node", "dist/worker.js"]
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          'node -e "fetch(''http://127.0.0.1:3001/healthz'').then(r=>process.exit(r.ok?0:1),()=>process.exit(1))"',
+        ]
+      interval: 20s
+      timeout: 3s
+      retries: 3
+      start_period: 20s
+    # Gives the job in progress time to finish on `docker compose stop`.
+    stop_grace_period: 30s
+    restart: unless-stopped
+
+volumes:
+  db-data:

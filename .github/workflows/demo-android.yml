@@ -1,0 +1,62 @@
+name: Demo APK
+
+# Builds the DEMO app for Android (sample data, no backend, no internet permission)
+# on every push, and keeps the APK for 30 days as a downloadable artifact.
+# On pushes to main it also refreshes a "Demo build" release with the same APK, which
+# is the easiest link to open on a phone.
+on:
+  push:
+  workflow_dispatch:
+
+permissions:
+  contents: write # only used to refresh the "demo-latest" release on main
+
+concurrency:
+  group: demo-apk-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  apk:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    defaults:
+      run:
+        working-directory: mobile
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.47.2'
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      # The demo's guards and journey tests must pass before an APK is offered.
+      - run: flutter test test/demo
+      - name: Build the demo APK
+        run: >
+          flutter build apk --release --flavor demo -t lib/main_demo.dart
+          --dart-define=ALMAPAY_ENV=demo --dart-define=ALMAPAY_DEMO_RELEASE=true
+      - name: Name the file clearly
+        run: cp build/app/outputs/flutter-apk/app-demo-release.apk build/almapay-demo.apk
+      - uses: actions/upload-artifact@v4
+        with:
+          name: almapay-demo-apk
+          path: mobile/build/almapay-demo.apk
+          retention-days: 30
+          if-no-files-found: error
+      - name: Refresh the "Demo build" release (main only)
+        if: github.ref == 'refs/heads/main'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: demo-latest
+          name: Demo build (sample data, no real money)
+          body: |
+            AlmaPay DEMO for Android. Sample data only: no backend, no real money, no internet permission.
+            Download `almapay-demo.apk` and open it on your phone (see docs/demo/README.md).
+            Built from commit ${{ github.sha }}.
+          prerelease: true
+          files: mobile/build/almapay-demo.apk

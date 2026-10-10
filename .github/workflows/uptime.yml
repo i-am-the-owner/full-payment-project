@@ -1,0 +1,20 @@
+name: Uptime check
+
+# Optional stopgap monitor. Set the repository variable HEALTH_URL (for example
+# https://api.example.com) to turn it on. A real uptime service is better: GitHub's
+# schedule is best-effort and can be delayed.
+on:
+  schedule:
+    - cron: "*/15 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    if: ${{ vars.HEALTH_URL != '' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: sh backend/scripts/uptime-check.sh "${{ vars.HEALTH_URL }}"

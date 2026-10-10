@@ -1,0 +1,636 @@
+<title>AaminPay App Design</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;700;800;900&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders:wght@600;700;800;900&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: an editorial case page. Cover with the idea, a market scan, the three principles, then the key screens in a grid and the foundations. The ticket is the one bold thing; everything around it stays quiet. */
+:root{
+  /* presentation page */
+  --bg:#F1F4FA; --fg:#0D2252; --muted:#5B6785; --rule:#DCE2EE; --card:#FFFFFF; --cover:#0D2252; --on-cover:#F4F3F7; --on-cover-2:#A8B4CE;
+  /* app (fixed light) */
+  --ink:#0D2252; --ink2:#5B6785; --line:#E2E7F1; --fog:#F2F5FB; --white:#FFFFFF;
+  --marigold:#F5A623; --marigold-soft:#FEF1D6; --marigold-deep:#8A5A00;
+  --rosa:#E5127D; --rosa-soft:#FDE3EF;
+  --kente:#1F8A5B; --kente-soft:#E0F2E9;
+  --sky:#2F7FD6; --sky-soft:#E3EEFB;
+  --indigo:#5B4BC4;
+  --blue:#2563D9; --blue-soft:#E6EEFC; --way:#F5A623; --paid:#1F8A5B; --refused:#D2382F;
+  --ok:#1C7F57; --ok-soft:#E1F3EA; --wait:#9A5B00; --wait-soft:#FDF0D8; --bad:#C2362B; --bad-soft:#FBE6E3; --go:#3346D3; --go-soft:#E7E9FB;
+  --display:"Big Shoulders Display", "Big Shoulders", "Arial Narrow", "Roboto Condensed", Impact, sans-serif;
+  --ui:"Geist", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --s:.72;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#0A1430;--fg:#EAF0FA;--muted:#9C99A7;--rule:#21305A;--card:#122046;--cover:#081633;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0A1430;--fg:#EAF0FA;--muted:#9C99A7;--rule:#21305A;--card:#122046;--cover:#081633;color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--ui);font-size:15.5px;line-height:1.55;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1360px;margin:0 auto;padding-inline:clamp(16px,4vw,56px)}
+h1,h2,h3{text-wrap:balance}
+
+.cover{background:var(--cover);color:var(--on-cover);overflow:hidden}
+.cover .wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:48px;align-items:end;padding-block:56px 0}
+.wm{display:flex;align-items:center;gap:10px;font-family:var(--display);font-weight:800;font-size:30px;letter-spacing:.01em;text-transform:lowercase}
+.cover h1{font-family:var(--display);font-weight:800;font-size:clamp(56px,8.4vw,112px);line-height:.88;letter-spacing:-.01em;margin:40px 0 24px;text-transform:uppercase}
+.cover p{color:var(--on-cover-2);max-width:48ch;margin:0 0 64px;font-size:17px}
+.cover .shots{display:flex;justify-content:center;align-items:flex-end;min-width:0}
+.cover .shots .dev{--s:.66;margin:0 -14px -120px}
+.cover .shots .dev.mid{--s:.76;z-index:2;margin-bottom:-70px}
+@media (max-width:900px){.cover .wrap{grid-template-columns:1fr}.cover .shots .dev:not(.mid){display:none}}
+
+main{padding-block:110px 80px}
+section.part{padding-top:80px}
+section.part:first-child{padding-top:0}
+.ph{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr);gap:16px 48px;align-items:start;border-top:1px solid var(--rule);padding-top:24px;margin-bottom:36px}
+.ph h2{margin:0;font-family:var(--display);font-weight:800;font-size:clamp(34px,4.5vw,52px);line-height:.95;text-transform:uppercase;letter-spacing:.005em}
+.ph p{margin:0;color:var(--muted);max-width:62ch}
+@media (max-width:760px){.ph{grid-template-columns:1fr}}
+
+.market{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,190px),1fr));gap:14px}
+.mk{background:var(--card);border:1px solid var(--rule);border-radius:16px;padding:14px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.mk .chips{display:flex;height:38px;border-radius:10px;overflow:hidden}
+.mk .chips i{flex:1;display:block}
+.mk b{font-size:15px}
+.mk span{font-size:13.5px;color:var(--muted);line-height:1.45}
+.mk.us{border:2px dashed var(--muted)}
+.verdict{margin-top:22px;display:flex;gap:14px;align-items:flex-start;max-width:78ch;font-size:15.5px}
+.verdict b{flex:none;font-family:var(--display);font-weight:800;font-size:22px;text-transform:uppercase;line-height:1.1}
+
+.princ{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:18px}
+.pr{background:var(--card);border:1px solid var(--rule);border-radius:22px;padding:22px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.pr h3{margin:0;font-family:var(--display);font-weight:800;font-size:30px;text-transform:uppercase;line-height:1}
+.pr p{margin:0;color:var(--muted);font-size:15px}
+.pr .demo{border-radius:16px;background:var(--fog);padding:16px;color:var(--ink);font-family:var(--ui);min-height:132px;display:flex;flex-direction:column;justify-content:center;gap:10px}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,calc(390px * var(--s)));justify-content:start;gap:52px 36px}
+@media (max-width:640px){.grid{justify-content:center}}
+.item{display:flex;flex-direction:column;gap:14px;width:calc(390px * var(--s))}
+.cap{font-size:13.5px;color:var(--muted);line-height:1.45}
+.cap b{display:block;color:var(--fg);font-size:15px;font-weight:600;margin-bottom:2px}
+
+.dev{flex:none;width:calc(390px * var(--s));height:calc(844px * var(--s));border-radius:calc(54px * var(--s));position:relative;box-shadow:0 26px 50px -30px rgba(13,34,82,.55);outline:1px solid rgba(13,34,82,.08)}
+.screen{--sbg:var(--fog);position:absolute;left:0;top:0;width:390px;height:844px;transform:scale(var(--s));transform-origin:0 0;border-radius:54px;overflow:hidden;background:var(--sbg);color:var(--ink);font-family:var(--ui);font-size:16px;line-height:1.4;display:flex;flex-direction:column;font-variant-numeric:tabular-nums}
+.screen.w{--sbg:#FFFFFF}
+.screen.k{--sbg:#0D2252;color:#fff}
+.sb{flex:none;height:54px;display:flex;align-items:center;justify-content:space-between;padding:6px 30px 0 40px;font-size:17px;font-weight:600;position:relative;z-index:2}
+.sb::after{content:"";position:absolute;left:50%;top:11px;width:124px;height:36px;margin-left:-62px;border-radius:20px;background:#000}
+.sb .ic{display:flex;gap:6px;align-items:center}
+.hi{position:absolute;left:50%;bottom:8px;width:136px;height:5px;margin-left:-68px;border-radius:3px;background:var(--ink);z-index:6}
+.k .hi{background:#fff}
+.nav{flex:none;height:52px;display:flex;align-items:center;padding:0 16px;position:relative;z-index:2}
+.nav .t{position:absolute;left:0;right:0;text-align:center;font-size:17px;font-weight:600;pointer-events:none}
+.body{flex:1;min-height:0;padding:12px 22px 0;display:flex;flex-direction:column;gap:16px;position:relative;z-index:1}
+.foot{flex:none;padding:12px 22px 40px;display:flex;flex-direction:column;gap:14px;position:relative;z-index:1}
+
+.d{font-family:var(--display);font-weight:800;letter-spacing:.005em;line-height:.9}
+.code{font-family:var(--display);font-weight:800;font-size:58px;line-height:.85;letter-spacing:.01em}
+.num{font-family:var(--display);font-weight:800;font-size:56px;line-height:.9;letter-spacing:.005em}
+.lead{margin:0;color:var(--ink2);font-size:16px;line-height:1.45}
+.lbl{font-size:13.5px;color:var(--ink2);font-weight:500}
+
+.btn{height:58px;border-radius:29px;background:var(--ink);color:#fff;font-size:17px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:10px}
+.btn.lt2{background:#fff;color:var(--ink);box-shadow:inset 0 0 0 1.5px var(--line)}
+.btn.mg{background:var(--marigold);color:var(--ink)}
+.tlink{text-align:center;font-size:16px;font-weight:600}
+.pad{flex:none;display:grid;grid-template-columns:repeat(3,1fr);padding:0 22px 34px;row-gap:2px}
+.pad div{height:48px;display:grid;place-items:center;font-size:27px;font-weight:500}
+
+.av{width:46px;height:46px;border-radius:50%;flex:none;display:grid;place-items:center;font-weight:600;font-size:15px;position:relative}
+.av svg.fl{position:absolute;right:-3px;bottom:-3px;border:2px solid #fff;border-radius:50%}
+.av.in{background:var(--marigold-soft);color:var(--marigold-deep)}
+.av.mx{background:var(--rosa-soft);color:#9E0C56}
+.av.gh{background:var(--kente-soft);color:#14603F}
+.badge{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;padding:4px 10px;border-radius:999px;white-space:nowrap}
+.badge::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+.b-ok{background:var(--ok-soft);color:var(--ok)}
+.b-wait{background:var(--blue-soft);color:var(--blue)}
+.b-bad{background:var(--bad-soft);color:var(--refused)}
+.b-go{background:var(--wait-soft);color:var(--wait)}
+.row{display:flex;align-items:center;gap:14px;padding:14px 0;border-bottom:1px solid var(--line)}
+.row:last-child{border-bottom:0}
+.row .tx{flex:1;min-width:0}
+.row .tx b{display:block;font-size:16px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row .tx small{font-size:14px;color:var(--ink2)}
+.panel{background:#fff;border-radius:24px;padding:4px 18px}
+.kv{display:flex;justify-content:space-between;gap:12px;padding:12px 0;font-size:15.5px;border-bottom:1px solid var(--line)}
+.kv:last-child{border-bottom:0}
+.kv span:first-child{color:var(--ink2)}
+.kv span:last-child{font-weight:600;text-align:right}
+
+/* THE TICKET */
+.tk{--cut:150px;position:relative;background:#fff;border-radius:26px;color:var(--ink)}
+.tk::before,.tk::after{content:"";position:absolute;top:calc(var(--cut) - 15px);width:30px;height:30px;border-radius:50%;background:var(--sbg)}
+.tk::before{left:-15px}.tk::after{right:-15px}
+.tk .top{padding:20px 22px 18px;border-radius:26px 26px 0 0;height:var(--cut);display:flex;flex-direction:column;justify-content:space-between}
+.tk .perf{border-top:2px dashed var(--line);margin:0 22px}
+.tk .stub{padding:16px 22px 20px;display:flex;flex-direction:column;gap:2px}
+.tk.mg .top{background:var(--marigold)}
+.tk.rs .top{background:var(--rosa);color:#fff}
+.tk.kt .top{background:var(--kente);color:#fff}
+.tk.ink .top{background:var(--ink);color:#fff}
+.tk.sk .top{background:var(--sky);color:#fff}
+.tk.ig .top{background:var(--indigo);color:#fff}
+.tk.ex .top{background:var(--blue);color:#fff}
+.tk.ow .top{background:var(--way);color:var(--ink)}
+.tk.pd .top{background:var(--paid);color:#fff}
+.tk.rf .top{background:var(--refused);color:#fff}
+.tk.split .top{background:linear-gradient(90deg,var(--blue) 0 50%,var(--paid) 50% 100%);color:#fff}
+.half{display:flex;align-items:center;gap:8px;font-family:var(--display);font-weight:800;font-size:30px;line-height:1}
+.half small{font-family:var(--ui);font-size:12.5px;font-weight:500;opacity:.85;display:block}
+.sendmini{height:40px;padding:0 18px;border-radius:20px;background:var(--ink);color:#fff;font-size:15px;font-weight:600;display:flex;align-items:center;gap:6px}
+.pm{display:flex;align-items:center;gap:14px;padding:15px 16px;border-radius:16px;background:#fff;box-shadow:inset 0 0 0 1.5px var(--line);font-size:16px;font-weight:600}
+.pm.on{box-shadow:inset 0 0 0 2px var(--blue)}
+.pm .ib{width:42px;height:42px;border-radius:12px;background:var(--blue-soft);color:var(--blue);display:grid;place-items:center;flex:none}
+.pm small{display:block;font-size:13.5px;font-weight:400;color:var(--ink2)}
+.pm .rd{width:22px;height:22px;border-radius:50%;box-shadow:inset 0 0 0 2px #B9C2D6;margin-left:auto;flex:none}
+.pm.on .rd{box-shadow:inset 0 0 0 7px var(--blue)}
+.totbar{display:flex;justify-content:space-between;align-items:baseline;padding:14px 18px;border-radius:16px;background:var(--blue-soft)}
+.totbar b{font-family:var(--display);font-weight:800;font-size:30px}
+.av.in,.av.mx,.av.gh,.av.so{background:#E6ECF7;color:var(--ink)}
+.btn.inv{background:#fff;color:var(--ink)}
+.swapbtn{position:absolute;left:50%;top:calc(var(--cut) - 26px);margin-left:-26px;width:52px;height:52px;border-radius:50%;background:var(--ink);color:#fff;display:grid;place-items:center;z-index:2;box-shadow:0 0 0 5px var(--sbg)}
+.of{flex:none;position:relative;height:56px;border:1.5px solid #CFCED6;border-radius:14px;background:#fff;display:flex;align-items:center;gap:12px;padding:0 16px;font-size:16px}
+.of .lg{position:absolute;left:12px;top:-9px;background:var(--sbg);padding:0 6px;font-size:12px;color:var(--ink2);letter-spacing:.04em}
+.of .ph{color:#8E8C97}
+.of .end{margin-left:auto;display:flex;align-items:center;color:var(--ink2)}
+.chk{display:flex;align-items:center;justify-content:center;gap:10px;font-size:14.5px;color:var(--ink2)}
+.chk .box{width:22px;height:22px;border-radius:6px;background:var(--ink);color:#fff;display:grid;place-items:center;flex:none}
+.tile{flex:1 1 0;min-width:0;height:54px;border-radius:16px;background:#fff;box-shadow:inset 0 0 0 1.5px var(--line);display:flex;align-items:center;gap:10px;padding:0 12px;font-size:15px;font-weight:600}
+.tile .ib{width:34px;height:34px;border-radius:50%;background:var(--marigold-soft);display:grid;place-items:center;color:var(--marigold-deep);flex:none}
+.av.so{background:#E3EEFB;color:#1F5FA8}
+.tk .rt{display:flex;align-items:flex-end;justify-content:space-between;gap:10px}
+.tk .rt small{display:block;font-size:13px;font-weight:500;opacity:.78;font-family:var(--ui);letter-spacing:0;margin-top:6px}
+.tk .line{flex:1;height:2px;margin-bottom:34px;position:relative;background:repeating-linear-gradient(90deg,currentColor 0 6px,transparent 6px 11px);opacity:.55}
+.tk .line::after{content:"";position:absolute;right:-2px;top:-5px;width:12px;height:12px;border-radius:50%;background:currentColor}
+.tk .meta{display:grid;grid-template-columns:1fr 1fr;gap:14px 12px;padding-top:4px}
+.tk .meta small{display:block;font-size:12.5px;color:var(--ink2)}
+.tk .meta b{font-size:16px;font-weight:600}
+
+.hero-mg{background:var(--marigold);color:var(--ink)}
+.stamp{position:absolute;right:18px;top:calc(var(--cut) - 62px);z-index:3;background:rgba(255,255,255,.94);width:112px;height:112px;border-radius:50%;border:3px solid var(--ok);color:var(--ok);display:grid;place-items:center;text-align:center;transform:rotate(-14deg);font-family:var(--display);font-weight:800;font-size:22px;line-height:.95;text-transform:uppercase;opacity:.92}
+.stamp::before{content:"";position:absolute;inset:6px;border-radius:50%;border:1.5px solid var(--ok)}
+
+.jr{display:flex;flex-direction:column}
+.jr .st{display:flex;gap:16px;position:relative;padding-bottom:24px}
+.jr .st:last-child{padding-bottom:0}
+.jr .st::before{content:"";position:absolute;left:14px;top:32px;bottom:2px;width:3px;border-radius:2px;background:var(--line)}
+.jr .st.done::before{background:var(--ink)}
+.jr .st:last-child::before{display:none}
+.jr .dot{width:31px;height:31px;border-radius:50%;flex:none;display:grid;place-items:center;background:#fff;border:2.5px solid var(--line);z-index:1}
+.jr .done .dot{background:var(--ink);border-color:var(--ink);color:#fff}
+.jr .now .dot{border-color:var(--ink)}
+.jr .now .dot::after{content:"";width:11px;height:11px;border-radius:50%;background:var(--ink)}
+.jr b{display:block;font-size:16.5px;font-weight:600}
+.jr small{font-size:14px;color:var(--ink2)}
+.jr .todo b{color:#9AA5BD}
+.clock{display:flex;align-items:baseline;gap:6px;font-size:14px;color:var(--ink2)}
+.clock b{font-family:var(--display);font-weight:800;font-size:24px;color:var(--ink);line-height:1}
+
+.tabs{flex:none;height:88px;display:flex;justify-content:space-around;padding:10px 8px 0;background:#fff;border-top:1px solid var(--line);position:relative;z-index:2}
+.tabs div{display:flex;flex-direction:column;align-items:center;gap:4px;font-size:11px;font-weight:600;color:#9AA5BD;width:70px}
+.tabs div.on{color:var(--blue)}
+
+.found{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:18px}
+.fc{background:var(--card);border:1px solid var(--rule);border-radius:22px;padding:22px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.fc h3{margin:0;font-size:17px;font-weight:600}
+.sw{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.sw div{border-radius:14px;padding:44px 12px 10px;font-size:12.5px;font-weight:600;line-height:1.3}
+.sw div span{display:block;font-weight:400;opacity:.85}
+.ts{display:flex;flex-direction:column;gap:10px}
+.ts div{display:flex;justify-content:space-between;align-items:baseline;gap:12px;border-bottom:1px solid var(--rule);padding-bottom:8px}
+.ts div:last-child{border-bottom:0}
+.ts span:last-child{font-size:12.5px;color:var(--muted);white-space:nowrap}
+.rg{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:14px}
+.rgc{background:var(--card);border:1px solid var(--rule);border-radius:18px;padding:12px;display:flex;flex-direction:column;gap:6px;min-width:0}
+.rgc .sw2{height:62px;border-radius:12px;display:flex;align-items:center;padding:0 14px;margin-bottom:4px}
+.rgc b{font-size:14.5px}
+.rgc>span{font-size:13.5px;color:var(--muted);line-height:1.4}
+.rnote{margin:16px 0 0;max-width:72ch;color:var(--muted)}
+.rnote b{color:var(--fg)}
+.anat{margin-top:28px;display:grid;grid-template-columns:minmax(0,380px) minmax(0,1fr);gap:24px 40px;align-items:start;background:var(--card);border:1px solid var(--rule);border-radius:22px;padding:24px}
+.anat-tk{background:var(--fog);border-radius:18px;padding:18px;--sbg:var(--fog)}
+.parts{margin:0;padding-left:22px;display:flex;flex-direction:column;gap:12px;font-size:15px;color:var(--muted)}
+.parts b{color:var(--fg)}
+@media (max-width:800px){.anat{grid-template-columns:1fr}}
+.dodont{margin-top:18px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:14px}
+.dodont>div{background:var(--card);border:1px solid var(--rule);border-radius:18px;padding:18px 20px}
+.dodont b{font-size:16px}
+.dodont ul{margin:8px 0 0;padding-left:20px;color:var(--muted);display:flex;flex-direction:column;gap:6px;font-size:15px}
+.fnote{margin-top:48px;color:var(--muted);font-size:13.5px;max-width:74ch}
+.src{font-size:13px;color:var(--muted);margin-top:14px}
+.src a{color:inherit}
+a:focus-visible{outline:2px solid var(--marigold);outline-offset:3px}
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+<defs>
+  <clipPath id="cc"><circle cx="12" cy="12" r="12"/></clipPath>
+  <symbol id="f-gb" viewBox="0 0 24 24"><g clip-path="url(#cc)"><rect width="24" height="24" fill="#012169"/><path d="M0 0 24 24M24 0 0 24" stroke="#fff" stroke-width="5"/><path d="M0 0 24 24M24 0 0 24" stroke="#C8102E" stroke-width="2"/><path d="M12 0v24M0 12h24" stroke="#fff" stroke-width="7"/><path d="M12 0v24M0 12h24" stroke="#C8102E" stroke-width="4"/></g></symbol>
+  <symbol id="f-in" viewBox="0 0 24 24"><g clip-path="url(#cc)"><rect width="24" height="8" fill="#FF9933"/><rect y="8" width="24" height="8" fill="#fff"/><rect y="16" width="24" height="8" fill="#138808"/><circle cx="12" cy="12" r="2.6" fill="none" stroke="#000080" stroke-width="1"/></g></symbol>
+  <symbol id="f-mx" viewBox="0 0 24 24"><g clip-path="url(#cc)"><rect width="8" height="24" fill="#006847"/><rect x="8" width="8" height="24" fill="#fff"/><rect x="16" width="8" height="24" fill="#CE1126"/><circle cx="12" cy="12" r="2.2" fill="#8C5A2B"/></g></symbol>
+  <symbol id="f-gh" viewBox="0 0 24 24"><g clip-path="url(#cc)"><rect width="24" height="8" fill="#CE1126"/><rect y="8" width="24" height="8" fill="#FCD116"/><rect y="16" width="24" height="8" fill="#006B3F"/><path d="m12 9 .9 2.1 2.3.2-1.7 1.5.5 2.2-2-1.2-2 1.2.5-2.2-1.7-1.5 2.3-.2z" fill="#000"/></g></symbol>
+  <symbol id="f-so" viewBox="0 0 24 24"><g clip-path="url(#cc)"><rect width="24" height="24" fill="#4189DD"/><path d="m12 6.2 1.5 4.4h4.6l-3.7 2.7 1.4 4.4L12 15l-3.8 2.7 1.4-4.4-3.7-2.7h4.6z" fill="#fff"/></g></symbol>
+  <symbol id="down" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="swapv" viewBox="0 0 24 24"><path d="M8 4v16M8 4 4.5 7.5M8 4l3.5 3.5M16 20V4M16 20l-3.5-3.5M16 20l3.5-3.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M3 12h18M12 3c2.6 2.6 3.8 5.6 3.8 9S14.6 18.4 12 21c-2.6-2.6-3.8-5.6-3.8-9S9.4 5.6 12 3z" fill="none" stroke="currentColor" stroke-width="1.8"/></symbol>
+  <symbol id="mail" viewBox="0 0 24 24"><rect x="3" y="5.5" width="18" height="13" rx="2" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="m3.5 6.5 8.5 6.5 8.5-6.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></symbol>
+  <symbol id="lock" viewBox="0 0 24 24"><rect x="5" y="10.5" width="14" height="10" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8.5 10.5V8a3.5 3.5 0 0 1 7 0v2.5" fill="none" stroke="currentColor" stroke-width="1.8"/></symbol>
+  <symbol id="eye" viewBox="0 0 24 24"><path d="M1.5 12S5.5 5 12 5s10.5 7 10.5 7-4 7-10.5 7S1.5 12 1.5 12z" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="3" fill="currentColor"/></symbol>
+  <symbol id="calc" viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8.5 7h7M8.5 11.5h.01M12 11.5h.01M15.5 11.5h.01M8.5 15h.01M12 15h.01M15.5 15h.01M8.5 18h.01M12 18h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+  <symbol id="help" viewBox="0 0 24 24"><path d="M4 13v-1a8 8 0 0 1 16 0v1" fill="none" stroke="currentColor" stroke-width="1.8"/><rect x="3" y="12.5" width="4" height="6" rx="1.5" fill="currentColor"/><rect x="17" y="12.5" width="4" height="6" rx="1.5" fill="currentColor"/></symbol>
+  <symbol id="f-ke" viewBox="0 0 24 24"><g clip-path="url(#cc)"><rect width="24" height="24" fill="#fff"/><rect width="24" height="7" fill="#000"/><rect y="8.5" width="24" height="7" fill="#BB0000"/><rect y="17" width="24" height="7" fill="#006600"/><ellipse cx="12" cy="12" rx="3" ry="6" fill="#BB0000" stroke="#000" stroke-width=".8"/></g></symbol>
+  <symbol id="card" viewBox="0 0 24 24"><rect x="2.5" y="5" width="19" height="14" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M2.5 9.5h19M6 15h4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+  <symbol id="phonepay" viewBox="0 0 24 24"><rect x="6.5" y="2.5" width="11" height="19" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M9.5 11.5h5M12 9v5M10.5 18.5h3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+  <symbol id="bank" viewBox="0 0 24 24"><path d="M3.5 9.5 12 4l8.5 5.5M5.5 10v7.5M9.8 10v7.5M14.2 10v7.5M18.5 10v7.5M3.5 20h17" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="mark" viewBox="0 0 32 32"><rect width="32" height="32" rx="9" fill="#2563D9"/><circle cx="0" cy="16" r="4" fill="#0D2252"/><circle cx="32" cy="16" r="4" fill="#0D2252"/><path d="M8 16h13" stroke="#FFFFFF" stroke-width="2.4" stroke-dasharray="2.6 3" stroke-linecap="round"/><circle cx="23" cy="16" r="3.2" fill="#FFFFFF"/></symbol>
+  <symbol id="sig" viewBox="0 0 18 12"><rect x="0" y="8" width="3" height="4" rx="1" fill="currentColor"/><rect x="5" y="5.5" width="3" height="6.5" rx="1" fill="currentColor"/><rect x="10" y="3" width="3" height="9" rx="1" fill="currentColor"/><rect x="15" y="0" width="3" height="12" rx="1" fill="currentColor"/></symbol>
+  <symbol id="wifi" viewBox="0 0 16 12"><path d="M8 11.5 5.6 9a3.4 3.4 0 0 1 4.8 0zM3.5 6.9a6.4 6.4 0 0 1 9 0l-1.5 1.5a4.3 4.3 0 0 0-6 0zM1.2 4.6a9.6 9.6 0 0 1 13.6 0L13.3 6a7.5 7.5 0 0 0-10.6 0z" fill="currentColor"/></symbol>
+  <symbol id="bat" viewBox="0 0 27 13"><rect x=".5" y=".5" width="23" height="12" rx="3.5" fill="none" stroke="currentColor" opacity=".4"/><rect x="2" y="2" width="20" height="9" rx="2" fill="currentColor"/><path d="M25 4.5v4a2 2 0 0 0 0-4z" fill="currentColor" opacity=".4"/></symbol>
+  <symbol id="back" viewBox="0 0 24 24"><path d="M15 5 8 12l7 7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="close" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></symbol>
+  <symbol id="chev" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="check" viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="shield" viewBox="0 0 24 24"><path d="M12 2.8 4.5 5.6v5.6c0 4.6 3.1 8.3 7.5 10 4.4-1.7 7.5-5.4 7.5-10V5.6z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="m8.6 12 2.4 2.4 4.4-4.6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="home-f" viewBox="0 0 26 26"><path d="M4 11.5 13 4l9 7.5V22h-6v-6.2h-6V22H4z" fill="currentColor" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"/></symbol>
+  <symbol id="home" viewBox="0 0 26 26"><path d="M4 11.5 13 4l9 7.5V22h-6v-6.2h-6V22H4z" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"/></symbol>
+  <symbol id="people" viewBox="0 0 26 26"><circle cx="10" cy="9" r="3.6" fill="none" stroke="currentColor" stroke-width="1.9"/><path d="M3.5 21c.8-3.4 3.4-5.3 6.5-5.3s5.7 1.9 6.5 5.3M17 5.6a3.4 3.4 0 0 1 0 6.6M19.5 15.9c1.6.7 2.6 2.4 3 4.7" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></symbol>
+  <symbol id="ticket" viewBox="0 0 26 26"><path d="M3.5 7.5a2 2 0 0 1 2-2h15a2 2 0 0 1 2 2v3a2.5 2.5 0 0 0 0 5v3a2 2 0 0 1-2 2h-15a2 2 0 0 1-2-2v-3a2.5 2.5 0 0 0 0-5z" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"/><path d="M15.5 6v14" stroke="currentColor" stroke-width="1.6" stroke-dasharray="2 2.4"/></symbol>
+  <symbol id="ticket-f" viewBox="0 0 26 26"><path d="M3.5 7.5a2 2 0 0 1 2-2h15a2 2 0 0 1 2 2v3a2.5 2.5 0 0 0 0 5v3a2 2 0 0 1-2 2h-15a2 2 0 0 1-2-2v-3a2.5 2.5 0 0 0 0-5z" fill="currentColor"/><path d="M15.5 6v14" stroke="#fff" stroke-width="1.6" stroke-dasharray="2 2.4"/></symbol>
+  <symbol id="user" viewBox="0 0 26 26"><circle cx="13" cy="9" r="4.2" fill="none" stroke="currentColor" stroke-width="1.9"/><path d="M5 22c1-4 4.2-6.2 8-6.2s7 2.2 8 6.2" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></symbol>
+  <symbol id="bell" viewBox="0 0 24 24"><path d="M6 16.5V11a6 6 0 0 1 12 0v5.5l1.8 1.8H4.2zM10 21h4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/></symbol>
+  <symbol id="plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></symbol>
+  <symbol id="search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="m16 16 4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+  <symbol id="del" viewBox="0 0 28 24"><path d="M9 4h15a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H9l-7-8z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="m13 9 6 6m0-6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+  <symbol id="share" viewBox="0 0 24 24"><path d="M12 15V4m0 0L8 8m4-4 4 4M6 12v6.5A1.5 1.5 0 0 0 7.5 20h9a1.5 1.5 0 0 0 1.5-1.5V12" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4" fill="currentColor"/><path d="M12 2.5v2.5M12 19v2.5M2.5 12H5M19 12h2.5M5.3 5.3l1.8 1.8M16.9 16.9l1.8 1.8M5.3 18.7l1.8-1.8M16.9 7.1l1.8-1.8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+  <symbol id="moon" viewBox="0 0 24 24"><path d="M19.5 14.5A8 8 0 0 1 9.5 4.5a8 8 0 1 0 10 10z" fill="currentColor"/></symbol>
+</defs>
+</svg>
+
+<header class="cover">
+  <div class="wrap">
+    <div>
+      <div class="wm"><svg width="36" height="36"><use href="#mark"/></svg>aaminpay</div>
+      <h1>Every transfer is a journey home.</h1>
+      <p>A design direction no money transfer app uses today. Each payment is a ticket between two places. Blue is your side, green is theirs. It turns amber while the money travels, fully green when it arrives, and red if it's refused.</p>
+    </div>
+    <div class="shots" aria-hidden="true">
+      <div class="dev"><div class="screen"><div class="sb"><span>9:41</span><span class="ic"><svg width="18" height="12"><use href="#sig"/></svg><svg width="16" height="12"><use href="#wifi"/></svg><svg width="27" height="13"><use href="#bat"/></svg></span></div>
+        <div class="nav"><svg width="24" height="24"><use href="#close"/></svg><span class="t">Send to Kenya</span></div>
+        <div class="body" style="padding-top:6px;gap:14px">
+          <div class="tk ex" style="--cut:58px"><div class="top" style="height:58px;padding:0 18px;flex-direction:row;align-items:center"><span style="font-weight:600;font-size:15px">You send · United Kingdom</span><span style="margin-left:auto;display:flex;align-items:center;gap:6px;font-weight:700"><svg width="24" height="24"><use href="#f-gb"/></svg>GBP<svg width="16" height="16"><use href="#down"/></svg></span></div><div class="perf"></div><div class="stub" style="padding:12px 18px 16px"><span class="num" style="font-size:46px;white-space:nowrap">£500.00<span style="display:inline-block;width:3px;height:40px;background:var(--ink);margin-left:3px;vertical-align:-4px"></span></span></div></div><div style="height:0;position:relative;z-index:3"><span style="position:absolute;left:50%;top:-29px;margin-left:-26px;width:52px;height:52px;border-radius:50%;background:var(--ink);color:#fff;display:grid;place-items:center;box-shadow:0 0 0 5px var(--sbg)"><svg width="24" height="24"><use href="#swapv"/></svg></span></div><div class="tk pd" style="--cut:58px"><div class="top" style="height:58px;padding:0 18px;flex-direction:row;align-items:center"><span style="font-weight:600;font-size:15px">Wanjiru gets · Kenya</span><span style="margin-left:auto;display:flex;align-items:center;gap:6px;font-weight:700"><svg width="24" height="24"><use href="#f-ke"/></svg>KES<svg width="16" height="16"><use href="#down"/></svg></span></div><div class="perf"></div><div class="stub" style="padding:12px 18px 16px"><span class="num" style="font-size:46px;white-space:nowrap">KSh 84,700.00</span></div></div>
+          <div class="panel" style="padding:2px 18px">
+            <div class="kv"><span>Our fee</span><span>£2.99</span></div>
+            <div class="kv"><span>Rate, held 30 min</span><span>£1 = KSh 169.40</span></div>
+            <div class="kv"><span>Arrives in Nairobi</span><span>Within minutes</span></div>
+            <div class="kv" style="font-size:17px"><span style="color:var(--ink);font-weight:700">Total to pay</span><span style="font-weight:800">£502.99</span></div>
+          </div>
+        </div>
+        <div class="foot" style="gap:10px"><div class="btn">Continue</div><div class="chk"><span class="box"><svg width="14" height="14"><use href="#check"/></svg></span>I am not sending on behalf of someone else</div></div><span class="hi"></span></div></div>
+      <div class="dev mid"><div class="screen"><div class="sb"><span>9:41</span><span class="ic"><svg width="18" height="12"><use href="#sig"/></svg><svg width="16" height="12"><use href="#wifi"/></svg><svg width="27" height="13"><use href="#bat"/></svg></span></div>
+        <div class="body" style="padding-top:6px;gap:14px">
+          <div style="display:flex;justify-content:space-between;align-items:center"><div class="d" style="font-size:40px;text-transform:uppercase">Hi Sara</div><svg width="24" height="24"><use href="#bell"/></svg></div>
+          <div class="tk split" style="--cut:66px"><div class="top" style="height:66px;padding:0;flex-direction:row;align-items:stretch"><div style="flex:1;display:flex;align-items:center;gap:8px;padding:0 16px"><svg width="26" height="26"><use href="#f-gb"/></svg><span class="half">GBP<svg width="16" height="16"><use href="#down"/></svg></span></div><div style="flex:1;display:flex;align-items:center;justify-content:flex-end;gap:8px;padding:0 16px"><span class="half">KES<svg width="16" height="16"><use href="#down"/></svg></span><svg width="26" height="26"><use href="#f-ke"/></svg></div></div><div class="perf" style="margin:0 16px"></div><div class="stub" style="padding:12px 16px 14px;flex-direction:row;justify-content:space-between;align-items:center"><div><span class="lbl" style="font-size:13px">£1 buys</span><b class="d" style="display:block;font-size:34px">KSh 169.40</b></div><span class="sendmini">Send<svg width="16" height="16"><use href="#chev"/></svg></span></div></div>
+          <div style="display:flex;justify-content:space-between;align-items:baseline"><b style="font-size:17px">Your people</b><span class="lbl">Local time</span></div>
+          <div class="panel" style="margin-top:-6px">
+            <div class="row"><span class="av so">WK<svg class="fl" width="18" height="18"><use href="#f-ke"/></svg></span><div class="tx"><b>Wanjiru Kamau</b><small>Nairobi, M-Pesa</small></div><span class="clock"><svg width="16" height="16"><use href="#sun"/></svg><b style="font-size:22px">11:41</b></span></div>
+            <div class="row"><span class="av so">AH<svg class="fl" width="18" height="18"><use href="#f-so"/></svg></span><div class="tx"><b>Abdi Hassan</b><small>Mogadishu, mobile wallet</small></div><span class="clock"><svg width="16" height="16"><use href="#sun"/></svg><b style="font-size:22px">11:41</b></span></div>
+            <div class="row"><span class="av" style="background:#fff;box-shadow:inset 0 0 0 1.5px var(--line)"><svg width="20" height="20"><use href="#plus"/></svg></span><div class="tx"><b>Add someone</b></div></div>
+          </div>
+          <div class="tk ow" style="--cut:52px"><div class="top" style="padding:10px 16px;height:52px;flex-direction:row;align-items:center"><span class="code" style="font-size:28px">GBP → USD</span><span style="margin-left:auto;font-size:13px;font-weight:600">8 Oct</span></div><div class="perf" style="margin:0 16px"></div><div class="stub" style="padding:10px 16px 12px;flex-direction:row;justify-content:space-between;align-items:center"><span><span class="lbl" style="font-size:12.5px">Abdi Hassan</span><b class="d" style="display:block;font-size:24px">$379.92</b></span><span class="badge b-go">On its way</span></div></div>
+        </div>
+        <div class="tabs"><div class="on"><svg width="26" height="26"><use href="#home-f"/></svg>Home</div><div class=""><svg width="26" height="26"><use href="#people"/></svg>People</div><div class=""><svg width="26" height="26"><use href="#ticket"/></svg>Transfers</div><div class=""><svg width="26" height="26"><use href="#user"/></svg>You</div></div><span class="hi"></span></div></div>
+      <div class="dev"><div class="screen"><div class="sb"><span>9:41</span><span class="ic"><svg width="18" height="12"><use href="#sig"/></svg><svg width="16" height="12"><use href="#wifi"/></svg><svg width="27" height="13"><use href="#bat"/></svg></span></div>
+        <div class="nav"><svg width="24" height="24"><use href="#back"/></svg><span class="t">Receipt</span><span style="margin-left:auto"><svg width="24" height="24"><use href="#share"/></svg></span></div>
+        <div class="body" style="padding-top:6px">
+          <div class="tk pd" style="--cut:150px">
+            <div class="top"><div class="rt"><div class="code">GBP<small>Leicester</small></div><div class="line"></div><div class="code" style="text-align:right">KES<small>Nairobi</small></div></div><div style="font-weight:600;font-size:15px">Wanjiru Kamau, M-Pesa</div></div>
+            <div class="perf"></div>
+            <div class="stub" style="gap:14px">
+              <div><div class="lbl">Wanjiru got</div><div class="num" style="font-size:44px;white-space:nowrap">KSh 84,700.00</div></div>
+              <div class="meta">
+                <div><small>You paid</small><b>£502.99</b></div>
+                <div><small>Our fee</small><b>£2.99</b></div>
+                <div><small>Paid with</small><b>Visa ending 4821</b></div>
+                <div><small>Reference</small><b>AP38291745</b></div>
+              </div>
+            </div>
+            <div class="stamp">Deliv&shy;ered<br>10 Oct</div>
+          </div>
+          <div class="lbl" style="text-align:center">Paid out by Example Partner Ltd, a licensed payment institution</div>
+        </div>
+        <div class="foot"><div class="btn">Send to Wanjiru again</div></div><span class="hi"></span></div></div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+<section class="part" id="market">
+  <div class="ph"><h2>What the market looks like</h2><p>Most transfer apps share the same parts: a coloured brand header, a converter with two boxes, and a list of transactions. They differ mainly in colour. Our previous design used dark teal and mint, which sits too close to Wise.</p></div>
+  <div class="market">
+    <div class="mk"><div class="chips"><i style="background:#163300"></i><i style="background:#9FE870"></i><i style="background:#E2F6D5"></i></div><b>Wise</b><span>Forest green with electric lime, heavy display type, pill buttons.</span></div>
+    <div class="mk"><div class="chips"><i style="background:#FFDD00"></i><i style="background:#000"></i></div><b>Western Union</b><span>Yellow and black, the classic remittance look.</span></div>
+    <div class="mk"><div class="chips"><i style="background:#0B2C5A"></i><i style="background:#2E7CF6"></i></div><b>Remitly</b><span>Navy and bright blue, the most common fintech colour.</span></div>
+    <div class="mk"><div class="chips"><i style="background:#0A0A0A"></i><i style="background:#FFFFFF"></i><i style="background:#6E5BFF"></i></div><b>Revolut</b><span>Black and white with gradient cards.</span></div>
+    <div class="mk"><div class="chips"><i style="background:#FF4F40"></i><i style="background:#14233C"></i></div><b>Monzo</b><span>Hot coral on navy, friendly and rounded.</span></div>
+    <div class="mk us"><div class="chips"><i style="background:#0B3D45"></i><i style="background:#34C49A"></i></div><b>Our earlier draft</b><span>Dark teal and mint. Read as a Wise lookalike.</span></div>
+  </div>
+  <div class="verdict"><b>Gap</b><span>No app shows the state of your money at a glance. In AaminPay the ticket itself changes colour as the money moves, so customers know where things stand without reading.</span></div>
+  <div class="src">Wise colours from <a href="https://styles.refero.design/style/367c0c6e-73a7-441c-a8ff-91d139ac60dc">Refero's Wise style reference</a> and <a href="https://www.creativereview.co.uk/wise-rebrand-ragged-edge/">Creative Review</a>. Other brands shown by colour family, approximate.</div>
+</section>
+
+<section class="part" id="idea">
+  <div class="ph"><h2>Three ideas, used everywhere</h2><p>These replace the usual converter-and-list layout. Each one answers a real question customers have when sending money home.</p></div>
+  <div class="princ">
+    <div class="pr">
+      <h3>The ticket</h3>
+      <p>Every transfer is a ticket from one currency and city to another, with a tear-off stub for the amount. It doubles as the receipt and gets stamped on delivery.</p>
+      <div class="demo"><div class="tk ex" style="--cut:84px;--sbg:var(--fog)"><div class="top" style="padding:14px 16px"><div class="rt"><div class="code" style="font-size:34px">GBP</div><div class="line" style="margin-bottom:12px"></div><div class="code" style="font-size:34px">INR</div></div></div><div class="perf" style="margin:0 16px"></div><div class="stub" style="padding:10px 16px 12px"><span class="lbl" style="font-size:12px">Priya gets</span><b class="d" style="font-size:28px">₹55,880.62</b></div></div></div>
+    </div>
+    <div class="pr">
+      <h3>Two clocks</h3>
+      <p>Each person shows their local time. Customers can see it's 02:41 in Guadalajara before sending, and the tracker gives arrival in the recipient's time.</p>
+      <div class="demo" style="flex-direction:row;align-items:center;justify-content:space-around"><div class="clock" style="flex-direction:column;align-items:flex-start;gap:4px"><span>Leicester</span><b>09:41</b></div><svg width="40" height="12" viewBox="0 0 40 12"><path d="M0 6h34" stroke="#9AA5BD" stroke-width="2" stroke-dasharray="4 4"/><circle cx="35" cy="6" r="4" fill="#0D2252"/></svg><div class="clock" style="flex-direction:column;align-items:flex-start;gap:4px"><span>Bengaluru</span><b>14:11</b></div></div>
+    </div>
+    <div class="pr">
+      <h3>Status colour</h3>
+      <p>The ticket top changes colour with each step. The rest of the app is blue, dark blue and white, so colour on a ticket always means "this is what's happening to your money".</p>
+      <div class="demo" style="display:grid;grid-template-columns:repeat(2,1fr);gap:6px"><div style="border-radius:10px;background:linear-gradient(90deg,var(--blue) 0 50%,var(--paid) 50% 100%);color:#fff;padding:26px 10px 9px;font-weight:600;font-size:13px">Exchange</div><div style="border-radius:10px;background:var(--way);color:var(--ink);padding:26px 10px 9px;font-weight:600;font-size:13px">On the way</div><div style="border-radius:10px;background:var(--paid);color:#fff;padding:26px 10px 9px;font-weight:600;font-size:13px">Arrived</div><div style="border-radius:10px;background:var(--refused);color:#fff;padding:26px 10px 9px;font-weight:600;font-size:13px">Refused</div></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="part" id="rules">
+  <div class="ph"><h2>Colour and ticket rules</h2><p>Blue for you, green for them, amber while it travels, red if refused. Two ticket sizes cover every screen.</p></div>
+
+  <div class="rg"><div class="rgc"><div class="sw2" style="background:linear-gradient(90deg,var(--blue) 0 50%,var(--paid) 50% 100%);color:#fff"><span class="code" style="font-size:26px">GBP → KES</span></div><b>Blue + green · Exchange</b><span>Home, log in and the check screen. Left half blue (your pounds), right half green (their currency).</span></div><div class="rgc"><div class="sw2" style="background:var(--blue);color:#fff"><span class="code" style="font-size:26px">You send</span></div><b>Blue #2563D9 · Your side</b><span>What you send, on the Send page and rate calculator.</span></div><div class="rgc"><div class="sw2" style="background:var(--paid);color:#fff"><span class="code" style="font-size:26px">They get</span></div><b>Green #1F8A5B · Their side and paid</b><span>What they receive. The whole ticket turns green when the money arrives.</span></div><div class="rgc"><div class="sw2" style="background:var(--way);color:var(--ink)"><span class="code" style="font-size:26px">GBP → KES</span></div><b>Amber #F5A623 · On the way</b><span>You have paid and the money is travelling. Dark text on this one only.</span></div><div class="rgc"><div class="sw2" style="background:var(--refused);color:#fff"><span class="code" style="font-size:26px">KES → GBP</span></div><b>Red #D2382F · Refused</b><span>Refused or returned. The route flips to show the money coming back.</span></div></div>
+  <p class="rnote">Simple story: <b>blue is you, green is them</b>. Money starts blue, travels <b>amber</b>, and arrives <b>green</b>, or turns <b>red</b> if it's refused. Everything else in the app is <b>blue, dark blue and white</b>.</p>
+
+  <div class="anat">
+    <div class="anat-tk">
+      <div class="tk ex" style="--cut:112px;--sbg:var(--fog);color:var(--ink)">
+        <div class="top"><div class="rt"><div class="code">GBP<small>Leicester</small></div><div class="line"></div><div class="code" style="text-align:right">USD<small>Mogadishu</small></div></div></div>
+        <span class="swapbtn"><svg width="24" height="24"><use href="#swapv"/></svg></span>
+        <div class="perf"></div>
+        <div class="stub" style="flex-direction:row;justify-content:space-between;align-items:flex-end"><div><div class="lbl">Abdi gets</div><div class="num" style="font-size:48px">$633.20</div></div></div>
+      </div>
+      <div class="tk ow" style="--cut:52px;--sbg:var(--fog);margin-top:14px;color:var(--ink)"><div class="top" style="padding:10px 16px;height:52px;flex-direction:row;align-items:center"><span class="code" style="font-size:28px">GBP → USD</span><span style="margin-left:auto;font-size:13px;font-weight:600">9 Oct</span></div><div class="perf" style="margin:0 16px"></div><div class="stub" style="padding:10px 16px 12px;flex-direction:row;justify-content:space-between;align-items:center"><span><span class="lbl" style="font-size:12.5px">Abdi Hassan</span><b class="d" style="display:block;font-size:24px">$633.20</b></span><span class="badge b-go">On its way</span></div></div>
+    </div>
+    <ol class="parts">
+      <li><b>Top: the route.</b> FROM code, a dotted line, TO code, cities underneath. Filled with the status colour.</li>
+      <li><b>Tear line with two notches.</b> Always in the same place, between route and amount.</li>
+      <li><b>Stub: the amount.</b> White, dark blue text, amount left-aligned and biggest on screen. The status pill sits on the right of the stub.</li>
+      <li><b>Swap button.</b> Dark blue circle between the blue and green tickets, only where the customer types an amount.</li>
+      <li><b>Two sizes only.</b> Large (full width, route 58pt) for one transfer; small (52 high top) for lists. Both use the full screen width minus 22pt each side, stacked straight with 10pt gaps. Never rotated.</li>
+      <li><b>One large ticket per screen.</b> Lists use small tickets only.</li>
+    </ol>
+  </div>
+
+  <div class="dodont">
+    <div><b>Always</b><ul><li>App colours: blue, dark blue and white. No black.</li><li>Buttons dark blue (white on dark screens); links and the selected tab blue</li><li>Ticket colour matches the step, with the step also written in words</li><li>Backgrounds white or light grey</li></ul></div>
+    <div><b>Never</b><ul><li>Amber, green or red on buttons or backgrounds</li><li>A ticket colour that does not match its step</li><li>Tickets at an angle or overlapping</li><li>A country picker on log in or sign up (UK only)</li></ul></div>
+  </div>
+</section>
+
+<section class="part" id="screens">
+  <div class="ph"><h2>Key screens</h2><p>The full path: log in, sign up, home, send, choose who, check, pay, then track and receipt. Blue is your side, green is theirs. The ticket turns amber while the money travels and fully green when it arrives.</p></div>
+  <div class="grid">
+    <div class="item">
+      <div class="dev"><div class="screen"><div class="sb" style="color:#fff"><span>9:41</span><span class="ic"><svg width="18" height="12"><use href="#sig"/></svg><svg width="16" height="12"><use href="#wifi"/></svg><svg width="27" height="13"><use href="#bat"/></svg></span></div>
+        <div style="flex:none;background:var(--ink);color:#fff;border-bottom-right-radius:56px;padding-bottom:22px;margin-top:-54px;padding-top:54px">
+          <div style="padding:10px 22px 0;display:flex;flex-direction:column;gap:16px">
+            <div style="display:flex;justify-content:space-between;align-items:center"><div class="wm" style="font-size:28px"><svg width="32" height="32"><use href="#mark"/></svg>aaminpay</div><span style="height:38px;padding:0 12px;border:1.5px solid rgba(255,255,255,.35);border-radius:19px;display:flex;align-items:center;gap:7px;font-size:14px;font-weight:600"><svg width="18" height="18"><use href="#globe"/></svg>ENG</span></div>
+            <div class="tk split" style="--cut:66px;--sbg:#0D2252"><div class="top" style="height:66px;padding:0;flex-direction:row;align-items:stretch"><div style="flex:1;display:flex;align-items:center;gap:8px;padding:0 16px"><svg width="26" height="26"><use href="#f-gb"/></svg><span class="half">GBP<svg width="16" height="16"><use href="#down"/></svg></span></div><div style="flex:1;display:flex;align-items:center;justify-content:flex-end;gap:8px;padding:0 16px"><span class="half">KES<svg width="16" height="16"><use href="#down"/></svg></span><svg width="26" height="26"><use href="#f-ke"/></svg></div></div><div class="perf" style="margin:0 16px"></div><div class="stub" style="padding:12px 16px 14px;flex-direction:row;justify-content:space-between;align-items:center"><div><span class="lbl" style="font-size:13px">£1 buys</span><b class="d" style="display:block;font-size:34px">KSh 169.40</b></div><span class="lbl">Today</span></div></div>
+          </div>
+        </div>
+        <div class="body" style="padding-top:22px;gap:14px">
+          <div class="d" style="font-size:38px;text-transform:uppercase">Welcome back</div>
+          <div class="of" style="margin-top:4px"><svg width="22" height="22" style="color:var(--ink2)"><use href="#mail"/></svg><span class="ph">Email</span></div>
+          <div class="of"><svg width="22" height="22" style="color:var(--ink2)"><use href="#lock"/></svg><span class="ph">Password</span><span class="end"><svg width="22" height="22"><use href="#eye"/></svg></span></div>
+          <div style="text-align:right;font-size:15px;font-weight:600;margin-top:-4px">Forgot password?</div>
+        </div>
+        <div class="foot" style="gap:12px;padding-bottom:30px">
+          <div class="btn">Log in</div>
+          <div class="tlink" style="font-weight:500;color:var(--ink2)">New to AaminPay? <b style="color:var(--blue)">Sign up</b></div>
+          <div style="display:flex;gap:10px"><div class="tile"><span class="ib"><svg width="18" height="18"><use href="#calc"/></svg></span>Rate calculator</div><div class="tile"><span class="ib"><svg width="18" height="18"><use href="#help"/></svg></span>Help</div></div>
+        </div><span class="hi"></span></div></div>
+      <div class="cap"><b>Log in</b>The first screen. Today's rate on a small blue-and-green ticket. New customers tap Sign up.</div>
+    </div>
+    <div class="item">
+      <div class="dev"><div class="screen"><div class="sb"><span>9:41</span><span class="ic"><svg width="18" height="12"><use href="#sig"/></svg><svg width="16" height="12"><use href="#wifi"/></svg><svg width="27" height="13"><use href="#bat"/></svg></span></div>
+        <div class="nav"><svg width="24" height="24"><use href="#back"/></svg><span class="t">Sign up</span></div>
+        <div class="body" style="padding-top:10px;gap:16px">
+          <div class="d" style="font-size:38px;text-transform:uppercase">Create your account</div>
+          <div style="display:flex;gap:10px"><div class="of" style="flex:1;min-width:0"><span class="lg">First name</span>Sara</div><div class="of" style="flex:1;min-width:0"><span class="lg">Last name</span>Ahmed</div></div>
+          <div class="of"><span class="lg">Email</span>sara.ahmed@email.co.uk</div>
+          <div class="of"><span class="lg">Mobile</span><svg width="24" height="24"><use href="#f-gb"/></svg><span style="color:var(--ink2)">+44</span>7700 900418</div>
+          <div class="of"><span class="lg">Password</span>••••••••••••<span class="end"><svg width="22" height="22"><use href="#eye"/></svg></span></div>
+          <div class="chk" style="justify-content:flex-start;align-items:flex-start"><span class="box"><svg width="14" height="14"><use href="#check"/></svg></span>I agree to the Terms of Use and Privacy Policy</div>
+        </div>
+        <div class="foot"><div class="btn">Create account</div><div class="tlink" style="font-weight:500;color:var(--ink2)">Already have an account? <b style="color:var(--blue)">Log in</b></div></div><span class="hi"></span></div></div>
+      <div class="cap"><b>Sign up</b>A plain form: name as on ID, email, UK mobile, password. No country choice, it's the UK.</div>
+    </div>
+    <div class="item">
+      <div class="dev"><div class="screen"><div class="sb"><span>9:41</span><span class="ic"><svg width="18" height="12"><use href="#sig"/></svg><svg width="16" height="12"><use href="#wifi"/></svg><svg width="27" height="13"><use href="#bat"/></svg></span></div>
+        <div class="body" style="padding-top:6px;gap:14px">
+          <div style="display:flex;justify-content:space-between;align-items:center"><div class="d" style="font-size:40px;text-transform:uppercase">Hi Sara</div><svg width="24" height="24"><use href="#bell"/></svg></div>
+          <div class="tk split" style="--cut:66px"><div class="top" style="height:66px;padding:0;flex-direction:row;align-items:stretch"><div style="flex:1;display:flex;align-items:center;gap:8px;padding:0 16px"><svg width="26" height="26"><use href="#f-gb"/></svg><span class="half">GBP<svg width="16" height="16"><use href="#down"/></svg></span></div><div style="flex:1;display:flex;align-items:center;justify-content:flex-end;gap:8px;padding:0 16px"><span class="half">KES<svg width="16" height="16"><use href="#down"/></svg></span><svg width="26" height="26"><use href="#f-ke"/></svg></div></div><div class="perf" style="margin:0 16px"></div><div class="stub" style="padding:12px 16px 14px;flex-direction:row;justify-content:space-between;align-items:center"><div><span class="lbl" style="font-size:13px">£1 buys</span><b class="d" style="display:block;font-size:34px">KSh 169.40</b></div><span class="sendmini">Send<svg width="16" height="16"><use href="#chev"/></svg></span></div></div>
+          <div style="display:flex;justify-content:space-between;align-items:baseline"><b style="font-size:17px">Your people</b><span class="lbl">Local time</span></div>
+          <div class="panel" style="margin-top:-6px">
+            <div class="row"><span class="av so">WK<svg class="fl" width="18" height="18"><use href="#f-ke"/></svg></span><div class="tx"><b>Wanjiru Kamau</b><small>Nairobi, M-Pesa</small></div><span class="clock"><svg width="16" height="16"><use href="#sun"/></svg><b style="font-size:22px">11:41</b></span></div>
+            <div class="row"><span class="av so">AH<svg class="fl" width="18" height="18"><use href="#f-so"/></svg></span><div class="tx"><b>Abdi Hassan</b><small>Mogadishu, mobile wallet</small></div><span class="clock"><svg width="16" height="16"><use href="#sun"/></svg><b style="font-size:22px">11:41</b></span></div>
+            <div class="row"><span class="av" style="background:#fff;box-shadow:inset 0 0 0 1.5px var(--line)"><svg width="20" height="20"><use href="#plus"/></svg></span><div class="tx"><b>Add someone</b></div></div>
+          </div>
+          <div class="tk ow" style="--cut:52px"><div class="top" style="padding:10px 16px;height:52px;flex-direction:row;align-items:center"><span class="code" style="font-size:28px">GBP → USD</span><span style="margin-left:auto;font-size:13px;font-weight:600">8 Oct</span></div><div class="perf" style="margin:0 16px"></div><div class="stub" style="padding:10px 16px 12px;flex-direction:row;justify-content:space-between;align-items:center"><span><span class="lbl" style="font-size:12.5px">Abdi Hassan</span><b class="d" style="display:block;font-size:24px">$379.92</b></span><span class="badge b-go">On its way</span></div></div>
+        </div>
+        <div class="tabs"><div class="on"><svg width="26" height="26"><use href="#home-f"/></svg>Home</div><div class=""><svg width="26" height="26"><use href="#people"/></svg>People</div><div class=""><svg width="26" height="26"><use href="#ticket"/></svg>Transfers</div><div class=""><svg width="26" height="26"><use href="#user"/></svg>You</div></div><span class="hi"></span></div></div>
+      <div class="cap"><b>Home</b>A small exchange ticket: blue for your pounds, green for their currency. Tap GBP or KES to change, then Send.</div>
+    </div>
+    <div class="item">
+      <div class="dev"><div class="screen"><div class="sb"><span>9:41</span><span class="ic"><svg width="18" height="12"><use href="#sig"/></svg><svg width="16" height="12"><use href="#wifi"/></svg><svg width="27" height="13"><use href="#bat"/></svg></span></div>
+        <div class="nav"><svg width="24" height="24"><use href="#close"/></svg><span class="t">Send to Kenya</span></div>
+        <div class="body" style="padding-top:6px;gap:14px">
+          <div class="tk ex" style="--cut:58px"><div class="top" style="height:58px;padding:0 18px;flex-direction:row;align-items:center"><span style="font-weight:600;font-size:15px">You send · United Kingdom</span><span style="margin-left:auto;display:flex;align-items:center;gap:6px;font-weight:700"><svg width="24" height="24"><use href="#f-gb"/></svg>GBP<svg width="16" height="16"><use href="#down"/></svg></span></div><div class="perf"></div><div class="stub" style="padding:12px 18px 16px"><span class="num" style="font-size:46px;white-space:nowrap">£500.00<span style="display:inline-block;width:3px;height:40px;background:var(--ink);margin-left:3px;vertical-align:-4px"></span></span></div></div><div style="height:0;position:relative;z-index:3"><span style="position:absolute;left:50%;top:-29px;margin-left:-26px;width:52px;height:52px;border-radius:50%;background:var(--ink);color:#fff;display:grid;place-items:center;box-shadow:0 0 0 5px var(--sbg)"><svg width="24" height="24"><use href="#swapv"/></svg></span></div><div class="tk pd" style="--cut:58px"><div class="top" style="height:58px;padding:0 18px;flex-direction:row;align-items:center"><span style="font-weight:600;font-size:15px">Wanjiru gets · Kenya</span><span style="margin-left:auto;display:flex;align-items:center;gap:6px;font-weight:700"><svg width="24" height="24"><use href="#f-ke"/></svg>KES<svg width="16" height="16"><use href="#down"/></svg></span></div><div class="perf"></div><div class="stub" style="padding:12px 18px 16px"><span class="num" style="font-size:46px;white-space:nowrap">KSh 84,700.00</span></div></div>
+          <div class="panel" style="padding:2px 18px">
+            <div class="kv"><span>Our fee</span><span>£2.99</span></div>
+            <div class="kv"><span>Rate, held 30 min</span><span>£1 = KSh 169.40</span></div>
+            <div class="kv"><span>Arrives in Nairobi</span><span>Within minutes</span></div>
+            <div class="kv" style="font-size:17px"><span style="color:var(--ink);font-weight:700">Total to pay</span><span style="font-weight:800">£502.99</span></div>
+          </div>
+        </div>
+        <div class="foot" style="gap:10px"><div class="btn">Continue</div><div class="chk"><span class="box"><svg width="14" height="14"><use href="#check"/></svg></span>I am not sending on behalf of someone else</div></div><span class="hi"></span></div></div>
+      <div class="cap"><b>Send</b>Two tickets: blue for what you send, green for what they get, with the swap button between. Fee, rate, arrival and total underneath.</div>
+    </div>
+    <div class="item">
+      <div class="dev"><div class="screen"><div class="sb"><span>9:41</span><span class="ic"><svg width="18" height="12"><use href="#sig"/></svg><svg width="16" height="12"><use href="#wifi"/></svg><svg width="27" height="13"><use href="#bat"/></svg></span></div>
+        <div class="nav"><svg width="24" height="24"><use href="#back"/></svg><span class="t">Who are you sending to?</span></div>
+        <div class="body" style="padding-top:8px">
+          <div style="height:52px;border-radius:26px;background:#fff;display:flex;align-items:center;gap:10px;padding:0 18px;color:#9AA5BD"><svg width="20" height="20"><use href="#search"/></svg>Name, phone or bank</div>
+          <div class="btn lt2"><svg width="20" height="20"><use href="#plus"/></svg>Add someone new in Kenya</div>
+          <div class="lbl">In Kenya</div>
+          <div class="panel" style="margin-top:-6px">
+            <div class="row"><span class="av so">WK<svg class="fl" width="18" height="18"><use href="#f-ke"/></svg></span><div class="tx"><b>Wanjiru Kamau</b><small>M-Pesa, +254 712 ••• 781</small></div><svg width="20" height="20" style="color:var(--blue)"><use href="#check"/></svg></div>
+            <div class="row"><span class="av so">OO<svg class="fl" width="18" height="18"><use href="#f-ke"/></svg></span><div class="tx"><b>Otieno Odhiambo</b><small>Equity Bank ending 3310</small></div><svg width="20" height="20" style="color:#9AA5BD"><use href="#chev"/></svg></div>
+            <div class="row"><span class="av so">AN<svg class="fl" width="18" height="18"><use href="#f-ke"/></svg></span><div class="tx"><b>Achieng Njeri</b><small>M-Pesa, +254 722 ••• 145</small></div><svg width="20" height="20" style="color:#9AA5BD"><use href="#chev"/></svg></div>
+          </div>
+        </div>
+        <div class="foot"><div class="btn">Continue</div></div><span class="hi"></span></div></div>
+      <div class="cap"><b>Choose who</b>Saved people in the chosen country, or add someone new.</div>
+    </div>
+    <div class="item">
+      <div class="dev"><div class="screen"><div class="sb"><span>9:41</span><span class="ic"><svg width="18" height="12"><use href="#sig"/></svg><svg width="16" height="12"><use href="#wifi"/></svg><svg width="27" height="13"><use href="#bat"/></svg></span></div>
+        <div class="nav"><svg width="24" height="24"><use href="#back"/></svg><span class="t">Check your transfer</span></div>
+        <div class="body" style="padding-top:6px">
+          <div class="tk split" style="--cut:150px">
+            <div class="top"><div class="rt"><div class="code">GBP<small>Leicester, 09:41</small></div><div class="line"></div><div class="code" style="text-align:right">KES<small>Nairobi, 11:41</small></div></div><div style="display:flex;align-items:center;gap:10px;font-weight:600;font-size:15px"><span class="av so" style="width:34px;height:34px;font-size:13px">WK</span>Wanjiru Kamau, M-Pesa</div></div>
+            <div class="perf"></div>
+            <div class="stub" style="gap:14px">
+              <div><div class="lbl">Wanjiru gets</div><div class="num" style="font-size:44px;white-space:nowrap">KSh 84,700.00</div></div>
+              <div class="meta">
+                <div><small>You send</small><b>£500.00</b></div>
+                <div><small>Our fee</small><b>£2.99</b></div>
+                <div><small>Rate</small><b>KSh 169.40</b></div>
+                <div><small>Arrives</small><b>Within minutes</b></div>
+              </div>
+            </div>
+          </div>
+          <div class="totbar"><span style="font-weight:600">Total to pay</span><b>£502.99</b></div>
+          <div style="text-align:center;font-size:14.5px;color:var(--ink2)">Rate held for another <b style="color:var(--ink)">26:41</b></div>
+        </div>
+        <div class="foot"><div class="btn">Continue to payment</div></div><span class="hi"></span></div></div>
+      <div class="cap"><b>Check</b>The full ticket, split blue and green, with the total to pay.</div>
+    </div>
+    <div class="item">
+      <div class="dev"><div class="screen"><div class="sb"><span>9:41</span><span class="ic"><svg width="18" height="12"><use href="#sig"/></svg><svg width="16" height="12"><use href="#wifi"/></svg><svg width="27" height="13"><use href="#bat"/></svg></span></div>
+        <div class="nav"><svg width="24" height="24"><use href="#back"/></svg><span class="t">Payment</span></div>
+        <div class="body" style="padding-top:6px;gap:12px">
+          <div class="d" style="font-size:38px;text-transform:uppercase">How do you want to pay?</div>
+          <div class="totbar"><span style="font-weight:600">To Wanjiru, Kenya</span><b>£502.99</b></div>
+          <div class="pm"><span class="ib"><svg width="22" height="22"><use href="#phonepay"/></svg></span><div>Google Pay<small>Pay with your phone</small></div><span class="rd"></span></div>
+          <div class="pm"><span class="ib"><svg width="22" height="22"><use href="#phonepay"/></svg></span><div>Apple Pay<small>Pay with your phone</small></div><span class="rd"></span></div>
+          <div class="pm on"><span class="ib"><svg width="22" height="22"><use href="#card"/></svg></span><div>Debit card<small>Visa ending 4821</small></div><span class="rd"></span></div>
+          <div class="pm"><span class="ib"><svg width="22" height="22"><use href="#bank"/></svg></span><div>Pay by bank<small>Approve in your banking app</small></div><span class="rd"></span></div>
+          <div style="display:flex;gap:10px;font-size:13.5px;color:var(--ink2);line-height:1.4"><svg width="20" height="20" style="flex:none"><use href="#shield"/></svg>Payments are processed by our licensed payment partner. AaminPay never holds your money or sees your full card number.</div>
+        </div>
+        <div class="foot"><div class="btn">Pay £502.99</div></div><span class="hi"></span></div></div>
+      <div class="cap"><b>Payment</b>The last step: Google Pay, Apple Pay, debit card or pay by bank.</div>
+    </div>
+    <div class="item">
+      <div class="dev"><div class="screen w"><div class="sb"><span>9:41</span><span class="ic"><svg width="18" height="12"><use href="#sig"/></svg><svg width="16" height="12"><use href="#wifi"/></svg><svg width="27" height="13"><use href="#bat"/></svg></span></div>
+        <div class="nav"><svg width="24" height="24"><use href="#close"/></svg><span class="t">On its way to Wanjiru</span></div>
+        <div class="body" style="gap:22px;padding-top:6px">
+          <div class="hero-mg" style="border-radius:26px;padding:20px 22px;display:flex;justify-content:space-between;align-items:flex-end">
+            <div><div style="font-size:14px;font-weight:500;opacity:.75">Arrives in Nairobi by</div><div class="num" style="font-size:72px">11:55</div></div>
+            <div style="text-align:right;font-size:14px;font-weight:600">That's 09:55<br>in Leicester</div>
+          </div>
+          <div class="jr">
+            <div class="st done"><span class="dot"><svg width="16" height="16"><use href="#check"/></svg></span><div><b>Transfer set up</b><small>09:41 your time</small></div></div>
+            <div class="st done"><span class="dot"><svg width="16" height="16"><use href="#check"/></svg></span><div><b>£502.99 paid by Visa debit</b><small>09:42 your time</small></div></div>
+            <div class="st now"><span class="dot"></span><div><b>Changing to shillings, sending to M-Pesa</b><small>Now</small></div></div>
+            <div class="st todo"><span class="dot"></span><div><b>Nairobi: in Wanjiru's wallet</b><small>We'll tell you both</small></div></div>
+          </div>
+        </div>
+        <div class="foot"><div class="btn lt2"><svg width="20" height="20"><use href="#share"/></svg>Send Wanjiru the tracking link</div></div><span class="hi"></span></div></div>
+      <div class="cap"><b>Track</b>The ticket turns amber while the money travels. Arrival is in her local time.</div>
+    </div>
+    <div class="item">
+      <div class="dev"><div class="screen"><div class="sb"><span>9:41</span><span class="ic"><svg width="18" height="12"><use href="#sig"/></svg><svg width="16" height="12"><use href="#wifi"/></svg><svg width="27" height="13"><use href="#bat"/></svg></span></div>
+        <div class="nav"><svg width="24" height="24"><use href="#back"/></svg><span class="t">Receipt</span><span style="margin-left:auto"><svg width="24" height="24"><use href="#share"/></svg></span></div>
+        <div class="body" style="padding-top:6px">
+          <div class="tk pd" style="--cut:150px">
+            <div class="top"><div class="rt"><div class="code">GBP<small>Leicester</small></div><div class="line"></div><div class="code" style="text-align:right">KES<small>Nairobi</small></div></div><div style="font-weight:600;font-size:15px">Wanjiru Kamau, M-Pesa</div></div>
+            <div class="perf"></div>
+            <div class="stub" style="gap:14px">
+              <div><div class="lbl">Wanjiru got</div><div class="num" style="font-size:44px;white-space:nowrap">KSh 84,700.00</div></div>
+              <div class="meta">
+                <div><small>You paid</small><b>£502.99</b></div>
+                <div><small>Our fee</small><b>£2.99</b></div>
+                <div><small>Paid with</small><b>Visa ending 4821</b></div>
+                <div><small>Reference</small><b>AP38291745</b></div>
+              </div>
+            </div>
+            <div class="stamp">Deliv&shy;ered<br>10 Oct</div>
+          </div>
+          <div class="lbl" style="text-align:center">Paid out by Example Partner Ltd, a licensed payment institution</div>
+        </div>
+        <div class="foot"><div class="btn">Send to Wanjiru again</div></div><span class="hi"></span></div></div>
+      <div class="cap"><b>Receipt</b>Fully green with the Delivered stamp once Wanjiru has the money.</div>
+    </div>
+    <div class="item">
+      <div class="dev"><div class="screen"><div class="sb"><span>9:41</span><span class="ic"><svg width="18" height="12"><use href="#sig"/></svg><svg width="16" height="12"><use href="#wifi"/></svg><svg width="27" height="13"><use href="#bat"/></svg></span></div>
+        <div class="body" style="padding-top:8px;gap:12px">
+          <div class="d" style="font-size:44px;text-transform:uppercase">Transfers</div>
+          <div class="tk ow" style="--cut:58px"><div class="top" style="padding:12px 18px;height:58px;flex-direction:row;align-items:center"><span class="code" style="font-size:30px">GBP → KES</span><span style="margin-left:auto;font-size:14px;font-weight:600">10 Oct</span></div><div class="perf"></div><div class="stub" style="flex-direction:row;justify-content:space-between;align-items:center;padding:12px 18px 14px"><span><b style="display:block">Wanjiru Kamau</b><span class="d" style="font-size:26px">KSh 84,700.00</span></span><span class="badge b-go">On its way</span></div></div>
+          <div class="tk pd" style="--cut:58px"><div class="top" style="padding:12px 18px;height:58px;flex-direction:row;align-items:center"><span class="code" style="font-size:30px">GBP → USD</span><span style="margin-left:auto;font-size:14px;font-weight:600">30 Sep</span></div><div class="perf"></div><div class="stub" style="flex-direction:row;justify-content:space-between;align-items:center;padding:12px 18px 14px"><span><b style="display:block">Abdi Hassan</b><span class="d" style="font-size:26px">$379.92</span></span><span class="badge b-ok">Delivered</span></div></div>
+          <div class="tk pd" style="--cut:58px"><div class="top" style="padding:12px 18px;height:58px;flex-direction:row;align-items:center"><span class="code" style="font-size:30px">GBP → MXN</span><span style="margin-left:auto;font-size:14px;font-weight:600">28 Sep</span></div><div class="perf"></div><div class="stub" style="flex-direction:row;justify-content:space-between;align-items:center;padding:12px 18px 14px"><span><b style="display:block">Juan Pérez</b><span class="d" style="font-size:26px">MX$4,612.00</span></span><span class="badge b-ok">Delivered</span></div></div>
+          <div class="tk rf" style="--cut:58px"><div class="top" style="padding:12px 18px;height:58px;flex-direction:row;align-items:center"><span class="code" style="font-size:30px">GBP → GHS</span><span style="margin-left:auto;font-size:14px;font-weight:600">19 Sep</span></div><div class="perf"></div><div class="stub" style="flex-direction:row;justify-content:space-between;align-items:center;padding:12px 18px 14px"><span><b style="display:block">Ama Mensah</b><span class="d" style="font-size:26px">GH₵2,710.50</span></span><span class="badge b-bad">Returned</span></div></div>
+        </div>
+        <div class="tabs"><div class=""><svg width="26" height="26"><use href="#home"/></svg>Home</div><div class=""><svg width="26" height="26"><use href="#people"/></svg>People</div><div class="on"><svg width="26" height="26"><use href="#ticket-f"/></svg>Transfers</div><div class=""><svg width="26" height="26"><use href="#user"/></svg>You</div></div><span class="hi"></span></div></div>
+      <div class="cap"><b>Transfers</b>Every transfer as a small ticket, coloured by its step.</div>
+    </div>
+    <div class="item">
+      <div class="dev"><div class="screen w"><div class="sb"><span>9:41</span><span class="ic"><svg width="18" height="12"><use href="#sig"/></svg><svg width="16" height="12"><use href="#wifi"/></svg><svg width="27" height="13"><use href="#bat"/></svg></span></div>
+        <div class="nav"><svg width="24" height="24"><use href="#close"/></svg><span class="t">Transfer to Ama</span></div>
+        <div class="body" style="padding-top:6px">
+          <div class="tk rf" style="--cut:120px;box-shadow:0 0 0 1px var(--line);--sbg:#fff">
+            <div class="top"><div class="rt"><div class="code" style="font-size:48px">GHS</div><div class="line" style="transform:scaleX(-1)"></div><div class="code" style="font-size:48px;text-align:right">GBP</div></div></div>
+            <div class="perf"></div>
+            <div class="stub"><div class="lbl">Coming back to you</div><div class="num" style="font-size:50px">£150.00</div></div>
+          </div>
+          <div class="d" style="font-size:36px;text-transform:uppercase">Your money is on its way back</div>
+          <p class="lead">Ama's bank refused the payment because the account number didn't match her name. Our partner is returning your money.</p>
+          <div class="panel" style="background:var(--fog)"><div class="kv"><span>Back to</span><span>Visa ending 4821</span></div><div class="kv"><span>Expected</span><span>Within 3 working days</span></div></div>
+        </div>
+        <div class="foot"><div class="btn">Fix details and send again</div></div><span class="hi"></span></div></div>
+      <div class="cap"><b>Refused</b>Red, with the route reversed, and the money going back to your card.</div>
+    </div>
+    <div class="item">
+      <div class="dev"><div class="screen"><div class="sb"><span>9:41</span><span class="ic"><svg width="18" height="12"><use href="#sig"/></svg><svg width="16" height="12"><use href="#wifi"/></svg><svg width="27" height="13"><use href="#bat"/></svg></span></div>
+        <div class="nav"><svg width="24" height="24"><use href="#back"/></svg><span class="t">Rate calculator</span></div>
+        <div class="body" style="padding-top:6px;gap:14px">
+          <div class="tk ex" style="--cut:58px"><div class="top" style="height:58px;padding:0 18px;flex-direction:row;align-items:center"><span style="font-weight:600;font-size:15px">You send · United Kingdom</span><span style="margin-left:auto;display:flex;align-items:center;gap:6px;font-weight:700"><svg width="24" height="24"><use href="#f-gb"/></svg>GBP<svg width="16" height="16"><use href="#down"/></svg></span></div><div class="perf"></div><div class="stub" style="padding:12px 18px 16px"><span class="num" style="font-size:46px;white-space:nowrap">£100.00</span></div></div><div style="height:0;position:relative;z-index:3"><span style="position:absolute;left:50%;top:-29px;margin-left:-26px;width:52px;height:52px;border-radius:50%;background:var(--ink);color:#fff;display:grid;place-items:center;box-shadow:0 0 0 5px var(--sbg)"><svg width="24" height="24"><use href="#swapv"/></svg></span></div><div class="tk pd" style="--cut:58px"><div class="top" style="height:58px;padding:0 18px;flex-direction:row;align-items:center"><span style="font-weight:600;font-size:15px">They get · Kenya</span><span style="margin-left:auto;display:flex;align-items:center;gap:6px;font-weight:700"><svg width="24" height="24"><use href="#f-ke"/></svg>KES<svg width="16" height="16"><use href="#down"/></svg></span></div><div class="perf"></div><div class="stub" style="padding:12px 18px 16px"><span class="num" style="font-size:46px;white-space:nowrap">KSh 16,940.00</span></div></div>
+          <div class="panel" style="padding:2px 18px">
+            <div class="kv"><span>Our fee</span><span>£1.99</span></div>
+            <div class="kv"><span>Rate</span><span>£1 = KSh 169.40</span></div>
+            <div class="kv"><span>Nairobi time now</span><span>11:41</span></div>
+          </div>
+          <p class="lead" style="font-size:14.5px">Rates change during the day. Your rate is held for 30 minutes once you start a transfer.</p>
+        </div>
+        <div class="foot"><div class="btn">Sign up to send</div></div><span class="hi"></span></div></div>
+      <div class="cap"><b>Rate calculator</b>Opens from log in. The same blue and green tickets as Send.</div>
+    </div>
+  </div>
+</section>
+
+<section class="part" id="foundations">
+  <div class="ph"><h2>Foundations</h2><p>Blue, dark blue and white do the work. Colour belongs to the destination, so it always means something.</p></div>
+  <div class="found">
+    <div class="fc">
+      <h3>Colour</h3>
+      <div class="sw"><div style="background:#2563D9;color:#fff">Blue<span>#2563D9, brand and your side</span></div><div style="background:#0D2252;color:#fff">Dark blue<span>#0D2252, text and buttons</span></div><div style="background:#F2F5FB;color:#0D2252;box-shadow:inset 0 0 0 1px #E2E7F1">White and fog<span>#FFFFFF and #F2F5FB</span></div><div style="background:#F5A623;color:#0D2252">Amber<span>#F5A623, on the way</span></div><div style="background:#1F8A5B;color:#fff">Green<span>#1F8A5B, their side and arrived</span></div><div style="background:#D2382F;color:#fff">Red<span>#D2382F, refused</span></div></div>
+    </div>
+    <div class="fc">
+      <h3>Type</h3>
+      <div class="ts">
+        <div><span class="d" style="font-size:52px">₹55,880.62</span><span>Big Shoulders 800</span></div>
+        <div><span class="d" style="font-size:40px;text-transform:uppercase">GBP → INR</span><span>Route codes</span></div>
+        <div><span style="font-size:17px;font-weight:600">Buttons and titles</span><span>Geist 600</span></div>
+        <div><span style="font-size:16px">Body and lists</span><span>Geist 400</span></div>
+      </div>
+      <span style="font-size:13.5px;color:var(--muted)">A condensed face like a departure board for amounts and routes; a quiet sans for everything else.</span>
+    </div>
+    <div class="fc">
+      <h3>The ticket component</h3>
+      <div style="background:var(--fog);border-radius:16px;padding:16px">
+        <div class="tk ex" style="--cut:84px;--sbg:var(--fog)"><div class="top" style="padding:14px 16px"><div class="rt"><div class="code" style="font-size:34px">GBP</div><div class="line" style="margin-bottom:12px"></div><div class="code" style="font-size:34px">INR</div></div></div><div class="perf" style="margin:0 16px"></div><div class="stub" style="padding:10px 16px 12px;color:var(--ink)"><span class="lbl" style="font-size:12px">Route on top, amount on the stub</span><b class="d" style="font-size:28px">₹55,880.62</b></div></div>
+      </div>
+      <span style="font-size:13.5px;color:var(--muted)">Used for the rate card, amount, review, history and receipts. Notches and perforation are fixed; only the top colour changes, with the step.</span>
+    </div>
+  </div>
+  <p class="fnote">Amber, green and red appear only on ticket tops and status pills. The name, colours and logo mark are a proposal. All names, amounts, bank details, times and the partner name are sample data.</p>
+</section>
+
+</main>

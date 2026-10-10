@@ -1,0 +1,39 @@
+name: almapay
+description: "AlmaPay – secure international money transfers (UK → Kenya)."
+publish_to: 'none'
+version: 0.1.0+1
+
+environment:
+  sdk: ^3.13.2
+
+dependencies:
+  flutter:
+    sdk: flutter
+  # Platform-backed secure storage: Keychain (iOS) / EncryptedSharedPreferences +
+  # Keystore (Android). Used only for the access & refresh tokens.
+  flutter_secure_storage: 11.0.0
+  # Minimal HTTP client. Auth header injection and refresh-on-401 are implemented
+  # as an http.BaseClient wrapper (no interceptor framework needed).
+  http: 1.6.0
+  # SHA-256 for certificate pinning (already pulled in by other packages).
+  crypto: 3.0.7
+  permission_handler: 13.0.2
+  webview_flutter: 4.14.1
+  webview_flutter_android: 4.14.1
+  webview_flutter_wkwebview: 3.27.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: 6.0.0
+
+flutter:
+  uses-material-design: true
+  fonts:
+    - family: Geist
+      fonts:
+        - asset: assets/fonts/Geist.ttf
+    - family: BigShouldersDisplay
+      fonts:
+        - asset: assets/fonts/BigShouldersDisplay.ttf
+
