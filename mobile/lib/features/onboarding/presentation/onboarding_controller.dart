@@ -26,11 +26,15 @@ class OnboardingController extends ChangeNotifier {
 
   OnboardingStage _stage = OnboardingStage.loading;
   ProfileForm? _profileForm;
+  String? _firstName;
   bool _busy = false;
   String? _error;
   Map<String, String> _fieldErrors = const {};
 
   OnboardingStage get stage => _stage;
+
+  /// The customer's first name from their saved profile, for greeting them.
+  String? get firstName => _firstName;
   ProfileForm? get profileForm => _profileForm;
   bool get busy => _busy;
 
@@ -45,6 +49,7 @@ class OnboardingController extends ChangeNotifier {
   void clear() {
     _stage = OnboardingStage.loading;
     _profileForm = null;
+    _firstName = null;
     _busy = false;
     _error = null;
     _fieldErrors = const {};
@@ -66,6 +71,7 @@ class OnboardingController extends ChangeNotifier {
         _profileForm = await _repository.getProfileForm();
       }
       _stage = stage;
+      if (stage == OnboardingStage.verified) await _loadFirstName();
     } on ApiException catch (error) {
       _error = error.message;
       if (_stage == OnboardingStage.loading) {
@@ -74,6 +80,17 @@ class OnboardingController extends ChangeNotifier {
     } finally {
       _busy = false;
       notifyListeners();
+    }
+  }
+
+  /// A greeting is nice to have: if the profile can't be read, show none.
+  Future<void> _loadFirstName() async {
+    try {
+      final name = (await _repository.getProfileForm()).values['firstName'];
+      final trimmed = name?.trim();
+      _firstName = (trimmed == null || trimmed.isEmpty) ? null : trimmed;
+    } on ApiException {
+      _firstName = null;
     }
   }
 

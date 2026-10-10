@@ -8,6 +8,7 @@ import '../../../shared/widgets/person_row.dart';
 import '../../../shared/widgets/transfer_ticket.dart';
 import '../../auth/presentation/auth_controller.dart';
 import '../../legal/presentation/legal_pages.dart';
+import '../../onboarding/presentation/onboarding_controller.dart';
 import '../../security/biometric_lock.dart';
 import '../../send_money/domain/models.dart';
 import '../../send_money/presentation/send_money_controller.dart';
@@ -24,9 +25,11 @@ class VerifiedShell extends StatefulWidget {
     required this.config,
     required this.sendMoney,
     this.biometrics,
+    this.onboarding,
     super.key,
   });
 
+  final OnboardingController? onboarding;
   final AuthController auth;
   final AppConfig config;
   final SendMoneyController sendMoney;
@@ -59,6 +62,7 @@ class _VerifiedShellState extends State<VerifiedShell> {
         auth: widget.auth,
         sendMoney: widget.sendMoney,
         config: widget.config,
+        onboarding: widget.onboarding,
         onSend: _send,
         onSeeAll: () => setState(() {
           _gen++;
@@ -123,8 +127,11 @@ class _HomeTab extends StatefulWidget {
     required this.config,
     required this.onSend,
     required this.onSeeAll,
+    this.onboarding,
     super.key,
   });
+
+  final OnboardingController? onboarding;
 
   final AuthController auth;
   final SendMoneyController sendMoney;
@@ -137,6 +144,9 @@ class _HomeTab extends StatefulWidget {
 }
 
 class _HomeTabState extends State<_HomeTab> {
+  /// Stands in when there is no onboarding controller (nothing to listen to).
+  static final _noChange = ValueNotifier<int>(0);
+
   List<Transfer> _recent = const [];
 
   @override
@@ -153,32 +163,39 @@ class _HomeTabState extends State<_HomeTab> {
 
   @override
   Widget build(BuildContext context) {
-    final email = widget.auth.user?.email;
     return SafeArea(
       bottom: false,
       child: ListView(
         padding: const EdgeInsets.fromLTRB(22, 10, 22, 20),
         children: [
-          Row(
-            children: [
-              Expanded(
-                child: Text(
-                  'HELLO',
-                  style: AlmaPayText.display.copyWith(fontSize: 40),
-                ),
-              ),
-              const AaminMark(size: 32),
-            ],
+          ListenableBuilder(
+            listenable: widget.onboarding ?? _noChange,
+            builder: (context, _) {
+              final name = widget.onboarding?.firstName;
+              return Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      name == null ? 'HELLO' : 'HELLO, ${name.toUpperCase()}',
+                      key: const Key('hello_heading'),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: AlmaPayText.display.copyWith(fontSize: 40),
+                    ),
+                  ),
+                  const AaminMark(size: 32),
+                ],
+              );
+            },
           ),
-          if (email != null)
-            Padding(
-              padding: const EdgeInsets.only(top: 2, bottom: 12),
-              child: Text(
-                'Signed in as $email',
-                key: const Key('signed_in_as'),
-                style: AlmaPayText.ui(size: 13.5, color: AlmaPayColours.ink2),
-              ),
+          Padding(
+            padding: const EdgeInsets.only(top: 2, bottom: 12),
+            child: Text(
+              'Welcome to ${widget.config.appDisplayName}',
+              key: const Key('welcome_text'),
+              style: AlmaPayText.ui(size: 13.5, color: AlmaPayColours.ink2),
             ),
+          ),
           AaminTicket(
             topHeight: 66,
             topPadding: EdgeInsets.zero,
