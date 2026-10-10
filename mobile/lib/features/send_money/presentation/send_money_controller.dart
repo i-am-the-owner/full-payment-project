@@ -125,6 +125,13 @@ class SendMoneyController extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Forgets everything that belongs to the signed-in customer. Called when the
+  /// account changes, so one customer's people are never shown to the next.
+  void clearCustomerData() {
+    _recipients = const [];
+    reset();
+  }
+
   /// Loads the currencies the provider supports. Called when the flow opens.
   Future<void> loadCurrencies() async {
     await _run(() async {

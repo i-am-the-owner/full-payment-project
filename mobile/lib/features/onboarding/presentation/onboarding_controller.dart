@@ -40,6 +40,17 @@ class OnboardingController extends ChangeNotifier {
   /// Server-side problems by field name (`firstName`, `phone`, ...).
   Map<String, String> get fieldErrors => _fieldErrors;
 
+  /// Forgets the previous customer's progress, so a new sign-in starts at
+  /// `loading` and is checked with the backend, never shown as already verified.
+  void clear() {
+    _stage = OnboardingStage.loading;
+    _profileForm = null;
+    _busy = false;
+    _error = null;
+    _fieldErrors = const {};
+    notifyListeners();
+  }
+
   /// Asks the backend where the customer is, and picks the screen for it.
   Future<void> load({bool showSpinner = true}) async {
     _error = null;

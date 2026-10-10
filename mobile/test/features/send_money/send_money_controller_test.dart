@@ -37,6 +37,27 @@ Future<SendMoneyController> _atReview(
 
 void main() {
   test(
+    'clearing the customer data drops their people and half-made transfer',
+    () async {
+      final backend = FakeSendMoneyBackend();
+      backend.addSavedRecipient();
+      final c = _controller(backend);
+      await c.loadCurrencies();
+      c.setAmount(AmountSide.send, '100.00');
+      await c.updateQuote();
+      await c.loadRecipients();
+      expect(c.recipients, isNotEmpty);
+      expect(c.quote, isNotNull);
+
+      c.clearCustomerData();
+
+      expect(c.recipients, isEmpty);
+      expect(c.quote, isNull);
+      expect(c.amount, isEmpty);
+    },
+  );
+
+  test(
     'currencies, names and decimals come from the backend, not the app',
     () async {
       final backend = FakeSendMoneyBackend();

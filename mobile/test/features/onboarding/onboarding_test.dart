@@ -203,6 +203,17 @@ Future<void> _tap(WidgetTester tester, String key) async {
 }
 
 void main() {
+  test('the next account does not inherit the previous progress', () async {
+    final backend = _Backend()..status = 'VERIFIED';
+    final controller = _controller(backend);
+    await controller.load();
+    expect(controller.stage, OnboardingStage.verified);
+
+    controller.clear();
+
+    expect(controller.stage, OnboardingStage.loading);
+  });
+
   group('which screen the customer sees', () {
     Future<OnboardingStage> stageFor(
       String status, {

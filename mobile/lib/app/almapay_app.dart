@@ -36,6 +36,7 @@ class _AlmaPayAppState extends State<AlmaPayApp> {
   late final OnboardingController _onboarding;
   late final SendMoneyController _sendMoney;
   late final BiometricLockController _biometrics;
+  String? _signedInUserId;
 
   @override
   void initState() {
@@ -63,12 +64,24 @@ class _AlmaPayAppState extends State<AlmaPayApp> {
           store: SecureBiometricPreferenceStore(),
         );
     _biometrics.init();
+    widget.auth.authController.addListener(_onAuthChanged);
     // Restore a persisted session before the first frame settles.
     widget.auth.authController.restoreSession();
   }
 
+  /// Whenever the signed-in account changes (including sign-out), drop the
+  /// previous customer's people, progress and half-made transfer.
+  void _onAuthChanged() {
+    final id = widget.auth.authController.user?.id;
+    if (id == _signedInUserId) return;
+    _signedInUserId = id;
+    _onboarding.clear();
+    _sendMoney.clearCustomerData();
+  }
+
   @override
   void dispose() {
+    widget.auth.authController.removeListener(_onAuthChanged);
     _onboarding.dispose();
     _sendMoney.dispose();
     _biometrics.dispose();
