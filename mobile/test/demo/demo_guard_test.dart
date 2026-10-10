@@ -93,8 +93,9 @@ void main() {
         for (final entity in Directory('lib').listSync(recursive: true)) {
           if (entity is! File || !entity.path.endsWith('.dart')) continue;
           final path = entity.path.replaceAll(r'\', '/');
-          if (path.startsWith('lib/demo/') || path == 'lib/main_demo.dart')
+          if (path.startsWith('lib/demo/') || path == 'lib/main_demo.dart') {
             continue;
+          }
           if (RegExp(r"import\s+'[^']*demo[^']*'")
               .hasMatch(entity.readAsStringSync())) {
             offenders.add(path);

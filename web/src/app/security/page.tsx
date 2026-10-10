@@ -60,10 +60,10 @@ export default function SecurityPage() {
       <Section tone="muted" title="What we don't claim" containerSize="narrow">
         <p className="text-[var(--color-ink-soft)]">
           We will not display security certifications, audit badges or
-          regulatory approvals that AaminPay does not hold. As the product matures
-          and independent assessments are completed, this page will be updated
-          with accurate, verifiable information. If you have a security concern,
-          please{" "}
+          regulatory approvals that AaminPay does not hold. As the product
+          matures and independent assessments are completed, this page will be
+          updated with accurate, verifiable information. If you have a security
+          concern, please{" "}
           <a href="/contact" className="underline">
             contact us
           </a>
@@ -80,7 +80,8 @@ export default function SecurityPage() {
             available.
           </li>
           <li>
-            AaminPay will never ask for your password by email, message or phone.
+            AaminPay will never ask for your password by email, message or
+            phone.
           </li>
         </ul>
       </Section>

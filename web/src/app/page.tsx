@@ -79,9 +79,9 @@ export default function HomePage() {
                 <span className="text-sky">Simple. Transparent.</span>
               </h1>
               <p className="mt-6 max-w-xl text-lg text-slate-300">
-                AaminPay is a UK-based digital platform for sending money abroad.
-                See the exchange rate and fees before you confirm, then track
-                your transfer until it arrives.
+                AaminPay is a UK-based digital platform for sending money
+                abroad. See the exchange rate and fees before you confirm, then
+                track your transfer until it arrives.
               </p>
               <div className="mt-9 flex flex-wrap gap-3">
                 <ButtonLink href="/how-it-works" size="lg" variant="accent">
@@ -126,7 +126,9 @@ export default function HomePage() {
                     <dd className="font-semibold">Amount in GBP</dd>
                   </div>
                   <div className="flex items-center justify-between">
-                    <dt className="text-[var(--color-ink-soft)]">AaminPay fee</dt>
+                    <dt className="text-[var(--color-ink-soft)]">
+                      AaminPay fee
+                    </dt>
                     <dd className="font-semibold">Shown in full</dd>
                   </div>
                   <div className="flex items-center justify-between">
@@ -146,8 +148,8 @@ export default function HomePage() {
                 </dl>
               </div>
               <p className="mt-5 text-center text-xs text-slate-400">
-                Figures are calculated by AaminPay when you request a transfer and
-                are shown in the app before you confirm.
+                Figures are calculated by AaminPay when you request a transfer
+                and are shown in the app before you confirm.
               </p>
             </div>
           </div>
@@ -307,11 +309,11 @@ export default function HomePage() {
 
       {/* CTA */}
       <Section id="cta" tone="muted" containerSize="narrow">
-        <div className="bg-blue rounded-[var(--radius-xl)] text-white px-8 py-14 text-center">
+        <div className="bg-blue rounded-[var(--radius-xl)] px-8 py-14 text-center text-white">
           <h2 className="text-3xl text-white sm:text-4xl">
             Ready when AaminPay launches?
           </h2>
-          <p className="mx-auto text-white/85 mt-3 max-w-lg">
+          <p className="mx-auto mt-3 max-w-lg text-white/85">
             Learn how the transfer process works and what you&apos;ll need to
             get started.
           </p>

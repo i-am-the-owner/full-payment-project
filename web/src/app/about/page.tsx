@@ -67,11 +67,11 @@ export default function AboutPage() {
 
       <Section title="Where we are" containerSize="narrow">
         <p className="text-[var(--color-ink-soft)]">
-          AaminPay is in active development. The mobile app and backend are being
-          built, and we are completing the registrations and partner onboarding
-          needed before opening for live transfers. We&apos;re not publishing
-          customer numbers, funding details or a company history here, because
-          we only want to state things we can stand behind.
+          AaminPay is in active development. The mobile app and backend are
+          being built, and we are completing the registrations and partner
+          onboarding needed before opening for live transfers. We&apos;re not
+          publishing customer numbers, funding details or a company history
+          here, because we only want to state things we can stand behind.
         </p>
       </Section>
     </>

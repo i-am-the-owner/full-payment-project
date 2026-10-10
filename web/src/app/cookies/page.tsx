@@ -25,8 +25,8 @@ export default function CookiesPage() {
           <p className="text-[var(--color-ink-soft)]">
             This draft describes how AaminPay&apos;s website intends to use
             cookies and similar technologies. It will be finalised with legal
-            advice, and a cookie-consent mechanism will be added, before AaminPay
-            launches.
+            advice, and a cookie-consent mechanism will be added, before
+            AaminPay launches.
           </p>
 
           <h2>1. What cookies are</h2>

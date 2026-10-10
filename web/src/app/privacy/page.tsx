@@ -23,8 +23,8 @@ export default function PrivacyPage() {
 
         <div className="prose mt-10 text-[var(--color-ink)]">
           <p className="text-[var(--color-ink-soft)]">
-            This draft describes how AaminPay intends to handle personal data. It
-            will be finalised with legal advice before AaminPay launches.
+            This draft describes how AaminPay intends to handle personal data.
+            It will be finalised with legal advice before AaminPay launches.
           </p>
 
           <h2>1. Who we are</h2>

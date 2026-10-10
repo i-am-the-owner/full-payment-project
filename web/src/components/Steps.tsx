@@ -13,7 +13,7 @@ export function Steps({ steps }: { steps: Step[] }) {
         <li key={step.title} className="relative">
           <span
             aria-hidden="true"
-            className="bg-blue absolute text-white -left-[43px] flex h-8 w-8 items-center justify-center rounded-full text-sm font-bold"
+            className="bg-blue absolute -left-[43px] flex h-8 w-8 items-center justify-center rounded-full text-sm font-bold text-white"
           >
             {i + 1}
           </span>

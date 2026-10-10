@@ -25,18 +25,18 @@ export default function FeesPage() {
           <strong className="font-semibold">
             Commercial pricing is not finalised.
           </strong>{" "}
-          The amounts below are described in general terms only. AaminPay does not
-          publish a specific fee or a specific exchange rate on this page. The
-          real figures for your transfer are calculated at the time you request
-          it and are shown in the app.
+          The amounts below are described in general terms only. AaminPay does
+          not publish a specific fee or a specific exchange rate on this page.
+          The real figures for your transfer are calculated at the time you
+          request it and are shown in the app.
         </div>
 
         <div className="mt-8 grid gap-4 sm:grid-cols-2">
           <Card>
             <CardTitle>Transfer fee</CardTitle>
             <CardBody>
-              A fee set by AaminPay for processing your transfer. It is shown as a
-              clear amount in your sending currency before you confirm. When
+              A fee set by AaminPay for processing your transfer. It is shown as
+              a clear amount in your sending currency before you confirm. When
               pricing is finalised, the current fee will be published here.
             </CardBody>
           </Card>

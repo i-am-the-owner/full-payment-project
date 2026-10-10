@@ -80,22 +80,22 @@ export default function TermsPage() {
           <h2>6. Acceptable use</h2>
           <p>
             You must not use AaminPay for unlawful purposes, including money
-            laundering, terrorist financing, fraud or sanctions evasion. AaminPay
-            may refuse, delay or reverse a transfer to meet its legal
+            laundering, terrorist financing, fraud or sanctions evasion.
+            AaminPay may refuse, delay or reverse a transfer to meet its legal
             obligations.
           </p>
 
           <h2>7. Liability</h2>
           <p>
-            The final terms will set out AaminPay&apos;s responsibilities and the
-            limits of its liability, in line with applicable law. Nothing will
-            exclude liability that cannot be excluded by law.
+            The final terms will set out AaminPay&apos;s responsibilities and
+            the limits of its liability, in line with applicable law. Nothing
+            will exclude liability that cannot be excluded by law.
           </p>
 
           <h2>8. Changes</h2>
           <p>
-            AaminPay may update these terms. Material changes will be communicated
-            before they take effect.
+            AaminPay may update these terms. Material changes will be
+            communicated before they take effect.
           </p>
 
           <h2>9. Contact</h2>

@@ -14,7 +14,18 @@ const root = resolve(process.argv[2] ?? '../mobile/build/web');
 const out = resolve(process.argv[3] ?? '../docs/demo/screenshots');
 mkdirSync(out, { recursive: true });
 
-const types = { '.html': 'text/html', '.js': 'text/javascript', '.mjs': 'text/javascript', '.json': 'application/json', '.wasm': 'application/wasm', '.png': 'image/png', '.ico': 'image/x-icon', '.otf': 'font/otf', '.ttf': 'font/ttf', '.css': 'text/css' };
+const types = {
+  '.html': 'text/html',
+  '.js': 'text/javascript',
+  '.mjs': 'text/javascript',
+  '.json': 'application/json',
+  '.wasm': 'application/wasm',
+  '.png': 'image/png',
+  '.ico': 'image/x-icon',
+  '.otf': 'font/otf',
+  '.ttf': 'font/ttf',
+  '.css': 'text/css',
+};
 const server = createServer((req, res) => {
   const path = decodeURIComponent((req.url ?? '/').split('?')[0]);
   let file = join(root, path === '/' ? 'index.html' : path);
@@ -26,14 +37,20 @@ await new Promise((r) => server.listen(0, '127.0.0.1', r));
 const origin = `http://127.0.0.1:${server.address().port}`;
 
 const browser = await chromium.launch();
-const context = await browser.newContext({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 2, isMobile: true, hasTouch: true });
+const context = await browser.newContext({
+  viewport: { width: 390, height: 844 },
+  deviceScaleFactor: 2,
+  isMobile: true,
+  hasTouch: true,
+});
 const page = await context.newPage();
 const problems = [];
 const outside = [];
 page.on('console', (m) => m.type() === 'error' && problems.push(m.text()));
 page.on('pageerror', (e) => problems.push(String(e)));
 page.on('request', (r) => {
-  if (!r.url().startsWith(origin) && !r.url().startsWith('data:') && !r.url().startsWith('blob:')) outside.push(r.url());
+  if (!r.url().startsWith(origin) && !r.url().startsWith('data:') && !r.url().startsWith('blob:'))
+    outside.push(r.url());
 });
 
 // Flutter web draws to a canvas; its accessibility tree is switched on by one hidden button.
@@ -81,7 +98,8 @@ const width = await page.evaluate(() => document.documentElement.scrollWidth);
 await browser.close();
 server.close();
 
-if (outside.length) throw new Error(`The demo requested outside its own origin: ${outside.join(', ')}`);
+if (outside.length)
+  throw new Error(`The demo requested outside its own origin: ${outside.join(', ')}`);
 if (problems.length) throw new Error(`Console errors: ${problems.join(' | ')}`);
 if (width > 390) throw new Error(`Horizontal overflow: ${width}px`);
 console.log(`OK: no outside requests, no errors, ${width}px wide. Screenshots in ${out}`);

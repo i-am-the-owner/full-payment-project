@@ -109,9 +109,9 @@ export default async function CountryPage({ params }: RouteParams) {
                   {pricing.rateDisplay}
                 </p>
                 <p className="text-[var(--color-ink-soft)]">
-                  AaminPay does not publish a fixed rate or fee for this corridor.
-                  You&apos;ll see the exact figures for your transfer in the app
-                  before you confirm. See the{" "}
+                  AaminPay does not publish a fixed rate or fee for this
+                  corridor. You&apos;ll see the exact figures for your transfer
+                  in the app before you confirm. See the{" "}
                   <Link href="/fees" className="underline">
                     Fees
                   </Link>{" "}
