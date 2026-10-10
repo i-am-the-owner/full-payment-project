@@ -176,8 +176,10 @@ class _HomeTabState extends State<_HomeTab> {
                 children: [
                   Expanded(
                     child: Text(
-                      name == null ? 'HELLO' : 'HELLO, ${name.toUpperCase()}',
-                      key: const Key('hello_heading'),
+                      name == null
+                          ? 'WELCOME'
+                          : 'WELCOME, ${name.toUpperCase()}',
+                      key: const Key('welcome_heading'),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: AlmaPayText.display.copyWith(fontSize: 40),
@@ -188,14 +190,7 @@ class _HomeTabState extends State<_HomeTab> {
               );
             },
           ),
-          Padding(
-            padding: const EdgeInsets.only(top: 2, bottom: 12),
-            child: Text(
-              'Welcome to ${widget.config.appDisplayName}',
-              key: const Key('welcome_text'),
-              style: AlmaPayText.ui(size: 13.5, color: AlmaPayColours.ink2),
-            ),
-          ),
+          const SizedBox(height: 12),
           AaminTicket(
             topHeight: 66,
             topPadding: EdgeInsets.zero,
