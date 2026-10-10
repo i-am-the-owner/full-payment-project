@@ -37,17 +37,34 @@ class _RegisterPageState extends State<RegisterPage> {
     if (!mounted) {
       return;
     }
-    setState(() => _submitting = false);
     if (error != null) {
+      setState(() => _submitting = false);
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text(error)));
       return;
     }
+    // Signed up: go straight in rather than back to the log in screen.
+    final signedIn = await widget.controller.login(
+      email: _email.text.trim(),
+      password: _password.text,
+    );
+    if (!mounted) {
+      return;
+    }
+    setState(() => _submitting = false);
+    if (signedIn) {
+      // The app now shows the signed-in screens; close this page.
+      Navigator.of(context).popUntil((route) => route.isFirst);
+      return;
+    }
+    final messenger = ScaffoldMessenger.of(context);
     Navigator.of(context).pop();
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
+    messenger.showSnackBar(
+      SnackBar(
         content: Text(
-          'Check your email for a verification link, then sign in.',
+          widget.controller.lastError ??
+              'Account created. Check your email for a verification link, '
+                  'then log in.',
         ),
       ),
     );

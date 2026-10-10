@@ -125,6 +125,34 @@ void main() {
     expect(find.byKey(const Key('sign_out')), findsOneWidget);
   });
 
+  testWidgets('creating an account signs the customer straight in', (
+    tester,
+  ) async {
+    final repository = _StubRepository(null)..loginResult = _user;
+    final controller = AuthController(repository);
+    await controller.restoreSession();
+    await tester.pumpWidget(_wrap(controller));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byKey(const Key('login_sign_up')));
+    await tester.pumpAndSettle();
+    await tester.enterText(
+      find.byKey(const Key('register_email')),
+      'new@example.test',
+    );
+    await tester.enterText(
+      find.byKey(const Key('register_password')),
+      'a strong enough passphrase',
+    );
+    await tester.tap(find.byKey(const Key('register_submit')));
+    await tester.pumpAndSettle();
+
+    // No trip back to the log in screen: the signed-in app is showing.
+    expect(find.byKey(const Key('login_submit')), findsNothing);
+    expect(find.byKey(const Key('register_submit')), findsNothing);
+    expect(find.byKey(const Key('stage_verified')), findsOneWidget);
+  });
+
   testWidgets('login form validates empty fields', (tester) async {
     final controller = AuthController(_StubRepository(null));
     await controller.restoreSession();
