@@ -470,9 +470,14 @@ export function createContainer(
         : config.rateLimit,
     payoutProvider: provider,
     providerWebhooks: { providerName: provider.name, receiveProviderWebhook },
-    // The dev-only mock controls exist only for the mock provider, never in production.
+    // The dev-only mock controls (including the fake identity page) exist only for the
+    // mock provider, never in a real production deployment. A staging deployment that
+    // runs NODE_ENV=production on purpose (ALLOW_NON_PROD_PROVIDER=true, APP_ENV not
+    // production) gets them too, so the whole flow can be tried without a real provider.
     mockProviderDev:
-      selectedProvider instanceof MockPayoutProvider && !config.isProduction
+      selectedProvider instanceof MockPayoutProvider &&
+      (!config.isProduction ||
+        (env.ALLOW_NON_PROD_PROVIDER && resolveAppEnvironment(env) !== 'production'))
         ? {
             mockProvider: selectedProvider,
             authenticator,
