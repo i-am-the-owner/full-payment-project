@@ -40,7 +40,7 @@ class PayStep extends StatelessWidget {
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
           decoration: BoxDecoration(
-            color: AlmaPayColours.blueSoft,
+            color: context.palette.accentSoft,
             borderRadius: BorderRadius.circular(16),
           ),
           child: Row(
@@ -84,7 +84,7 @@ class PayStep extends StatelessWidget {
           Text(
             'Send exactly this amount to $provider using these details. '
             'Include the reference so they can match your payment.',
-            style: AlmaPayText.ui(size: 14.5, color: AlmaPayColours.ink2),
+            style: AlmaPayText.ui(size: 14.5, color: context.palette.muted),
           ),
           const SizedBox(height: 8),
           Panel(
@@ -144,12 +144,12 @@ class PayStep extends StatelessWidget {
           key: const Key('pay_explainer'),
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Padding(
-              padding: EdgeInsets.only(top: 2),
+            Padding(
+              padding: const EdgeInsets.only(top: 2),
               child: Icon(
                 Icons.shield_outlined,
                 size: 18,
-                color: AlmaPayColours.ink2,
+                color: context.palette.muted,
               ),
             ),
             const SizedBox(width: 10),
@@ -165,7 +165,7 @@ class PayStep extends StatelessWidget {
                 'Payments are provided by $provider. AaminPay does not hold '
                 'customer funds.',
                 key: const Key('pay_provider_statement'),
-                style: AlmaPayText.ui(size: 12.5, color: AlmaPayColours.ink2),
+                style: AlmaPayText.ui(size: 12.5, color: context.palette.muted),
               ),
             ),
           ],
@@ -194,10 +194,10 @@ class _MethodCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(15),
       decoration: BoxDecoration(
-        color: AlmaPayColours.white,
+        color: context.palette.surface,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: selected ? AlmaPayColours.blue : AlmaPayColours.line,
+          color: selected ? AlmaPayColours.blue : context.palette.line,
           width: selected ? 2 : 1.5,
         ),
       ),
@@ -207,7 +207,7 @@ class _MethodCard extends StatelessWidget {
             width: 42,
             height: 42,
             decoration: BoxDecoration(
-              color: AlmaPayColours.blueSoft,
+              color: context.palette.accentSoft,
               borderRadius: BorderRadius.circular(12),
             ),
             child: Icon(icon, color: AlmaPayColours.blue),
@@ -220,7 +220,10 @@ class _MethodCard extends StatelessWidget {
                 Text(title, style: AlmaPayText.ui(size: 16, weight: 600)),
                 Text(
                   subtitle,
-                  style: AlmaPayText.ui(size: 13.5, color: AlmaPayColours.ink2),
+                  style: AlmaPayText.ui(
+                    size: 13.5,
+                    color: context.palette.muted,
+                  ),
                 ),
               ],
             ),
@@ -270,7 +273,7 @@ class _CopyRow extends StatelessWidget {
                     label,
                     style: AlmaPayText.ui(
                       size: 13.5,
-                      color: AlmaPayColours.ink2,
+                      color: context.palette.muted,
                     ),
                   ),
                   Text(
@@ -431,13 +434,13 @@ class _TransferStatusViewState extends State<TransferStatusView> {
             padding: const EdgeInsets.only(bottom: 14),
             child: Text(
               explain,
-              style: AlmaPayText.ui(size: 15, color: AlmaPayColours.ink2),
+              style: AlmaPayText.ui(size: 15, color: context.palette.muted),
             ),
           ),
         Container(
           padding: const EdgeInsets.all(18),
           decoration: BoxDecoration(
-            color: AlmaPayColours.white,
+            color: context.palette.surface,
             borderRadius: BorderRadius.circular(24),
           ),
           child: TransferTimeline(transfer: transfer),

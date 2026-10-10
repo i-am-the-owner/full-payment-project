@@ -203,6 +203,34 @@ Future<void> _tap(WidgetTester tester, String key) async {
 }
 
 void main() {
+  test('a verified customer is greeted by first name', () async {
+    final backend = _Backend()
+      ..status = 'VERIFIED'
+      ..profile = {
+        'firstName': 'Jane',
+        'lastName': 'Doe',
+        'dateOfBirth': '1990-04-12',
+        'countryOfResidence': 'GB',
+        'phone': '+447700900123',
+      };
+    final controller = _controller(backend);
+    await controller.load();
+    expect(controller.firstName, 'Jane');
+    controller.clear();
+    expect(controller.firstName, isNull);
+  });
+
+  test('the next account does not inherit the previous progress', () async {
+    final backend = _Backend()..status = 'VERIFIED';
+    final controller = _controller(backend);
+    await controller.load();
+    expect(controller.stage, OnboardingStage.verified);
+
+    controller.clear();
+
+    expect(controller.stage, OnboardingStage.loading);
+  });
+
   group('which screen the customer sees', () {
     Future<OnboardingStage> stageFor(
       String status, {

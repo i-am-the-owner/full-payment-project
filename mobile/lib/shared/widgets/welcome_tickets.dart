@@ -35,7 +35,7 @@ class WelcomeTickets extends StatelessWidget {
                     style: AlmaPayText.ui(
                       size: 13,
                       weight: 500,
-                      color: AlmaPayColours.ink2,
+                      color: context.palette.muted,
                     ),
                   ),
                   Text(
@@ -50,7 +50,7 @@ class WelcomeTickets extends StatelessWidget {
               style: AlmaPayText.ui(
                 size: 13,
                 weight: 500,
-                color: AlmaPayColours.ink2,
+                color: context.palette.muted,
               ),
             ),
           ],

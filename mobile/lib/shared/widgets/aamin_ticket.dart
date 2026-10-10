@@ -37,7 +37,7 @@ class AaminTicket extends StatelessWidget {
     final card = ClipPath(
       clipper: _TicketClipper(notchY: topHeight),
       child: ColoredBox(
-        color: AlmaPayColours.white,
+        color: context.palette.surface,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,

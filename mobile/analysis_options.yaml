@@ -17,6 +17,7 @@ analyzer:
     - "**/*.freezed.dart"
     - android/**
     - ios/**
+    - web/**
 
 linter:
   rules:

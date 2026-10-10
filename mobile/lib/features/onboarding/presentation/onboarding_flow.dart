@@ -325,7 +325,7 @@ class _Screen extends StatelessWidget {
               width: 64,
               height: 64,
               decoration: BoxDecoration(
-                color: AlmaPayColours.blueSoft,
+                color: context.palette.accentSoft,
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Icon(icon, size: 32, color: AlmaPayColours.blue),
@@ -346,7 +346,7 @@ class _Screen extends StatelessWidget {
             padding: const EdgeInsets.only(bottom: 12),
             child: SelectableText(
               paragraph,
-              style: AlmaPayText.ui(size: 16, color: AlmaPayColours.ink2),
+              style: AlmaPayText.ui(size: 16, color: context.palette.muted),
             ),
           ),
         const SizedBox(height: 12),
@@ -384,7 +384,7 @@ class _Message extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
-          color: isError ? AlmaPayColours.badSoft : AlmaPayColours.blueSoft,
+          color: isError ? AlmaPayColours.badSoft : context.palette.accentSoft,
           borderRadius: BorderRadius.circular(16),
         ),
         child: Text(
@@ -392,7 +392,7 @@ class _Message extends StatelessWidget {
           style: AlmaPayText.ui(
             size: 14.5,
             weight: 500,
-            color: isError ? AlmaPayColours.bad : AlmaPayColours.ink,
+            color: isError ? AlmaPayColours.bad : context.palette.text,
           ),
         ),
       ),

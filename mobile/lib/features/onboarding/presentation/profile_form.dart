@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 
 import '../../../shared/theme/almapay_theme.dart';
 import '../domain/onboarding_models.dart';
+import '../domain/phone_number.dart';
 import 'onboarding_controller.dart';
 
 /// The profile step: name, date of birth, country and phone number.
@@ -36,7 +37,7 @@ class _ProfileFormViewState extends State<ProfileFormView> {
     _year = TextEditingController(text: born.length == 3 ? born[0] : '');
     _month = TextEditingController(text: born.length == 3 ? born[1] : '');
     _day = TextEditingController(text: born.length == 3 ? born[2] : '');
-    _phone = TextEditingController(text: saved['phone'] ?? '');
+    _phone = TextEditingController(text: phoneForField(saved['phone'] ?? ''));
     final countries = form?.supportedCountries ?? const <String>[];
     final savedCountry = saved['countryOfResidence'];
     _country = countries.contains(savedCountry)
@@ -78,7 +79,7 @@ class _ProfileFormViewState extends State<ProfileFormView> {
         lastName: _lastName.text.trim(),
         dateOfBirth: _isoDate()!,
         countryOfResidence: _country!,
-        phone: _phone.text.replaceAll(RegExp(r'[\s()-]'), ''),
+        phone: normalisePhone(_phone.text),
       ),
     );
   }
@@ -222,16 +223,14 @@ class _ProfileFormViewState extends State<ProfileFormView> {
             controller: _phone,
             decoration: InputDecoration(
               labelText: 'Mobile phone number',
-              helperText: 'Include the country code, for example +447700900123',
+              helperText: 'Just your number, for example 07700 900123',
+              prefixText: '+44  ',
               errorText: serverErrors['phone'],
             ),
             keyboardType: TextInputType.phone,
             autofillHints: const [AutofillHints.telephoneNumber],
             validator: (v) =>
-                RegExp(r'^\+[1-9]\d{6,14}$')
-                    .hasMatch((v ?? '').replaceAll(RegExp(r'[\s()-]'), ''))
-                ? null
-                : 'Enter your phone number with the country code',
+                isValidPhone(v ?? '') ? null : 'Enter your mobile number',
           ),
           const SizedBox(height: 24),
           FilledButton(

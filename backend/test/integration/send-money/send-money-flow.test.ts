@@ -406,6 +406,42 @@ suite(
   },
 );
 
+suite("a customer's recipient list holds only their own recipients", async () => {
+  await ctx.reset();
+  const owner = await session(ctx);
+  const other = await session(ctx);
+  const mine = await addRecipient(ctx, owner);
+
+  const listed = async (s: Session): Promise<string[]> => {
+    const res = await ctx.http('/api/v1/recipients', authed(s.token));
+    assert.equal(res.status, 200);
+    return (data(res).recipients as Json[]).map((r) => r.id as string);
+  };
+  assert.deepEqual(await listed(owner), [mine.id]);
+  assert.deepEqual(await listed(other), []);
+  // Nor can the other customer delete it.
+  const del = await ctx.http(`/api/v1/recipients/${mine.id as string}`, {
+    method: 'DELETE',
+    ...authed(other.token),
+  });
+  assert.ok(del.status === 403 || del.status === 404, `got ${del.status}`);
+  assert.deepEqual(await listed(owner), [mine.id]);
+});
+
+suite('the transfer list names the person each transfer was sent to', async () => {
+  await ctx.reset();
+  const s = await session(ctx);
+  await newTransfer(ctx, s, key(10));
+
+  const res = await ctx.http('/api/v1/transfers', authed(s.token));
+  assert.equal(res.status, 200);
+  const first = (data(res).transfers as Json[])[0]!;
+  const recipient = first.recipient as Json;
+  assert.equal(typeof recipient.displayName, 'string');
+  assert.ok((recipient.displayName as string).length > 0);
+  assert.equal(recipient.id, first.recipientId);
+});
+
 // --- Webhooks ------------------------------------------------------------------
 
 suite(

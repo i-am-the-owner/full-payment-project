@@ -1,19 +1,23 @@
 import 'package:flutter/material.dart';
 
 import '../../../app/environment/app_config.dart';
+import '../../../app/theme_mode_controller.dart';
 import '../../../shared/theme/almapay_theme.dart';
 import '../../../shared/widgets/aamin_mark.dart';
 import '../../../shared/widgets/aamin_ticket.dart';
 import '../../../shared/widgets/person_row.dart';
 import '../../../shared/widgets/transfer_ticket.dart';
 import '../../auth/presentation/auth_controller.dart';
+import '../../identity/presentation/identity_check_page.dart';
 import '../../legal/presentation/legal_pages.dart';
+import '../../onboarding/presentation/onboarding_controller.dart';
 import '../../security/biometric_lock.dart';
 import '../../send_money/domain/models.dart';
 import '../../send_money/presentation/send_money_controller.dart';
 import '../../send_money/presentation/send_money_flow_page.dart';
 import '../../send_money/presentation/status_style.dart';
 import '../../send_money/presentation/transfer_history_page.dart';
+import '../../send_money/presentation/widgets/currency_picker.dart';
 
 /// What a verified customer sees: Home, People, Transfers and You, with the
 /// design's bottom bar. Everything shown comes from the backend; nothing here
@@ -24,9 +28,11 @@ class VerifiedShell extends StatefulWidget {
     required this.config,
     required this.sendMoney,
     this.biometrics,
+    this.onboarding,
     super.key,
   });
 
+  final OnboardingController? onboarding;
   final AuthController auth;
   final AppConfig config;
   final SendMoneyController sendMoney;
@@ -59,6 +65,7 @@ class _VerifiedShellState extends State<VerifiedShell> {
         auth: widget.auth,
         sendMoney: widget.sendMoney,
         config: widget.config,
+        onboarding: widget.onboarding,
         onSend: _send,
         onSeeAll: () => setState(() {
           _gen++;
@@ -77,6 +84,7 @@ class _VerifiedShellState extends State<VerifiedShell> {
         auth: widget.auth,
         config: widget.config,
         biometrics: widget.biometrics,
+        onboarding: widget.onboarding,
       ),
     ];
     return Scaffold(
@@ -123,8 +131,11 @@ class _HomeTab extends StatefulWidget {
     required this.config,
     required this.onSend,
     required this.onSeeAll,
+    this.onboarding,
     super.key,
   });
+
+  final OnboardingController? onboarding;
 
   final AuthController auth;
   final SendMoneyController sendMoney;
@@ -137,92 +148,155 @@ class _HomeTab extends StatefulWidget {
 }
 
 class _HomeTabState extends State<_HomeTab> {
+  /// Stands in when there is no onboarding controller (nothing to listen to).
+  static final _noChange = ValueNotifier<int>(0);
+
   List<Transfer> _recent = const [];
 
   @override
   void initState() {
     super.initState();
     _loadRecent();
+    widget.sendMoney.loadIndicativeRate();
   }
 
   Future<void> _loadRecent() async {
-    final page = await widget.sendMoney.loadHistory(1);
+    // The names come with the transfers; the saved people fill any gap.
+    final results = await Future.wait([
+      widget.sendMoney.loadHistory(1),
+      widget.sendMoney.refreshRecipientsQuietly(),
+    ]);
+    final page = results.first as TransferPage?;
     if (!mounted || page == null) return;
-    setState(() => _recent = page.transfers.take(3).toList());
+    setState(() => _recent = page.transfers.take(5).toList());
   }
 
   @override
   Widget build(BuildContext context) {
-    final email = widget.auth.user?.email;
     return SafeArea(
       bottom: false,
       child: ListView(
         padding: const EdgeInsets.fromLTRB(22, 10, 22, 20),
         children: [
-          Row(
-            children: [
-              Expanded(
-                child: Text(
-                  'HELLO',
-                  style: AlmaPayText.display.copyWith(fontSize: 40),
-                ),
-              ),
-              const AaminMark(size: 32),
-            ],
+          ListenableBuilder(
+            listenable: widget.onboarding ?? _noChange,
+            builder: (context, _) {
+              final name = widget.onboarding?.firstName;
+              return Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      name == null
+                          ? 'WELCOME'
+                          : 'WELCOME, ${name.toUpperCase()}',
+                      key: const Key('welcome_heading'),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: AlmaPayText.display.copyWith(fontSize: 28),
+                    ),
+                  ),
+                  const AaminMark(size: 32),
+                ],
+              );
+            },
           ),
-          if (email != null)
-            Padding(
-              padding: const EdgeInsets.only(top: 2, bottom: 12),
-              child: Text(
-                'Signed in as $email',
-                key: const Key('signed_in_as'),
-                style: AlmaPayText.ui(size: 13.5, color: AlmaPayColours.ink2),
-              ),
-            ),
-          AaminTicket(
-            topHeight: 66,
-            topPadding: EdgeInsets.zero,
-            stubPadding: const EdgeInsets.fromLTRB(16, 12, 16, 14),
-            bandGradient: AaminTicket.split,
-            top: Row(
-              children: [
-                _half('You send', Alignment.centerLeft),
-                _half('They receive', Alignment.centerRight),
-              ],
-            ),
-            stub: Row(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'See the exact price',
-                        style: AlmaPayText.ui(
-                          size: 13,
-                          weight: 500,
-                          color: AlmaPayColours.ink2,
+          const SizedBox(height: 12),
+          ListenableBuilder(
+            listenable: widget.sendMoney,
+            builder: (context, _) {
+              final sm = widget.sendMoney;
+              final rate = sm.indicativeRate;
+              return AaminTicket(
+                topHeight: 84,
+                topPadding: EdgeInsets.zero,
+                stubPadding: const EdgeInsets.fromLTRB(20, 16, 20, 18),
+                bandGradient: AaminTicket.split,
+                top: Row(
+                  children: [
+                    Expanded(
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 12),
+                          child: _pair(
+                            'Country you send from',
+                            sm.sourceCurrency,
+                            sm.sourceCurrencies,
+                            (c) {
+                              sm.setSourceCurrency(c);
+                              sm.loadIndicativeRate();
+                            },
+                          ),
                         ),
                       ),
-                      Text(
-                        'Before you pay',
-                        style: AlmaPayText.display.copyWith(fontSize: 30),
+                    ),
+                    const Icon(
+                      Icons.arrow_forward,
+                      color: AlmaPayColours.white,
+                    ),
+                    Expanded(
+                      child: Align(
+                        alignment: Alignment.centerRight,
+                        child: Padding(
+                          padding: const EdgeInsets.only(right: 12),
+                          child: _pair(
+                            'Country you send to',
+                            sm.targetCurrency,
+                            sm.targetCurrencies,
+                            (c) {
+                              sm.setTargetCurrency(c);
+                              sm.loadIndicativeRate();
+                            },
+                          ),
+                        ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-                FilledButton(
-                  key: const Key('verified_send_money'),
-                  onPressed: widget.onSend,
-                  style: FilledButton.styleFrom(
-                    minimumSize: const Size(96, 44),
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                  ),
-                  child: const Text('Send'),
+                stub: Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            rate == null
+                                ? 'See the exact price'
+                                : 'Exchange rate',
+                            style: AlmaPayText.ui(
+                              size: 14,
+                              weight: 500,
+                              color: context.palette.muted,
+                            ),
+                          ),
+                          FittedBox(
+                            fit: BoxFit.scaleDown,
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              rate ?? 'Before you pay',
+                              key: const Key('home_exchange_rate'),
+                              maxLines: 1,
+                              style: AlmaPayText.display.copyWith(fontSize: 34),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    FilledButton(
+                      key: const Key('verified_send_money'),
+                      onPressed: widget.onSend,
+                      style: FilledButton.styleFrom(
+                        minimumSize: const Size(110, 50),
+                        padding: const EdgeInsets.symmetric(horizontal: 24),
+                      ),
+                      child: const Text('Send'),
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              );
+            },
           ),
           const SizedBox(height: 22),
           Row(
@@ -245,7 +319,7 @@ class _HomeTabState extends State<_HomeTab> {
               padding: const EdgeInsets.symmetric(vertical: 12),
               child: Text(
                 'You have not sent any money yet.',
-                style: AlmaPayText.ui(color: AlmaPayColours.ink2),
+                style: AlmaPayText.ui(color: context.palette.muted),
               ),
             ),
           for (final t in _recent)
@@ -256,7 +330,7 @@ class _HomeTabState extends State<_HomeTab> {
                 fromCurrency: t.source.currency,
                 toCurrency: t.target.currency,
                 fromCaption: formatDate(t.createdAt),
-                toCaption: t.recipient?.displayName ?? t.reference,
+                toCaption: widget.sendMoney.recipientNameFor(t) ?? t.reference,
                 detail: 'You paid ${t.totalToPay.label}',
                 label: t.reference,
                 amount: t.target.label,
@@ -284,20 +358,18 @@ class _HomeTabState extends State<_HomeTab> {
     _ => (AlmaPayColours.waitSoft, AlmaPayColours.wait),
   };
 
-  Widget _half(String text, Alignment a) => Expanded(
-    child: Align(
-      alignment: a,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: Text(
-          text,
-          style: AlmaPayText.display.copyWith(
-            fontSize: 28,
-            color: AlmaPayColours.white,
-          ),
-        ),
-      ),
-    ),
+  Widget _pair(
+    String label,
+    String? selected,
+    List<String> codes,
+    ValueChanged<String> onSelected,
+  ) => CurrencyPickerButton(
+    label: label,
+    selected: selected,
+    codes: codes,
+    currencies: widget.sendMoney.currencies,
+    onSelected: onSelected,
+    codeSize: 30,
   );
 }
 
@@ -334,13 +406,13 @@ class _PeopleTabState extends State<_PeopleTab> {
               if (people.isEmpty)
                 Text(
                   'People you send money to will appear here.',
-                  style: AlmaPayText.ui(color: AlmaPayColours.ink2),
+                  style: AlmaPayText.ui(color: context.palette.muted),
                 )
               else
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 18),
                   decoration: BoxDecoration(
-                    color: AlmaPayColours.white,
+                    color: context.palette.surface,
                     borderRadius: BorderRadius.circular(24),
                   ),
                   child: Column(
@@ -363,49 +435,50 @@ class _PeopleTabState extends State<_PeopleTab> {
 // --- You ---------------------------------------------------------------------
 
 class _YouTab extends StatelessWidget {
-  const _YouTab({required this.auth, required this.config, this.biometrics});
+  const _YouTab({
+    required this.auth,
+    required this.config,
+    this.biometrics,
+    this.onboarding,
+  });
   final AuthController auth;
   final AppConfig config;
   final BiometricLockController? biometrics;
+  final OnboardingController? onboarding;
 
   void _open(BuildContext context, Widget page) =>
       Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => page));
 
   @override
   Widget build(BuildContext context) {
+    final p = context.palette;
     final user = auth.user;
+    final name = onboarding?.firstName;
+    final theme = ThemeScope.maybeOf(context);
     return SafeArea(
       bottom: false,
       child: ListView(
-        padding: const EdgeInsets.fromLTRB(22, 10, 22, 20),
+        padding: const EdgeInsets.fromLTRB(22, 10, 22, 28),
         children: [
-          Text('YOU', style: AlmaPayText.display.copyWith(fontSize: 40)),
-          const SizedBox(height: 14),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 4),
-            decoration: BoxDecoration(
-              color: AlmaPayColours.white,
-              borderRadius: BorderRadius.circular(24),
-            ),
-            child: Column(
-              children: [
-                _kv('Email', user?.email ?? ''),
-                const Divider(),
-                _kv('Support', config.supportEmail),
-              ],
-            ),
-          ),
+          Text('YOU', style: AlmaPayText.display.copyWith(fontSize: 34)),
           const SizedBox(height: 16),
-          if (biometrics case final lock? when lock.available)
-            ListenableBuilder(
-              listenable: lock,
-              builder: (context, _) => Padding(
-                padding: const EdgeInsets.only(bottom: 16),
-                child: Material(
-                  color: AlmaPayColours.white,
-                  borderRadius: BorderRadius.circular(24),
-                  clipBehavior: Clip.antiAlias,
-                  child: SwitchListTile(
+          _ProfileHeader(name: name, email: user?.email ?? ''),
+          const _SectionLabel('Account'),
+          _Group(
+            children: [
+              ListTile(
+                key: const Key('open_identity'),
+                leading: const Icon(Icons.verified_user_outlined),
+                title: const Text('Identity check'),
+                subtitle: const Text('Verified'),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: () =>
+                    _open(context, const IdentityCheckPage(verified: true)),
+              ),
+              if (biometrics case final lock? when lock.available)
+                ListenableBuilder(
+                  listenable: lock,
+                  builder: (context, _) => SwitchListTile(
                     key: const Key('biometric_switch'),
                     secondary: const Icon(Icons.fingerprint),
                     title: const Text('Unlock with fingerprint'),
@@ -413,69 +486,95 @@ class _YouTab extends StatelessWidget {
                     onChanged: lock.setEnabled,
                   ),
                 ),
-              ),
-            ),
-          Material(
-            color: AlmaPayColours.white,
-            borderRadius: BorderRadius.circular(24),
-            clipBehavior: Clip.antiAlias,
-            child: Column(
+            ],
+          ),
+          if (theme != null) ...[
+            const _SectionLabel('Appearance'),
+            _Group(
               children: [
-                ListTile(
-                  key: const Key('open_terms'),
-                  title: const Text('Terms & Conditions'),
-                  trailing: const Icon(Icons.chevron_right),
-                  onTap: () => _open(context, const LegalDocumentPage.terms()),
-                ),
-                const Divider(height: 1),
-                ListTile(
-                  key: const Key('open_privacy'),
-                  title: const Text('Privacy Policy'),
-                  trailing: const Icon(Icons.chevron_right),
-                  onTap: () =>
-                      _open(context, const LegalDocumentPage.privacy()),
-                ),
-                const Divider(height: 1),
-                ListTile(
-                  key: const Key('open_about'),
-                  title: Text('About ${config.appDisplayName}'),
-                  trailing: const Icon(Icons.chevron_right),
-                  onTap: () =>
-                      _open(context, AboutPage(appName: config.appDisplayName)),
-                ),
-                const Divider(height: 1),
-                ListTile(
-                  key: const Key('open_delete_data'),
-                  title: const Text('Delete my account / data'),
-                  trailing: const Icon(Icons.chevron_right),
-                  onTap: () => _open(
-                    context,
-                    DeleteDataPage(
-                      supportEmail: config.supportEmail,
-                      accountEmail: user?.email ?? '',
+                Padding(
+                  padding: const EdgeInsets.all(14),
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: SegmentedButton<ThemeMode>(
+                      key: const Key('theme_mode'),
+                      showSelectedIcon: false,
+                      segments: const [
+                        ButtonSegment(
+                          value: ThemeMode.system,
+                          icon: Icon(Icons.brightness_auto_outlined),
+                          label: Text('Auto'),
+                        ),
+                        ButtonSegment(
+                          value: ThemeMode.light,
+                          icon: Icon(Icons.light_mode_outlined),
+                          label: Text('Light'),
+                        ),
+                        ButtonSegment(
+                          value: ThemeMode.dark,
+                          icon: Icon(Icons.dark_mode_outlined),
+                          label: Text('Dark'),
+                        ),
+                      ],
+                      selected: {theme.mode},
+                      onSelectionChanged: (s) => theme.setMode(s.first),
                     ),
-                  ),
-                ),
-                const Divider(height: 1),
-                ListTile(
-                  key: const Key('open_contact'),
-                  title: const Text('Contact us'),
-                  trailing: const Icon(Icons.chevron_right),
-                  onTap: () => _open(
-                    context,
-                    ContactPage(supportEmail: config.supportEmail),
                   ),
                 ),
               ],
             ),
+          ],
+          const _SectionLabel('Help and legal'),
+          _Group(
+            children: [
+              _linkTile(
+                context,
+                const Key('open_contact'),
+                Icons.mail_outline,
+                'Contact us',
+                ContactPage(supportEmail: config.supportEmail),
+              ),
+              _linkTile(
+                context,
+                const Key('open_about'),
+                Icons.info_outline,
+                'About ${config.appDisplayName}',
+                AboutPage(appName: config.appDisplayName),
+              ),
+              _linkTile(
+                context,
+                const Key('open_terms'),
+                Icons.description_outlined,
+                'Terms & Conditions',
+                const LegalDocumentPage.terms(),
+              ),
+              _linkTile(
+                context,
+                const Key('open_privacy'),
+                Icons.lock_outline,
+                'Privacy Policy',
+                const LegalDocumentPage.privacy(),
+              ),
+              _linkTile(
+                context,
+                const Key('open_delete_data'),
+                Icons.delete_outline,
+                'Delete my account / data',
+                DeleteDataPage(
+                  supportEmail: config.supportEmail,
+                  accountEmail: user?.email ?? '',
+                ),
+              ),
+            ],
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 18),
           Text(
             'Payments are provided by our licensed partner. AaminPay never '
             'holds your money.',
-            style: AlmaPayText.ui(size: 13.5, color: AlmaPayColours.ink2),
+            textAlign: TextAlign.center,
+            style: AlmaPayText.ui(size: 13, color: p.muted),
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: 22),
           OutlinedButton.icon(
             key: const Key('sign_out'),
             onPressed: () async {
@@ -490,20 +589,103 @@ class _YouTab extends StatelessWidget {
     );
   }
 
-  Widget _kv(String k, String v) => Padding(
-    padding: const EdgeInsets.symmetric(vertical: 14),
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(k, style: AlmaPayText.ui(size: 15.5, color: AlmaPayColours.ink2)),
-        const SizedBox(width: 12),
-        Flexible(
-          child: Text(
-            v,
-            textAlign: TextAlign.end,
-            style: AlmaPayText.ui(size: 15.5, weight: 600),
+  Widget _linkTile(
+    BuildContext context,
+    Key key,
+    IconData icon,
+    String title,
+    Widget page,
+  ) => ListTile(
+    key: key,
+    leading: Icon(icon),
+    title: Text(title),
+    trailing: const Icon(Icons.chevron_right),
+    onTap: () => _open(context, page),
+  );
+}
+
+class _ProfileHeader extends StatelessWidget {
+  const _ProfileHeader({required this.name, required this.email});
+  final String? name;
+  final String email;
+
+  @override
+  Widget build(BuildContext context) {
+    final p = context.palette;
+    final initial = (name ?? email).trim().isEmpty
+        ? '?'
+        : (name ?? email).trim()[0].toUpperCase();
+    return Container(
+      padding: const EdgeInsets.all(18),
+      decoration: BoxDecoration(
+        color: p.surface,
+        borderRadius: BorderRadius.circular(24),
+      ),
+      child: Row(
+        children: [
+          CircleAvatar(
+            radius: 28,
+            backgroundColor: p.accentSoft,
+            child: Text(
+              initial,
+              style: AlmaPayText.ui(size: 22, weight: 700, color: p.accent),
+            ),
           ),
-        ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (name != null)
+                  Text(name!, style: AlmaPayText.ui(size: 18, weight: 600)),
+                Text(
+                  email,
+                  overflow: TextOverflow.ellipsis,
+                  style: AlmaPayText.ui(size: 14, color: p.muted),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _SectionLabel extends StatelessWidget {
+  const _SectionLabel(this.text);
+  final String text;
+
+  @override
+  Widget build(BuildContext context) => Padding(
+    padding: const EdgeInsets.fromLTRB(6, 24, 6, 8),
+    child: Text(
+      text.toUpperCase(),
+      style: AlmaPayText.ui(
+        size: 12,
+        weight: 700,
+        color: context.palette.muted,
+      ).copyWith(letterSpacing: 0.8),
+    ),
+  );
+}
+
+/// Rows in one rounded card, with a divider between them.
+class _Group extends StatelessWidget {
+  const _Group({required this.children});
+  final List<Widget> children;
+
+  @override
+  Widget build(BuildContext context) => Material(
+    color: context.palette.surface,
+    borderRadius: BorderRadius.circular(24),
+    clipBehavior: Clip.antiAlias,
+    child: Column(
+      children: [
+        for (var i = 0; i < children.length; i++) ...[
+          if (i > 0) const Divider(height: 1, indent: 16, endIndent: 16),
+          children[i],
+        ],
       ],
     ),
   );

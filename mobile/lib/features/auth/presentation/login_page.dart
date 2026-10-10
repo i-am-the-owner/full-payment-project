@@ -56,7 +56,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AlmaPayColours.fog,
+      backgroundColor: context.palette.background,
       body: Column(
         children: [
           const _AuthHeader(),
@@ -139,11 +139,13 @@ class _LoginPageState extends State<LoginPage> {
                         key: const Key('login_submit'),
                         onPressed: _submitting ? null : _submit,
                         child: _submitting
-                            ? const SizedBox.square(
+                            ? SizedBox.square(
                                 dimension: 20,
                                 child: CircularProgressIndicator(
                                   strokeWidth: 2,
-                                  color: AlmaPayColours.white,
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .onPrimary,
                                 ),
                               )
                             : const Text('Log in'),
@@ -155,7 +157,7 @@ class _LoginPageState extends State<LoginPage> {
                             text: 'New to AaminPay? ',
                             style: AlmaPayText.ui(
                               size: 15,
-                              color: AlmaPayColours.ink2,
+                              color: context.palette.muted,
                             ),
                             children: [
                               WidgetSpan(

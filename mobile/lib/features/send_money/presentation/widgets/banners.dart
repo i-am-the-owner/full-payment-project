@@ -19,7 +19,7 @@ class MessageBanner extends StatelessWidget {
         margin: const EdgeInsets.only(bottom: 16),
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
-          color: isError ? AlmaPayColours.badSoft : AlmaPayColours.blueSoft,
+          color: isError ? AlmaPayColours.badSoft : context.palette.accentSoft,
           borderRadius: BorderRadius.circular(16),
         ),
         child: Text(
@@ -27,7 +27,7 @@ class MessageBanner extends StatelessWidget {
           style: AlmaPayText.ui(
             size: 14.5,
             weight: 500,
-            color: isError ? AlmaPayColours.bad : AlmaPayColours.ink,
+            color: isError ? AlmaPayColours.bad : context.palette.text,
           ),
         ),
       ),
@@ -101,7 +101,7 @@ class Panel extends StatelessWidget {
   Widget build(BuildContext context) => Container(
     padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 4),
     decoration: BoxDecoration(
-      color: color ?? AlmaPayColours.white,
+      color: color ?? context.palette.surface,
       borderRadius: BorderRadius.circular(24),
     ),
     child: Column(

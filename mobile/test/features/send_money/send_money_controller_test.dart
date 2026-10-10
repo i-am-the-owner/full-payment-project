@@ -37,6 +37,80 @@ Future<SendMoneyController> _atReview(
 
 void main() {
   test(
+    'a transfer in a list is named after the saved person it went to',
+    () async {
+      final backend = FakeSendMoneyBackend();
+      final c = await _atReview(backend);
+      await c.confirm();
+      final page = (await c.loadHistory(1))!;
+      final transfer = page.transfers.first;
+
+      c.clearCustomerData();
+      expect(c.recipientNameFor(transfer), isNull);
+
+      await c.refreshRecipientsQuietly();
+      expect(c.recipientNameFor(transfer), 'Anna Schmidt');
+    },
+  );
+
+  test(
+    'choosing another country shows no old rate, then that pair\'s rate',
+    () async {
+      final backend = FakeSendMoneyBackend();
+      final c = _controller(backend);
+      await c.loadIndicativeRate();
+      final other = c.targetCurrencies.firstWhere(
+        (code) => code != c.targetCurrency && code != c.sourceCurrency,
+      );
+
+      c.setTargetCurrency(other);
+      expect(c.indicativeRate, isNull);
+
+      await c.loadIndicativeRate();
+      expect(c.indicativeRate, endsWith(' $other'));
+    },
+  );
+
+  test(
+    'the home ticket gets a rate from the backend and forgets it on sign-out',
+    () async {
+      final backend = FakeSendMoneyBackend();
+      final c = _controller(backend);
+      expect(c.indicativeRate, isNull);
+
+      await c.loadIndicativeRate();
+
+      expect(
+        c.indicativeRate,
+        matches(RegExp(r'^1 [A-Z]{3} = [0-9.]+ [A-Z]{3}$')),
+      );
+      c.clearCustomerData();
+      expect(c.indicativeRate, isNull);
+    },
+  );
+
+  test(
+    'clearing the customer data drops their people and half-made transfer',
+    () async {
+      final backend = FakeSendMoneyBackend();
+      backend.addSavedRecipient();
+      final c = _controller(backend);
+      await c.loadCurrencies();
+      c.setAmount(AmountSide.send, '100.00');
+      await c.updateQuote();
+      await c.loadRecipients();
+      expect(c.recipients, isNotEmpty);
+      expect(c.quote, isNotNull);
+
+      c.clearCustomerData();
+
+      expect(c.recipients, isEmpty);
+      expect(c.quote, isNull);
+      expect(c.amount, isEmpty);
+    },
+  );
+
+  test(
     'currencies, names and decimals come from the backend, not the app',
     () async {
       final backend = FakeSendMoneyBackend();

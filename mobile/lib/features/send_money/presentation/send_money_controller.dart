@@ -125,6 +125,89 @@ class SendMoneyController extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Who a transfer was sent to: the name the backend gave with it, or else the
+  /// saved person with that id. Null when neither is known.
+  String? recipientNameFor(Transfer t) {
+    final named = t.recipient?.displayName;
+    if (named != null && named.isNotEmpty) return named;
+    for (final r in _recipients) {
+      if (r.id == t.recipientId) return r.displayName;
+    }
+    return null;
+  }
+
+  /// Refreshes the saved people without showing a spinner or an error, for
+  /// lists that only want to put names on transfers.
+  Future<void> refreshRecipientsQuietly() async {
+    try {
+      _recipients = await _repository.listRecipients();
+      notifyListeners();
+    } on ApiException {
+      // Transfers just show their reference instead of a name.
+    }
+  }
+
+  Quote? _rateQuote;
+  DateTime? _rateFetchedAt;
+  bool _rateLoading = false;
+
+  /// "1 GBP = 164.20 KES" from a recent indicative quote, for the Home ticket.
+  /// Null until one has been fetched. It is a price to look at, never used to
+  /// send: a transfer is always made from a fresh quote the customer reviews.
+  String? get indicativeRate {
+    final q = _rateQuote;
+    // A rate for another pair than the one chosen is not shown.
+    return q == null ||
+            q.source.currency != _sourceCurrency ||
+            q.target.currency != _targetCurrency
+        ? null
+        : '1 ${q.source.currency} = ${q.exchangeRate} ${q.target.currency}';
+  }
+
+  /// Fetches the rate for the chosen pair (the provider's first pair at the
+  /// start). The same pair is fetched at most every five minutes, and a failure just leaves the old value (or none).
+  Future<void> loadIndicativeRate() async {
+    final at = _rateFetchedAt;
+    final current = _rateQuote;
+    final samePair =
+        current != null &&
+        current.source.currency == _sourceCurrency &&
+        current.target.currency == _targetCurrency;
+    if (_rateLoading ||
+        (samePair &&
+            at != null &&
+            DateTime.now().difference(at) < const Duration(minutes: 5))) {
+      return;
+    }
+    _rateLoading = true;
+    try {
+      if (_currencies == null) await loadCurrencies();
+      final source = _sourceCurrency;
+      final target = _targetCurrency;
+      if (source == null || target == null) return;
+      _rateQuote = await _repository.requestQuote(
+        sourceCurrency: source,
+        targetCurrency: target,
+        sourceAmount: '100',
+      );
+      _rateFetchedAt = DateTime.now();
+      notifyListeners();
+    } on ApiException {
+      // The ticket simply shows no rate.
+    } finally {
+      _rateLoading = false;
+    }
+  }
+
+  /// Forgets everything that belongs to the signed-in customer. Called when the
+  /// account changes, so one customer's people are never shown to the next.
+  void clearCustomerData() {
+    _recipients = const [];
+    _rateQuote = null;
+    _rateFetchedAt = null;
+    reset();
+  }
+
   /// Loads the currencies the provider supports. Called when the flow opens.
   Future<void> loadCurrencies() async {
     await _run(() async {

@@ -35,7 +35,9 @@ class AmountRow extends StatelessWidget {
                   style: AlmaPayText.ui(
                     size: 15.5,
                     weight: emphasise ? 600 : 400,
-                    color: emphasise ? AlmaPayColours.ink : AlmaPayColours.ink2,
+                    color: emphasise
+                        ? context.palette.text
+                        : context.palette.muted,
                   ),
                 ),
               ),

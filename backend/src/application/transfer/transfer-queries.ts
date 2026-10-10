@@ -15,6 +15,8 @@ export function createListRecipients(deps: {
 
 export interface TransferPage {
   readonly transfers: Transfer[];
+  /** The recipient of each transfer by id, even one removed since, so a list can name them. */
+  readonly recipients: ReadonlyMap<string, Recipient>;
   readonly page: number;
   readonly pageSize: number;
   readonly hasMore: boolean;
@@ -28,6 +30,7 @@ export type ListTransfers = (
 /** A page of the customer's transfers, newest first, from our own database. */
 export function createListTransfers(deps: {
   transferRepository: TransferRepository;
+  recipientRepository: RecipientRepository;
 }): ListTransfers {
   return async (userId, { page, pageSize }) => {
     // One extra row tells us whether another page exists.
@@ -35,8 +38,16 @@ export function createListTransfers(deps: {
       limit: pageSize + 1,
       offset: (page - 1) * pageSize,
     });
+    const transfers = rows.slice(0, pageSize);
+    const ids = [...new Set(transfers.map((t) => t.recipientId))];
+    const found = await Promise.all(ids.map((id) => deps.recipientRepository.findById(id)));
+    const recipients = new Map<string, Recipient>();
+    for (const recipient of found) {
+      if (recipient) recipients.set(recipient.id, recipient);
+    }
     return {
-      transfers: rows.slice(0, pageSize),
+      transfers,
+      recipients,
       page,
       pageSize,
       hasMore: rows.length > pageSize,

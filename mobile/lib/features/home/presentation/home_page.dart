@@ -59,6 +59,7 @@ class HomePage extends StatelessWidget {
             auth: controller,
             config: config,
             sendMoney: sendMoney,
+            onboarding: onboarding,
             biometrics: biometrics,
           );
         }
