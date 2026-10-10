@@ -24,6 +24,14 @@ before(async () => {
       DASHBOARD_USD_RATES: 'GBP:1.25',
     },
   });
+  // Currencies are normally copied from the provider at runtime. These tests insert
+  // transfers directly, so they make sure the ones they use exist (order-independent).
+  await ctx.container.pool.query(
+    `INSERT INTO currencies (code, name, minor_unit) VALUES
+       ('GBP', 'British pound', 2), ('EUR', 'Euro', 2), ('USD', 'US dollar', 2),
+       ('KES', 'Kenyan shilling', 2)
+     ON CONFLICT (code) DO NOTHING`,
+  );
 });
 after(async () => {
   if (ctx) await ctx.close();
