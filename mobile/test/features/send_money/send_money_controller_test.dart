@@ -37,6 +37,24 @@ Future<SendMoneyController> _atReview(
 
 void main() {
   test(
+    'the home ticket gets a rate from the backend and forgets it on sign-out',
+    () async {
+      final backend = FakeSendMoneyBackend();
+      final c = _controller(backend);
+      expect(c.indicativeRate, isNull);
+
+      await c.loadIndicativeRate();
+
+      expect(
+        c.indicativeRate,
+        matches(RegExp(r'^1 [A-Z]{3} = [0-9.]+ [A-Z]{3}$')),
+      );
+      c.clearCustomerData();
+      expect(c.indicativeRate, isNull);
+    },
+  );
+
+  test(
     'clearing the customer data drops their people and half-made transfer',
     () async {
       final backend = FakeSendMoneyBackend();

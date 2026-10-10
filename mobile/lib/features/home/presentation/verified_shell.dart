@@ -153,6 +153,7 @@ class _HomeTabState extends State<_HomeTab> {
   void initState() {
     super.initState();
     _loadRecent();
+    widget.sendMoney.loadIndicativeRate();
   }
 
   Future<void> _loadRecent() async {
@@ -182,7 +183,7 @@ class _HomeTabState extends State<_HomeTab> {
                       key: const Key('welcome_heading'),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: AlmaPayText.display.copyWith(fontSize: 40),
+                      style: AlmaPayText.display.copyWith(fontSize: 28),
                     ),
                   ),
                   const AaminMark(size: 32),
@@ -191,50 +192,65 @@ class _HomeTabState extends State<_HomeTab> {
             },
           ),
           const SizedBox(height: 12),
-          AaminTicket(
-            topHeight: 66,
-            topPadding: EdgeInsets.zero,
-            stubPadding: const EdgeInsets.fromLTRB(16, 12, 16, 14),
-            bandGradient: AaminTicket.split,
-            top: Row(
-              children: [
-                _half('You send', Alignment.centerLeft),
-                _half('They receive', Alignment.centerRight),
-              ],
-            ),
-            stub: Row(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'See the exact price',
-                        style: AlmaPayText.ui(
-                          size: 13,
-                          weight: 500,
-                          color: AlmaPayColours.ink2,
-                        ),
-                      ),
-                      Text(
-                        'Before you pay',
-                        style: AlmaPayText.display.copyWith(fontSize: 30),
-                      ),
-                    ],
-                  ),
+          ListenableBuilder(
+            listenable: widget.sendMoney,
+            builder: (context, _) {
+              final rate = widget.sendMoney.indicativeRate;
+              return AaminTicket(
+                topHeight: 84,
+                topPadding: EdgeInsets.zero,
+                stubPadding: const EdgeInsets.fromLTRB(20, 16, 20, 18),
+                bandGradient: AaminTicket.split,
+                top: Row(
+                  children: [
+                    _half('You send', Alignment.centerLeft),
+                    _half('They receive', Alignment.centerRight),
+                  ],
                 ),
-                FilledButton(
-                  key: const Key('verified_send_money'),
-                  onPressed: widget.onSend,
-                  style: FilledButton.styleFrom(
-                    minimumSize: const Size(96, 44),
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                  ),
-                  child: const Text('Send'),
+                stub: Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            rate == null
+                                ? 'See the exact price'
+                                : 'Exchange rate',
+                            style: AlmaPayText.ui(
+                              size: 14,
+                              weight: 500,
+                              color: AlmaPayColours.ink2,
+                            ),
+                          ),
+                          FittedBox(
+                            fit: BoxFit.scaleDown,
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              rate ?? 'Before you pay',
+                              key: const Key('home_exchange_rate'),
+                              maxLines: 1,
+                              style: AlmaPayText.display.copyWith(fontSize: 34),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    FilledButton(
+                      key: const Key('verified_send_money'),
+                      onPressed: widget.onSend,
+                      style: FilledButton.styleFrom(
+                        minimumSize: const Size(110, 50),
+                        padding: const EdgeInsets.symmetric(horizontal: 24),
+                      ),
+                      child: const Text('Send'),
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              );
+            },
           ),
           const SizedBox(height: 22),
           Row(
@@ -304,7 +320,7 @@ class _HomeTabState extends State<_HomeTab> {
         child: Text(
           text,
           style: AlmaPayText.display.copyWith(
-            fontSize: 28,
+            fontSize: 32,
             color: AlmaPayColours.white,
           ),
         ),

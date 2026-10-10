@@ -125,10 +125,55 @@ class SendMoneyController extends ChangeNotifier {
     notifyListeners();
   }
 
+  Quote? _rateQuote;
+  DateTime? _rateFetchedAt;
+  bool _rateLoading = false;
+
+  /// "1 GBP = 164.20 KES" from a recent indicative quote, for the Home ticket.
+  /// Null until one has been fetched. It is a price to look at, never used to
+  /// send: a transfer is always made from a fresh quote the customer reviews.
+  String? get indicativeRate {
+    final q = _rateQuote;
+    return q == null
+        ? null
+        : '1 ${q.source.currency} = ${q.exchangeRate} ${q.target.currency}';
+  }
+
+  /// Fetches the rate for the first currency pair the provider offers. At most
+  /// every five minutes, and a failure just leaves the old value (or none).
+  Future<void> loadIndicativeRate() async {
+    final at = _rateFetchedAt;
+    if (_rateLoading ||
+        (at != null &&
+            DateTime.now().difference(at) < const Duration(minutes: 5))) {
+      return;
+    }
+    _rateLoading = true;
+    try {
+      if (_currencies == null) await loadCurrencies();
+      final source = _sourceCurrency;
+      final target = _targetCurrency;
+      if (source == null || target == null) return;
+      _rateQuote = await _repository.requestQuote(
+        sourceCurrency: source,
+        targetCurrency: target,
+        sourceAmount: '100',
+      );
+      _rateFetchedAt = DateTime.now();
+      notifyListeners();
+    } on ApiException {
+      // The ticket simply shows no rate.
+    } finally {
+      _rateLoading = false;
+    }
+  }
+
   /// Forgets everything that belongs to the signed-in customer. Called when the
   /// account changes, so one customer's people are never shown to the next.
   void clearCustomerData() {
     _recipients = const [];
+    _rateQuote = null;
+    _rateFetchedAt = null;
     reset();
   }
 
