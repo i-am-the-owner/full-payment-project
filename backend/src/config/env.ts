@@ -197,6 +197,9 @@ export const envSchema = z.object({
   // dev script can send signed test webhooks to a running server. Random per
   // process when unset. The mock provider is refused in production anyway.
   MOCK_WEBHOOK_SECRET: z.string().min(16).optional(),
+  // Development only: the mock provider approves a new customer at once instead of
+  // sending them to its fake identity page. Refused in production.
+  MOCK_SKIP_IDENTITY_CHECK: booleanFromString.default(false),
   PAYOUT_HTTP_TIMEOUT_MS: z.coerce.number().int().min(1000).max(60_000).default(15_000),
   PAYOUT_HTTP_MAX_RETRIES: z.coerce.number().int().min(0).max(5).default(3),
 

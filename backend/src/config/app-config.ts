@@ -187,6 +187,9 @@ function assertProductionSafe(env: Env): void {
   if (env.MOCK_WEBHOOK_SECRET) {
     problems.push('MOCK_WEBHOOK_SECRET is for development only.');
   }
+  if (env.MOCK_SKIP_IDENTITY_CHECK) {
+    problems.push('MOCK_SKIP_IDENTITY_CHECK is for development only.');
+  }
   if (problems.length > 0) {
     throw new ConfigError(`Unsafe production configuration:\n  - ${problems.join('\n  - ')}`);
   }

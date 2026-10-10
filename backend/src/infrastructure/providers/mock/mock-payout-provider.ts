@@ -148,6 +148,8 @@ export interface MockPayoutProviderOptions {
   readonly clock?: () => Date;
   /** HMAC secret for the fake webhooks. Random per process when omitted. */
   readonly webhookSecret?: string;
+  /** Approve new customers at once instead of showing the mock identity page. */
+  readonly skipIdentityCheck?: boolean;
 }
 
 function ceilDiv(a: bigint, b: bigint): bigint {
@@ -179,6 +181,7 @@ export class MockPayoutProvider implements PayoutProvider {
 
   readonly #clock: () => Date;
   readonly #webhookSecret: string;
+  readonly #skipIdentityCheck: boolean;
   readonly #quotes = new Map<string, StoredQuote>();
   readonly #recipients = new Map<string, StoredRecipient>();
   readonly #transfers = new Map<string, StoredTransfer>();
@@ -187,6 +190,7 @@ export class MockPayoutProvider implements PayoutProvider {
   constructor(options: MockPayoutProviderOptions = {}) {
     this.#clock = options.clock ?? (() => new Date());
     this.#webhookSecret = options.webhookSecret ?? randomBytes(32).toString('hex');
+    this.#skipIdentityCheck = options.skipIdentityCheck ?? false;
   }
 
   getCapabilities(): Promise<Capabilities> {
@@ -196,7 +200,7 @@ export class MockPayoutProvider implements PayoutProvider {
       targetCurrencies: CURRENCIES.map((currency) => currency.code),
       features: {
         // A stand-in for a provider-hosted identity check (a dev-only page).
-        needsCustomerRedirectForKyc: true,
+        needsCustomerRedirectForKyc: !this.#skipIdentityCheck,
         fundingMethods: ['BANK_TRANSFER', 'BALANCE'],
       },
       senderCountries: ['GB'],
@@ -216,6 +220,7 @@ export class MockPayoutProvider implements PayoutProvider {
     user: OnboardingUser,
     context: OnboardingContext,
   ): Promise<OnboardingStart> {
+    if (this.#skipIdentityCheck) return Promise.resolve({ kind: 'done' });
     const page = new URL('/dev/mock/kyc', context.returnUrl);
     page.searchParams.set('return_url', context.returnUrl);
     return Promise.resolve({

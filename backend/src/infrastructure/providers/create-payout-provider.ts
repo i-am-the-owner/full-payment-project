@@ -30,9 +30,10 @@ export function createPayoutProvider(deps: PayoutProviderDeps): PayoutProvider {
   assertEnvironmentPolicy(env);
   switch (env.PAYOUT_PROVIDER) {
     case 'mock':
-      return new MockPayoutProvider(
-        env.MOCK_WEBHOOK_SECRET ? { webhookSecret: env.MOCK_WEBHOOK_SECRET } : {},
-      );
+      return new MockPayoutProvider({
+        ...(env.MOCK_WEBHOOK_SECRET ? { webhookSecret: env.MOCK_WEBHOOK_SECRET } : {}),
+        skipIdentityCheck: env.MOCK_SKIP_IDENTITY_CHECK,
+      });
     case 'wise':
       return createWiseProvider(deps);
     case 'airwallex':
